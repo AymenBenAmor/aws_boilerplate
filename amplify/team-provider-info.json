@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-boilerplateaws-dev-225421-authRole",
+      "UnauthRoleArn": "arn:aws:iam::384349963243:role/amplify-boilerplateaws-dev-225421-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::384349963243:role/amplify-boilerplateaws-dev-225421-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-boilerplateaws-dev-225421-deployment",
+      "UnauthRoleName": "amplify-boilerplateaws-dev-225421-unauthRole",
+      "StackName": "amplify-boilerplateaws-dev-225421",
+      "StackId": "arn:aws:cloudformation:eu-west-2:384349963243:stack/amplify-boilerplateaws-dev-225421/49c78020-ff71-11ea-b08c-06475a83f024",
+      "AmplifyAppId": "d3roigtq280pnp"
+    },
+    "categories": {
+      "auth": {
+        "boilerplateaws785bba4d": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "boilerplateaws785bba4d": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
