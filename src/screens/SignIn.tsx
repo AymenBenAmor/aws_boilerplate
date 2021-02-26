@@ -1,42 +1,49 @@
-import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Layout, Button, Text } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import AppTextInput from '../components/AppTextInput';
-import AppButton from '../components/AppButton';
-// import { AuthNavigationProp, updateAuth } from '../../App';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateAuth } from '../../App';
+import AppButton from '../components/common/AppButton';
+import AppTextInput from '../components/common/AppTextInput';
+import { authFun } from '../helpers/functions';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ParamList } from '../navigation/ParamList';
 
 type Props = {
-  //navigation: AuthNavigationProp;
-  updateAuthState: updateAuth;
+  navigation: StackNavigationProp<ParamList, 'SignIn'>;
+  updateAuthState?: updateAuth;
 };
 
-const SignIn: React.FC<Props> = ({ updateAuthState }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const SignIn: React.FC<Props> = ({
+  updateAuthState = () => {},
+  navigation,
+}) => {
+  const [username, setUsername] = React.useState('jianchenj@chesles.com');
+  const [password, setPassword] = React.useState('1111111111');
+  const [loading, setLoading] = React.useState(false);
 
   async function signIn() {
-    try {
-      await Auth.signIn(username, password);
-      console.log(
-        '<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/11/svg/2705.svg"> Success'
-      );
-      updateAuthState('loggedIn');
-    } catch (error) {
-      console.log(
-        '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> Error signing in...',
-        error
-      );
-    }
+    setLoading(true);
+    authFun({
+      func: Auth.signIn(username, password),
+      onSuccessFn: (res) => {
+        console.log('res', res);
+      },
+      onFailedFn: (err) => {
+        console.log('err', err);
+      },
+      callback: () => setLoading(false),
+    });
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
-      <Layout style={styles.container}>
-        <Text style={styles.title}>Sign in to your account</Text>
+    <Layout style={styles.container}>
+      <Text style={styles.title}>Sign in to your account</Text>
+      <View>
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -56,25 +63,28 @@ const SignIn: React.FC<Props> = ({ updateAuthState }) => {
           secureTextEntry
           textContentType="password"
         />
-        <AppButton title="Login" onPress={signIn} />
-        <Layout style={styles.footerButtonContainer}>
-          <Button onPress={() => console.log('to do')}>
-            Don't have an account? Sign Up
-          </Button>
-        </Layout>
+      </View>
+      <AppButton
+        loading={loading}
+        title="Login"
+        onPress={signIn}
+        disabled={username.length < 3 || password.length < 3}
+      />
+      <Layout style={styles.footerButtonContainer}>
+        <Button onPress={() => navigation.navigate('SignUp')}>
+          Don't have an account? Sign Up
+        </Button>
       </Layout>
-    </SafeAreaView>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
   },
   title: {
     fontSize: 20,

@@ -1,0 +1,6 @@
+export type ParamList = {
+  Splash: undefined;
+  Onboarding: undefined;
+  SignIn: undefined;
+  SignUp: undefined;
+};

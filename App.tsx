@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Amplify, { Auth } from 'aws-amplify';
+import * as eva from '@eva-design/eva';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
   IconRegistry,
@@ -13,12 +11,16 @@ import {
   Spinner,
 } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-
-import { default as theme } from './theme.json';
-import SignIn from './src/screens/SignIn';
+import Amplify, { Auth } from 'aws-amplify';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import config from './aws-exports';
+import AppNavigator from './src/navigation/AppNavigator';
 import Home from './src/screens/Home';
+import SignIn from './src/screens/SignIn';
+import { default as theme } from './theme.json';
 
 // import SignUp from './src/screens/SignUp';
 // import ConfirmSignUp from './src/screens/ConfirmSignUp';
@@ -61,17 +63,17 @@ const AuthenticationNavigator: React.FC<NavigatorProp> = ({
   );
 };
 
-const AppNavigator: React.FC<NavigatorProp> = ({
-  updateAuthState,
-}: NavigatorProp) => {
-  return (
-    <AppStack.Navigator>
-      <AppStack.Screen name="Home">
-        {() => <Home updateAuthState={updateAuthState} />}
-      </AppStack.Screen>
-    </AppStack.Navigator>
-  );
-};
+// const AppNavigator: React.FC<NavigatorProp> = ({
+//   updateAuthState,
+// }: NavigatorProp) => {
+//   return (
+//     <AppStack.Navigator>
+//       <AppStack.Screen name="Home">
+//         {() => <Home updateAuthState={updateAuthState} />}
+//       </AppStack.Screen>
+//     </AppStack.Navigator>
+//   );
+// };
 
 const Initializing = () => {
   return (
@@ -105,10 +107,11 @@ const App: React.FC = () => {
     setUserLoggedIn(loggedIn);
   }
   return (
-    <>
+    <SafeAreaView style={styles.safeAreaContainer}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-        <NavigationContainer>
+        <AppNavigator />
+        {/* <NavigationContainer>
           {isUserLoggedIn === 'initializing' && <Initializing />}
           {isUserLoggedIn === 'loggedIn' && (
             <AppNavigator updateAuthState={updateAuthState} />
@@ -116,10 +119,17 @@ const App: React.FC = () => {
           {isUserLoggedIn === 'loggedOut' && (
             <AuthenticationNavigator updateAuthState={updateAuthState} />
           )}
-        </NavigationContainer>
+        </NavigationContainer> */}
       </ApplicationProvider>
-    </>
+    </SafeAreaView>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+});
