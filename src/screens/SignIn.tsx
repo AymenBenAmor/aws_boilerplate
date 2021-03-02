@@ -1,16 +1,13 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Layout, Button, Text } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateAuth } from '../../App';
 import AppButton from '../components/common/AppButton';
 import AppTextInput from '../components/common/AppTextInput';
 import { authFun } from '../helpers/functions';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamList } from '../navigation/ParamList';
 
 type Props = {
@@ -46,7 +43,7 @@ const SignIn: React.FC<Props> = ({
       <View>
         <AppTextInput
           value={username}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={setUsername}
           leftIcon="person-outline"
           placeholder="Enter username"
           autoCapitalize="none"
@@ -55,7 +52,7 @@ const SignIn: React.FC<Props> = ({
         />
         <AppTextInput
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={setPassword}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"

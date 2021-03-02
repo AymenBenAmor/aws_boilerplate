@@ -1,5 +1,4 @@
 import * as eva from '@eva-design/eva';
-import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,
@@ -10,26 +9,25 @@ import {
   Layout,
   Spinner,
 } from '@ui-kitten/components';
+import { NavigationContainer } from '@react-navigation/native';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import Amplify, { Auth } from 'aws-amplify';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import config from './aws-exports';
-import AppNavigator from './src/navigation/AppNavigator';
 import Home from './src/screens/Home';
 import SignIn from './src/screens/SignIn';
 import { default as theme } from './theme.json';
 
-// import SignUp from './src/screens/SignUp';
-// import ConfirmSignUp from './src/screens/ConfirmSignUp';
-// import Home from './src/screens/Home';
+import SignUp from './src/screens/SignUp';
 
 Amplify.configure(config);
 
 type AuthStackParamList = {
   SignIn: undefined;
+  SignUp: undefined;
 };
 type AppStackParamList = {
   Home: undefined;
@@ -49,9 +47,7 @@ export type NavigatorProp = {
 const AuthenticationStack = createStackNavigator<AuthStackParamList>();
 const AppStack = createStackNavigator<AppStackParamList>();
 
-const AuthenticationNavigator: React.FC<NavigatorProp> = ({
-  updateAuthState,
-}: NavigatorProp) => {
+const AuthenticationNavigator = ({ updateAuthState }: NavigatorProp) => {
   return (
     <AuthenticationStack.Navigator headerMode="none">
       <AuthenticationStack.Screen name="SignIn">
@@ -59,21 +55,24 @@ const AuthenticationNavigator: React.FC<NavigatorProp> = ({
           <SignIn {...screenProps} updateAuthState={updateAuthState} />
         )}
       </AuthenticationStack.Screen>
+      <AuthenticationStack.Screen name="SignUp">
+        {(screenProps) => <SignUp {...screenProps} />}
+      </AuthenticationStack.Screen>
     </AuthenticationStack.Navigator>
   );
 };
 
-// const AppNavigator: React.FC<NavigatorProp> = ({
-//   updateAuthState,
-// }: NavigatorProp) => {
-//   return (
-//     <AppStack.Navigator>
-//       <AppStack.Screen name="Home">
-//         {() => <Home updateAuthState={updateAuthState} />}
-//       </AppStack.Screen>
-//     </AppStack.Navigator>
-//   );
-// };
+const AppNavigator: React.FC<NavigatorProp> = ({
+  updateAuthState,
+}: NavigatorProp) => {
+  return (
+    <AppStack.Navigator>
+      <AppStack.Screen name="Home">
+        {() => <Home updateAuthState={updateAuthState} />}
+      </AppStack.Screen>
+    </AppStack.Navigator>
+  );
+};
 
 const Initializing = () => {
   return (
@@ -107,21 +106,22 @@ const App: React.FC = () => {
     setUserLoggedIn(loggedIn);
   }
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-        <AppNavigator />
-        {/* <NavigationContainer>
-          {isUserLoggedIn === 'initializing' && <Initializing />}
-          {isUserLoggedIn === 'loggedIn' && (
-            <AppNavigator updateAuthState={updateAuthState} />
-          )}
-          {isUserLoggedIn === 'loggedOut' && (
-            <AuthenticationNavigator updateAuthState={updateAuthState} />
-          )}
-        </NavigationContainer> */}
-      </ApplicationProvider>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+          <NavigationContainer>
+            {isUserLoggedIn === 'initializing' && <Initializing />}
+            {isUserLoggedIn === 'loggedIn' && (
+              <AppNavigator updateAuthState={updateAuthState} />
+            )}
+            {isUserLoggedIn === 'loggedOut' && (
+              <AuthenticationNavigator updateAuthState={updateAuthState} />
+            )}
+          </NavigationContainer>
+        </ApplicationProvider>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

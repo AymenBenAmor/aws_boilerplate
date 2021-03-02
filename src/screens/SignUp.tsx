@@ -15,7 +15,6 @@ import {
 import AppButton from '../components/common/AppButton';
 import AppTextInput from '../components/common/AppTextInput';
 import { authFun, checkError } from '../helpers/functions';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamList } from '../navigation/ParamList';
 
 type Props = { navigation: StackNavigationProp<ParamList, 'SignUp'> };
@@ -78,14 +77,16 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container]}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback
+        onPress={Platform.OS !== 'web' ? Keyboard.dismiss : undefined}
+      >
         <View style={[styles.subcontainer]}>
           <Text style={styles.title}>Sign Up</Text>
           {!isConfirmStep ? (
             <View>
               <AppTextInput
                 value={email}
-                onChangeText={(value) => setEmail(value)}
+                onChangeText={setEmail}
                 leftIcon="person-outline"
                 placeholder="Enter email"
                 autoCapitalize="none"
@@ -94,7 +95,7 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
               />
               <AppTextInput
                 value={password}
-                onChangeText={(value) => setPassword(value)}
+                onChangeText={setPassword}
                 leftIcon="lock-outline"
                 placeholder="Enter password"
                 autoCapitalize="none"
@@ -104,7 +105,7 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
               />
               <AppTextInput
                 value={confirmPassword}
-                onChangeText={(value) => setConfirmPassword(value)}
+                onChangeText={setConfirmPassword}
                 leftIcon="lock-outline"
                 placeholder="Enter password"
                 autoCapitalize="none"
@@ -116,7 +117,7 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
           ) : (
             <AppTextInput
               value={verificationCode}
-              onChangeText={(value) => setverificationCode(value)}
+              onChangeText={setverificationCode}
               leftIcon="lock-outline"
               placeholder="Enter verification code "
               autoCapitalize="none"

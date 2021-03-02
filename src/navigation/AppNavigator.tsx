@@ -5,12 +5,11 @@ import React from 'react';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import Splash from '../screens/Splash';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamList } from './ParamList';
 
 const Stack = createStackNavigator<ParamList>();
 
-const AppNavigator: React.FC = () => {
+const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">

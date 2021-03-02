@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, TextInputProps, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  TextInputProps,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { Input, Layout, Icon } from '@ui-kitten/components';
 
 type Props = {
@@ -13,13 +17,15 @@ const AppTextInput: React.FC<Props> = ({ leftIcon, ...otherProps }) => {
   const [secureTextEntry, setSecureTextEntry] = React.useState(isPasswordInput);
 
   const _renderasswordIcon = () => (
-    <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
+    <TouchableWithoutFeedback
+      onPress={() => setSecureTextEntry(!secureTextEntry)}
+    >
       <Icon
         style={styles.passwordIcon}
         name={secureTextEntry ? 'eye-off' : 'eye'}
         fill="#6e6869"
       />
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 
   return (
