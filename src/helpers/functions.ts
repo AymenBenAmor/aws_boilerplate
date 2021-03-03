@@ -16,6 +16,9 @@ export const checkError = ({
     case 'password':
       errorValue = value.trim().length >= 10;
       break;
+    case 'verificationCode':
+      errorValue = value.trim().length === 6;
+      break;
 
     default:
       errorValue = value.trim().length >= 3;
@@ -27,12 +30,12 @@ export async function authFun({
   func,
   onSuccessFn,
   onFailedFn,
-  callback,
+  callback = () => {},
 }: {
   func: Promise<any>;
   onSuccessFn: (value: any) => void;
   onFailedFn: (value: any) => void;
-  callback: () => void;
+  callback?: () => void;
 }) {
   try {
     const user = await func;

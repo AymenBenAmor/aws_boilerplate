@@ -1,9 +1,11 @@
-import React from 'react';
 import { Button, Layout, Text } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import { updateAuth } from '../../App';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { updateAuth } from '../navigation/AppNavigator';
 
 type Props = {
   updateAuthState: updateAuth;

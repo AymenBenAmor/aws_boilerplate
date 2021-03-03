@@ -8,7 +8,7 @@ import Spinner from './SpinnerComponent';
 type Props = {
   title: string;
   loading?: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   onPress: (event: GestureResponderEvent) => void;
   style?: ViewStyle;
 };

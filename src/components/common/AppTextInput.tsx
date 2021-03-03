@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Input, Layout, Icon } from '@ui-kitten/components';
 import React from 'react';
 import {
   StyleSheet,
   TextInputProps,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Input, Layout, Icon } from '@ui-kitten/components';
 
 type Props = {
   leftIcon?: string;

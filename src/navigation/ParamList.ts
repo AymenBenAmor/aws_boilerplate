@@ -3,4 +3,6 @@ export type ParamList = {
   Onboarding: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  Home: undefined;
+  ForgotPassword: undefined;
 };
