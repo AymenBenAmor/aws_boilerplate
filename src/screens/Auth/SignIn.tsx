@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Button, Text } from '@ui-kitten/components';
+import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
 import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
+import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
@@ -21,16 +22,27 @@ const SignIn: React.FC<Props> = ({
   updateAuthState = () => {},
   navigation,
 }) => {
-  const [username, setUsername] = React.useState('jiancehenj@mikes.cd');
-  const [password, setPassword] = React.useState('1111111111');
   const [loading, setLoading] = React.useState(false);
 
-  console.log('navigationnavigation', navigation);
+  const {
+    handleChange,
+    handleSubmit,
+    checkErrors,
+    values,
+    isSubmitting,
+    errorsMessages,
+  } = useForm(
+    {
+      email: 'jiancehenj@shadesstreet.com',
+      password: '1111111111',
+    },
+    { email: 'Invalid email', password: 'Invalid password' }
+  );
 
   async function signIn() {
     setLoading(true);
     authFun({
-      func: Auth.signIn(username, password),
+      func: Auth.signIn(values.email, values.password),
       onSuccessFn: (res) => {
         console.log('res', res);
         updateAuthState('loggedIn');
@@ -48,23 +60,27 @@ const SignIn: React.FC<Props> = ({
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
-            value={username}
-            onChangeText={(text) => setUsername(text)}
+            value={values.email || ''}
+            onChangeText={(value) => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="emailAddress"
+            onBlur={() => checkErrors('email')}
+            errorMessage={errorsMessages.email || ''}
           />
           <AppTextInput
-            value={password}
-            onChangeText={(text) => setPassword(text)}
+            value={values.password || ''}
+            onChangeText={(value) => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry
             textContentType="password"
+            onBlur={() => checkErrors('password')}
+            errorMessage={errorsMessages.password || ''}
           />
         </View>
 
@@ -73,7 +89,7 @@ const SignIn: React.FC<Props> = ({
             loading={loading}
             title="Login"
             onPress={signIn}
-            disabled={username.length < 3 || password.length < 3}
+            disabled={isSubmitting}
           />
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('ForgotPassword')}

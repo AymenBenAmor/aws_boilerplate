@@ -5,14 +5,21 @@ import {
   StyleSheet,
   TextInputProps,
   TouchableWithoutFeedback,
+  Text,
+  View,
 } from 'react-native';
 
 type Props = {
   leftIcon?: string;
   isPasswordInput?: boolean;
+  errorMessage?: string;
 } & TextInputProps;
 
-const AppTextInput: React.FC<Props> = ({ leftIcon, ...otherProps }) => {
+const AppTextInput: React.FC<Props> = ({
+  leftIcon,
+  errorMessage,
+  ...otherProps
+}) => {
   const isPasswordInput = otherProps.textContentType === 'password';
 
   const [secureTextEntry, setSecureTextEntry] = React.useState(isPasswordInput);
@@ -32,7 +39,10 @@ const AppTextInput: React.FC<Props> = ({ leftIcon, ...otherProps }) => {
   return (
     <Layout style={styles.container}>
       <Input
-        style={styles.input}
+        style={[
+          styles.input,
+          { borderColor: errorMessage ? 'red' : '#8a8a8a' },
+        ]}
         placeholderTextColor="#6e6869"
         {...otherProps}
         accessoryLeft={() =>
@@ -51,17 +61,17 @@ const AppTextInput: React.FC<Props> = ({ leftIcon, ...otherProps }) => {
         }
         secureTextEntry={secureTextEntry}
       />
+      <Text style={styles.errorMessage}>{errorMessage} </Text>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9f9f9',
-    flexDirection: 'row',
     marginVertical: 10,
     height: 40,
     width: '100%',
+    marginBottom: 25,
   },
   icon: {
     marginRight: 10,
@@ -73,9 +83,13 @@ const styles = StyleSheet.create({
     height: 25,
   },
   input: {
-    flex: 1,
     fontSize: 18,
     color: '#101010',
+    width: '100%',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 13,
   },
 });
 

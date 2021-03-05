@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Text } from '@ui-kitten/components';
+import { Layout } from '@ui-kitten/components';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamList } from '../navigation/ParamList';
