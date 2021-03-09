@@ -5,4 +5,5 @@ export type ParamList = {
   SignUp: undefined;
   Home: undefined;
   ForgotPassword: undefined;
+  Profil: undefined;
 };

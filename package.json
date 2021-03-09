@@ -18,6 +18,7 @@
     "aws-amplify": "^3.3.2",
     "aws-amplify-react-native": "^4.2.7",
     "expo": "~39.0.2",
+    "expo-image-picker": "~9.1.0",
     "expo-status-bar": "~1.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",

@@ -16,6 +16,7 @@ type Props = {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   email: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const SignUpStep: React.FC<Props> = ({
   loading,
   setLoading,
   email,
+  setMessage,
 }) => {
   console.log(email);
 
@@ -59,6 +61,7 @@ const SignUpStep: React.FC<Props> = ({
       },
       onFailedFn: (err) => {
         console.log('err', err);
+        setMessage(err.message);
       },
       callback: () => setLoading(false),
     });

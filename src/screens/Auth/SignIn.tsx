@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Button } from '@ui-kitten/components';
+import { Layout, Button, Modal } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
@@ -8,6 +8,7 @@ import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
+import Toast from '../../components/common/Toast';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { updateAuth } from '../../navigation/AppNavigator';
@@ -23,6 +24,8 @@ const SignIn: React.FC<Props> = ({
   navigation,
 }) => {
   const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const [messageType, setMessageType] = React.useState('');
 
   const {
     handleChange,
@@ -33,7 +36,7 @@ const SignIn: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@shadesstreet.com',
+      email: 'jiancehenj@merseybasin.org',
       password: '1111111111',
     },
     { email: 'Invalid email', password: 'Invalid password' }
@@ -49,8 +52,12 @@ const SignIn: React.FC<Props> = ({
       },
       onFailedFn: (err) => {
         console.log('err', err);
+        setMessage(err.message);
+        setMessageType('error');
       },
-      callback: () => setLoading(false),
+      callback: () => {
+        setLoading(false);
+      },
     });
   }
 
@@ -101,6 +108,7 @@ const SignIn: React.FC<Props> = ({
         <Button onPress={() => navigation.navigate('SignUp')}>
           Don't have an account? Sign Up
         </Button>
+        <Toast message={message} callback={setMessage} type={messageType} />
       </Layout>
     </AppContainer>
   );

@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
@@ -15,6 +16,7 @@ type Props = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep1: React.FC<Props> = ({
@@ -22,6 +24,7 @@ const SignUpStep1: React.FC<Props> = ({
   setLoading,
   setIsConfirmStep,
   setEmail,
+  setMessage,
 }) => {
   const {
     handleChange,
@@ -31,12 +34,18 @@ const SignUpStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@shadesstreet.com',
+      email: 'jiancehenj@merseybasin.org',
+      family_name: 'firstName',
+      given_name: 'lastname',
+      address: 'address',
       password: '1111111111',
       confirmPassword: '1111111111',
     },
     {
       email: 'Invalid email',
+      family_name: 'Invalid firstName',
+      given_name: 'Invalid lastname',
+      address: 'Invalid address',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
     }
@@ -50,7 +59,9 @@ const SignUpStep1: React.FC<Props> = ({
         username: values.email,
         password: values.password,
         attributes: {
-          email: values.email,
+          given_name: values.given_name,
+          family_name: values.family_name,
+          address: values.address,
         },
       }),
       onSuccessFn: (res) => {
@@ -60,13 +71,14 @@ const SignUpStep1: React.FC<Props> = ({
       },
       onFailedFn: (err) => {
         console.log('err', err);
+        setMessage(err.message);
       },
       callback: () => setLoading(false),
     });
   }
 
   return (
-    <View style={[styles.subcontainer]}>
+    <ScrollView contentContainerStyle={[styles.subcontainer]}>
       <Text style={styles.title}>Sign Up</Text>
 
       <View>
@@ -80,6 +92,33 @@ const SignUpStep1: React.FC<Props> = ({
           textContentType="emailAddress"
           onBlur={() => checkErrors('email')}
           errorMessage={errorsMessages.email || ''}
+        />
+        <AppTextInput
+          value={values.family_name || ''}
+          onChangeText={(value) => handleChange({ name: 'family_name', value })}
+          leftIcon="person-outline"
+          placeholder="Enter first name"
+          autoCapitalize="none"
+          onBlur={() => checkErrors('family_name')}
+          errorMessage={errorsMessages.family_name || ''}
+        />
+        <AppTextInput
+          value={values.given_name || ''}
+          onChangeText={(value) => handleChange({ name: 'given_name', value })}
+          leftIcon="person-outline"
+          placeholder="Enter last name"
+          autoCapitalize="none"
+          onBlur={() => checkErrors('given_name')}
+          errorMessage={errorsMessages.given_name || ''}
+        />
+        <AppTextInput
+          value={values.address || ''}
+          onChangeText={(value) => handleChange({ name: 'address', value })}
+          leftIcon="person-outline"
+          placeholder="Enter address"
+          autoCapitalize="none"
+          onBlur={() => checkErrors('address')}
+          errorMessage={errorsMessages.address || ''}
         />
         <AppTextInput
           value={values.password || ''}
@@ -115,7 +154,7 @@ const SignUpStep1: React.FC<Props> = ({
         onPress={() => signUp()}
         disabled={isSubmitting}
       />
-    </View>
+    </ScrollView>
   );
 };
 

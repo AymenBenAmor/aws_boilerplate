@@ -6,6 +6,7 @@ import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import AppContainer from '../../components/common/AppContainer';
+import Toast from '../../components/common/Toast';
 import ForgotPasswordStep1 from '../../components/forgotPassword/ForgotPasswordStep1';
 import ForgotPasswordStep2 from '../../components/forgotPassword/ForgotPasswordStep2';
 import { ParamList } from '../../navigation/ParamList';
@@ -18,6 +19,8 @@ const ForgotPassword: React.FC<Props> = ({ navigation }) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
   const [email, setEmail] = React.useState('jiancehenj@mikes.cd');
   const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const [messageType] = React.useState('error');
 
   return (
     <AppContainer>
@@ -29,6 +32,7 @@ const ForgotPassword: React.FC<Props> = ({ navigation }) => {
             setLoading={setLoading}
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
+            setMessage={setMessage}
           />
         ) : (
           <ForgotPasswordStep2
@@ -36,8 +40,10 @@ const ForgotPassword: React.FC<Props> = ({ navigation }) => {
             email={email}
             loading={loading}
             setLoading={setLoading}
+            setMessage={setMessage}
           />
         )}
+        <Toast message={message} callback={setMessage} type={messageType} />
       </View>
     </AppContainer>
   );

@@ -14,8 +14,6 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
   const verifPassword = () =>
     values.password === values.confirmPassword ? '' : errors.confirmPassword;
 
-  console.log('verifPassword', verifPassword());
-
   const handleChange = ({ name, value }: { name: string; value: string }) => {
     setValues({
       ...values,
@@ -25,7 +23,9 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
   useEffect(() => {
     const tab = Object.keys(values);
     let hasError = false;
+
     for (var i = 0; i < tab.length; i++) {
+      console.log('tab[i]]', tab[i]);
       if (
         tab[i] === 'confirmPassword' &&
         values.confirmPassword !== values.password
@@ -60,6 +60,7 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
     values,
     errorsMessages,
     isSubmitting,
+    updateAllValues: setValues,
   };
 };
 

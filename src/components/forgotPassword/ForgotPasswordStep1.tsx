@@ -15,6 +15,7 @@ type Props = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ForgotPasswordStep1: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const ForgotPasswordStep1: React.FC<Props> = ({
   setLoading,
   setIsConfirmStep,
   setEmail,
+  setMessage,
 }) => {
   const {
     handleChange,
@@ -50,6 +52,7 @@ const ForgotPasswordStep1: React.FC<Props> = ({
       },
       onFailedFn: (err) => {
         console.log('err', err);
+        setMessage(err.message);
       },
       callback: () => setLoading(false),
     });

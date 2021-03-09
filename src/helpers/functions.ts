@@ -14,14 +14,14 @@ export const checkError = ({
       break;
 
     case 'password':
-      errorValue = value.trim().length >= 10;
+      errorValue = value?.trim().length >= 10;
       break;
     case 'verificationCode':
-      errorValue = value.trim().length === 6;
+      errorValue = value?.trim().length === 6;
       break;
 
     default:
-      errorValue = value.trim().length >= 3;
+      errorValue = value?.trim().length >= 3;
   }
   return errorValue;
 };

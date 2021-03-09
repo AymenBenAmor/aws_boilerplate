@@ -16,6 +16,7 @@ type Props = {
   email: string;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ForgotPasswordStep2: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const ForgotPasswordStep2: React.FC<Props> = ({
   email,
   loading,
   setLoading,
+  setMessage,
 }) => {
   const {
     handleChange,
@@ -63,6 +65,7 @@ const ForgotPasswordStep2: React.FC<Props> = ({
       },
       onFailedFn: (err) => {
         console.log('err', err);
+        setMessage(err.message);
       },
       callback: () => setLoading(false),
     });
