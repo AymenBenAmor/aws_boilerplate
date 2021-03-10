@@ -1,11 +1,14 @@
 import { Button, Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
+
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import AppButton from '../components/common/AppButton';
 import AppContainer from '../components/common/AppContainer';
 import AppTextInput from '../components/common/AppTextInput';
 import useForm from '../components/common/custemHook/useForm';
+import ImagePickerComponent from '../components/common/ImagePickerComponent';
+import CameraComponent from '../components/common/CameraComponent';
 import { authFun } from '../helpers/functions';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -90,6 +93,8 @@ const Profil: React.FC<Props> = ({}: Props) => {
     <AppContainer>
       <Layout style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
+
+        <ImagePickerComponent />
         {!isEditStep ? (
           <Layout>
             <Text style={styles.title}>
@@ -167,7 +172,6 @@ const Profil: React.FC<Props> = ({}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'space-between',
   },
   title: {

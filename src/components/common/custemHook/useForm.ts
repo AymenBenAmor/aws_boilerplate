@@ -25,7 +25,6 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
     let hasError = false;
 
     for (var i = 0; i < tab.length; i++) {
-      console.log('tab[i]]', tab[i]);
       if (
         tab[i] === 'confirmPassword' &&
         values.confirmPassword !== values.password
