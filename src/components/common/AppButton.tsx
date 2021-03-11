@@ -1,6 +1,5 @@
 import { Button } from '@ui-kitten/components';
 import React from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
 
 import Spinner from './SpinnerComponent';
@@ -13,9 +12,9 @@ type Props = {
   style?: ViewStyle;
 };
 
-const AppButton: React.FC<Props> = ({
+const AppButton = ({
   title,
-  onPress = () => {},
+  onPress,
   loading = false,
   disabled = false,
   style,
@@ -23,9 +22,9 @@ const AppButton: React.FC<Props> = ({
   const loadingIndicator = () => (loading ? <Spinner size="small" /> : <></>);
 
   const handleClick = (e: GestureResponderEvent) => {
-    console.log('handelClick', loading);
-
-    !loading && onPress(e);
+    if (!loading) {
+      onPress(e);
+    }
   };
 
   return (

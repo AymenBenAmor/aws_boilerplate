@@ -2,11 +2,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
 import Home from '../screens/Home';
-import Profil from '../screens/Profil';
+import Profile from '../screens/Profile';
 
 type AppStackParamList = {
   Home: undefined;
-  Profil: undefined;
+  Profile: undefined;
 };
 
 const AppStack = createStackNavigator<AppStackParamList>();
@@ -15,21 +15,15 @@ export type updateAuth = (isLoggedIn: string) => void;
 export type NavigatorProp = {
   updateAuthState: updateAuth;
 };
-const AppNavigator: React.FC<NavigatorProp> = ({
-  updateAuthState,
-}: NavigatorProp) => {
+const AppNavigator = ({ updateAuthState }: NavigatorProp) => {
   return (
     <AppStack.Navigator>
       <AppStack.Screen name="Home">
-        {(screenProps) => (
+        {screenProps => (
           <Home updateAuthState={updateAuthState} {...screenProps} />
         )}
       </AppStack.Screen>
-      <AppStack.Screen name="Profil">
-        {(screenProps) => (
-          <Profil updateAuthState={updateAuthState} {...screenProps} />
-        )}
-      </AppStack.Screen>
+      <AppStack.Screen name="Profile">{() => <Profile />}</AppStack.Screen>
     </AppStack.Navigator>
   );
 };

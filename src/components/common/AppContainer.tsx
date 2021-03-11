@@ -1,5 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -9,16 +8,18 @@ import {
 } from 'react-native';
 
 type Props = {
-  children: any;
+  children: React.ReactNode;
 };
 
-const AppContainer: React.FC<Props> = ({ children }: Props) => {
+const AppContainer = ({ children }: Props) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container]}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback
+        onPress={Platform.OS !== 'web' ? Keyboard.dismiss : undefined}
+      >
         {children}
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

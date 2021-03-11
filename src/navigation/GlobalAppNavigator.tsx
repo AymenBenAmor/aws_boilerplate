@@ -23,18 +23,10 @@ const GlobalAppNavigator = () => {
   async function checkAuthState() {
     authFun({
       func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: (res) => {
-        console.log(
-          '<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/11/svg/2705.svg"> User is signed in',
-          res
-        );
+      onSuccessFn: () => {
         setUserLoggedIn('loggedIn');
       },
-      onFailedFn: (err) => {
-        console.log(
-          '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> User is not signed in',
-          err
-        );
+      onFailedFn: () => {
         setUserLoggedIn('loggedOut');
       },
     });

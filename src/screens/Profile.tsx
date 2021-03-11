@@ -1,4 +1,4 @@
-import { Button, Layout } from '@ui-kitten/components';
+import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -8,17 +8,11 @@ import AppTextInput from '../components/common/AppTextInput';
 import useForm from '../components/common/custemHook/useForm';
 import { authFun } from '../helpers/functions';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { updateAuth } from '../navigation/AppNavigator';
-
-type Props = {
-  updateAuthState: updateAuth;
-};
-
-const Profil: React.FC<Props> = ({}: Props) => {
-  const [loading, setLoading] = React.useState(false);
+const Profile = () => {
+  const [, setLoading] = React.useState(false);
   const [isEditStep, setIsEditStep] = React.useState(false);
-  const [userDetails, setuserDetails] = React.useState<any>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
 
   const {
     handleChange,
@@ -39,27 +33,26 @@ const Profil: React.FC<Props> = ({}: Props) => {
       family_name: 'Invalid firstName',
       given_name: 'Invalid lastname',
       address: 'Invalid address',
-    }
+    },
   );
 
+  /* eslint-disable */
   React.useEffect(() => {
-    getUserDetails();
+    getUserDetails(); // todo check why we need to do all of that
   }, []);
+  /* eslint-enable */
 
   async function getUserDetails() {
     setLoading(true);
     authFun({
       func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: (res) => {
-        console.log('res', res);
+      onSuccessFn: res => {
         setuserDetails(res);
         updateAllValues(() => {
+          // eslint-disable-next-line camelcase
           const { email, family_name, given_name, address } = res.attributes;
           return { email, family_name, given_name, address };
         });
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
       },
       callback: () => {
         setLoading(false);
@@ -73,13 +66,9 @@ const Profil: React.FC<Props> = ({}: Props) => {
       func: Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-      onSuccessFn: (res) => {
-        console.log('res', res);
+      onSuccessFn: () => {
         getUserDetails();
         setIsEditStep(false);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
       },
       callback: () => {
         setLoading(false);
@@ -109,7 +98,7 @@ const Profil: React.FC<Props> = ({}: Props) => {
           <Layout>
             <AppTextInput
               value={values.email || ''}
-              onChangeText={(value) => handleChange({ name: 'email', value })}
+              onChangeText={value => handleChange({ name: 'email', value })}
               leftIcon="person-outline"
               placeholder="Enter email"
               autoCapitalize="none"
@@ -120,7 +109,7 @@ const Profil: React.FC<Props> = ({}: Props) => {
             />
             <AppTextInput
               value={values.family_name || ''}
-              onChangeText={(value) =>
+              onChangeText={value =>
                 handleChange({ name: 'family_name', value })
               }
               leftIcon="person-outline"
@@ -131,7 +120,7 @@ const Profil: React.FC<Props> = ({}: Props) => {
             />
             <AppTextInput
               value={values.given_name || ''}
-              onChangeText={(value) =>
+              onChangeText={value =>
                 handleChange({ name: 'given_name', value })
               }
               leftIcon="person-outline"
@@ -142,7 +131,7 @@ const Profil: React.FC<Props> = ({}: Props) => {
             />
             <AppTextInput
               value={values.address || ''}
-              onChangeText={(value) => handleChange({ name: 'address', value })}
+              onChangeText={value => handleChange({ name: 'address', value })}
               leftIcon="person-outline"
               placeholder="Enter address"
               autoCapitalize="none"
@@ -178,4 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profil;
+export default Profile;

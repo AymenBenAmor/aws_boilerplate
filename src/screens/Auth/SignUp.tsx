@@ -1,9 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 
 import AppContainer from '../../components/common/AppContainer';
 import Toast from '../../components/common/Toast';
@@ -15,7 +11,7 @@ type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
 };
 
-const SignUp: React.FC<Props> = ({ navigation }) => {
+const SignUp = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [message, setMessage] = React.useState('');
@@ -48,17 +44,5 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
     </AppContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  subcontainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingHorizontal: 15,
-  },
-});
 
 export default SignUp;

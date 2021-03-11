@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -18,13 +15,13 @@ type Props = {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ForgotPasswordStep1: React.FC<Props> = ({
+const ForgotPasswordStep1 = ({
   loading,
   setLoading,
   setIsConfirmStep,
   setEmail,
   setMessage,
-}) => {
+}: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -37,21 +34,18 @@ const ForgotPasswordStep1: React.FC<Props> = ({
     },
     {
       email: 'Invalid email',
-    }
+    },
   );
 
   async function forgotPassword() {
     setLoading(true);
     authFun({
       func: Auth.forgotPassword(values.email),
-      onSuccessFn: (res) => {
+      onSuccessFn: () => {
         setIsConfirmStep(true);
         setEmail(values.email);
-
-        console.log('res', res);
       },
-      onFailedFn: (err) => {
-        console.log('err', err);
+      onFailedFn: err => {
         setMessage(err.message);
       },
       callback: () => setLoading(false),
@@ -63,7 +57,7 @@ const ForgotPasswordStep1: React.FC<Props> = ({
       <View>
         <AppTextInput
           value={values.email || ''}
-          onChangeText={(value) => handleChange({ name: 'email', value })}
+          onChangeText={value => handleChange({ name: 'email', value })}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"

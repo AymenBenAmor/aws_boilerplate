@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Input, Layout, Icon } from '@ui-kitten/components';
 import React from 'react';
 import {
@@ -6,7 +5,6 @@ import {
   TextInputProps,
   TouchableWithoutFeedback,
   Text,
-  View,
 } from 'react-native';
 
 type Props = {
@@ -15,27 +13,10 @@ type Props = {
   errorMessage?: string;
 } & TextInputProps;
 
-const AppTextInput: React.FC<Props> = ({
-  leftIcon,
-  errorMessage,
-  ...otherProps
-}) => {
+const AppTextInput = ({ leftIcon, errorMessage, ...otherProps }: Props) => {
   const isPasswordInput = otherProps.textContentType === 'password';
 
   const [secureTextEntry, setSecureTextEntry] = React.useState(isPasswordInput);
-
-  const _renderasswordIcon = () => (
-    <TouchableWithoutFeedback
-      onPress={() => setSecureTextEntry(!secureTextEntry)}
-    >
-      <Icon
-        style={styles.passwordIcon}
-        name={secureTextEntry ? 'eye-off' : 'eye'}
-        fill="#6e6869"
-      />
-    </TouchableWithoutFeedback>
-  );
-
   return (
     <Layout style={styles.container}>
       <Input
@@ -54,7 +35,15 @@ const AppTextInput: React.FC<Props> = ({
         }
         accessoryRight={() =>
           otherProps.textContentType === 'password' ? (
-            _renderasswordIcon()
+            <TouchableWithoutFeedback
+              onPress={() => setSecureTextEntry(!secureTextEntry)}
+            >
+              <Icon
+                style={styles.passwordIcon}
+                name={secureTextEntry ? 'eye-off' : 'eye'}
+                fill="#6e6869"
+              />
+            </TouchableWithoutFeedback>
           ) : (
             <></>
           )

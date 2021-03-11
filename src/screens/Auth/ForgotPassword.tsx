@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
@@ -15,7 +12,7 @@ type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
 };
 
-const ForgotPassword: React.FC<Props> = ({ navigation }) => {
+const ForgotPassword = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
   const [email, setEmail] = React.useState('jiancehenj@mikes.cd');
   const [loading, setLoading] = React.useState(false);

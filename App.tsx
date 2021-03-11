@@ -8,19 +8,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import config from './aws-exports';
 import GlobalAppNavigator from './src/navigation/GlobalAppNavigator';
-import { default as theme } from './theme.json';
+// eslint-disable-next-line import/extensions
+import theme from './theme.json';
 
 Amplify.configure(config);
 
-type AuthStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
-};
-type AppStackParamList = {
-  Home: undefined;
-};
-
-const App: React.FC = () => {
+const App = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeAreaContainer}>

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
@@ -19,13 +17,13 @@ type Props = {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ForgotPasswordStep2: React.FC<Props> = ({
+const ForgotPasswordStep2 = ({
   navigation,
   email,
   loading,
   setLoading,
   setMessage,
-}) => {
+}: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -42,29 +40,24 @@ const ForgotPasswordStep2: React.FC<Props> = ({
       verificationCode: 'Invalid verification code',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
-    }
+    },
   );
 
   async function confirmForgotPassword() {
     setLoading(true);
-    console.log('loading', loading);
-
     authFun({
       func: Auth.forgotPasswordSubmit(
         email,
         values.verificationCode,
-        values.password
+        values.password,
       ),
-      onSuccessFn: (res) => {
-        console.log('res', res);
-
+      onSuccessFn: () => {
         navigation.reset({
           index: 0,
           routes: [{ name: 'SignIn' }],
         });
       },
-      onFailedFn: (err) => {
-        console.log('err', err);
+      onFailedFn: err => {
         setMessage(err.message);
       },
       callback: () => setLoading(false),
@@ -76,7 +69,7 @@ const ForgotPasswordStep2: React.FC<Props> = ({
       <View>
         <AppTextInput
           value={values.verificationCode || ''}
-          onChangeText={(value) =>
+          onChangeText={value =>
             handleChange({ name: 'verificationCode', value })
           }
           leftIcon="lock-outline"
@@ -89,7 +82,7 @@ const ForgotPasswordStep2: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.password || ''}
-          onChangeText={(value) => handleChange({ name: 'password', value })}
+          onChangeText={value => handleChange({ name: 'password', value })}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -101,7 +94,7 @@ const ForgotPasswordStep2: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={(value) =>
+          onChangeText={value =>
             handleChange({ name: 'confirmPassword', value })
           }
           leftIcon="lock-outline"

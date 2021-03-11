@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Modal, Card } from '@ui-kitten/components';
-import { EvaSize, EvaStatus } from '@ui-kitten/components/devsupport';
+import { Modal } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
@@ -10,13 +8,15 @@ type Props = {
   callback: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Toast: React.FC<Props> = ({ message, type, callback }: Props) => {
+const Toast = ({ message, type, callback }: Props) => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      !!message && callback('');
+      if (message) {
+        callback('');
+      }
     }, 2000);
     return () => clearTimeout(timer);
-  }, [message]);
+  }, [callback, message]);
 
   return (
     <Modal visible={!!message} style={{ width: '100%' }}>

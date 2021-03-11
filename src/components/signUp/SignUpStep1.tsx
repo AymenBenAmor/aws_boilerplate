@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
@@ -19,13 +16,13 @@ type Props = {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep1: React.FC<Props> = ({
+const SignUpStep1 = ({
   loading,
   setLoading,
   setIsConfirmStep,
   setEmail,
   setMessage,
-}) => {
+}: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -48,12 +45,11 @@ const SignUpStep1: React.FC<Props> = ({
       address: 'Invalid address',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
-    }
+    },
   );
 
   async function signUp() {
     setLoading(true);
-    console.log('loading', loading);
     authFun({
       func: Auth.signUp({
         username: values.email,
@@ -64,13 +60,11 @@ const SignUpStep1: React.FC<Props> = ({
           address: values.address,
         },
       }),
-      onSuccessFn: (res) => {
+      onSuccessFn: () => {
         setIsConfirmStep(true);
-        console.log('res', res);
         setEmail(values.email);
       },
-      onFailedFn: (err) => {
-        console.log('err', err);
+      onFailedFn: err => {
         setMessage(err.message);
       },
       callback: () => setLoading(false),
@@ -84,7 +78,7 @@ const SignUpStep1: React.FC<Props> = ({
       <View>
         <AppTextInput
           value={values.email || ''}
-          onChangeText={(value) => handleChange({ name: 'email', value })}
+          onChangeText={value => handleChange({ name: 'email', value })}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"
@@ -95,7 +89,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.family_name || ''}
-          onChangeText={(value) => handleChange({ name: 'family_name', value })}
+          onChangeText={value => handleChange({ name: 'family_name', value })}
           leftIcon="person-outline"
           placeholder="Enter first name"
           autoCapitalize="none"
@@ -104,7 +98,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.given_name || ''}
-          onChangeText={(value) => handleChange({ name: 'given_name', value })}
+          onChangeText={value => handleChange({ name: 'given_name', value })}
           leftIcon="person-outline"
           placeholder="Enter last name"
           autoCapitalize="none"
@@ -113,7 +107,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.address || ''}
-          onChangeText={(value) => handleChange({ name: 'address', value })}
+          onChangeText={value => handleChange({ name: 'address', value })}
           leftIcon="person-outline"
           placeholder="Enter address"
           autoCapitalize="none"
@@ -122,7 +116,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.password || ''}
-          onChangeText={(value) => handleChange({ name: 'password', value })}
+          onChangeText={value => handleChange({ name: 'password', value })}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -134,7 +128,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={(value) =>
+          onChangeText={value =>
             handleChange({ name: 'confirmPassword', value })
           }
           leftIcon="lock-outline"

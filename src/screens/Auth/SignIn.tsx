@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Button, Modal } from '@ui-kitten/components';
+import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
@@ -16,20 +15,16 @@ import { ParamList } from '../../navigation/ParamList';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
-  updateAuthState?: updateAuth;
+  updateAuthState: updateAuth;
 };
 
-const SignIn: React.FC<Props> = ({
-  updateAuthState = () => {},
-  navigation,
-}) => {
+const SignIn = ({ updateAuthState, navigation }: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState('');
   const [messageType, setMessageType] = React.useState('');
 
   const {
     handleChange,
-    handleSubmit,
     checkErrors,
     values,
     isSubmitting,
@@ -39,19 +34,17 @@ const SignIn: React.FC<Props> = ({
       email: 'jiancehenj@merseybasin.org',
       password: '1111111111',
     },
-    { email: 'Invalid email', password: 'Invalid password' }
+    { email: 'Invalid email', password: 'Invalid password' },
   );
 
   async function signIn() {
     setLoading(true);
     authFun({
       func: Auth.signIn(values.email, values.password),
-      onSuccessFn: (res) => {
-        console.log('res', res);
+      onSuccessFn: () => {
         updateAuthState('loggedIn');
       },
-      onFailedFn: (err) => {
-        console.log('err', err);
+      onFailedFn: err => {
         setMessage(err.message);
         setMessageType('error');
       },
@@ -68,7 +61,7 @@ const SignIn: React.FC<Props> = ({
         <View>
           <AppTextInput
             value={values.email || ''}
-            onChangeText={(value) => handleChange({ name: 'email', value })}
+            onChangeText={value => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
             autoCapitalize="none"
@@ -79,7 +72,7 @@ const SignIn: React.FC<Props> = ({
           />
           <AppTextInput
             value={values.password || ''}
-            onChangeText={(value) => handleChange({ name: 'password', value })}
+            onChangeText={value => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
             autoCapitalize="none"
@@ -106,7 +99,7 @@ const SignIn: React.FC<Props> = ({
         </Layout>
 
         <Button onPress={() => navigation.navigate('SignUp')}>
-          Don't have an account? Sign Up
+          Don&apos;t have an account? Sign Up
         </Button>
         <Toast message={message} callback={setMessage} type={messageType} />
       </Layout>

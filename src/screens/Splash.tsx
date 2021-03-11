@@ -1,17 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Layout } from '@ui-kitten/components';
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamList } from '../navigation/ParamList';
 
 interface SplashProps {
   navigation: StackNavigationProp<ParamList, 'Splash'>;
 }
 
-const Splash: React.FC<SplashProps> = ({ navigation }) => {
+const Splash = ({ navigation }: SplashProps) => {
   React.useEffect(() => {
     setTimeout(() => {
       navigation.reset({
@@ -19,7 +16,7 @@ const Splash: React.FC<SplashProps> = ({ navigation }) => {
         routes: [{ name: 'SignIn' }],
       });
     }, 2000);
-  }, []);
+  }, [navigation]);
   return (
     <Layout style={styles.container}>
       <Text style={styles.title}>Splash</Text>

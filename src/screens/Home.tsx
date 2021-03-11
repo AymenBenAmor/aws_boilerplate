@@ -5,22 +5,21 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
-
   updateAuthState: updateAuth;
 };
 
-const Home: React.FC<Props> = ({ updateAuthState, navigation }: Props) => {
+const Home = ({ updateAuthState, navigation }: Props) => {
   async function signOut() {
     try {
       await Auth.signOut();
       updateAuthState('loggedOut');
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('Error signing out: ', error);
     }
   }
@@ -31,9 +30,9 @@ const Home: React.FC<Props> = ({ updateAuthState, navigation }: Props) => {
       <StatusBar style="auto" />
       <Button
         style={{ marginVertical: 20 }}
-        onPress={() => navigation.navigate('Profil')}
+        onPress={() => navigation.navigate('Profile')}
       >
-        Profil
+        Profile
       </Button>
       <Button onPress={signOut}>Logout</Button>
     </Layout>

@@ -5,13 +5,15 @@ import { checkError } from '../../../helpers/functions';
 type ErrorsType = {
   [key: string]: string;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 const useForm = (initialValue: any, errors: ErrorsType) => {
+  // todo fix type of initialValue here (use generics)
   const [values, setValues] = useState(initialValue);
   const [errorsMessages, setErrorsMessage] = useState<ErrorsType>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {};
-  const verifPassword = () =>
+  const verifyPassword = () =>
     values.password === values.confirmPassword ? '' : errors.confirmPassword;
 
   const handleChange = ({ name, value }: { name: string; value: string }) => {
@@ -24,8 +26,7 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
     const tab = Object.keys(values);
     let hasError = false;
 
-    for (var i = 0; i < tab.length; i++) {
-      console.log('tab[i]]', tab[i]);
+    for (let i = 0; i < tab.length; i += 1) {
       if (
         tab[i] === 'confirmPassword' &&
         values.confirmPassword !== values.password
@@ -38,24 +39,21 @@ const useForm = (initialValue: any, errors: ErrorsType) => {
       }
     }
     setIsSubmitting(hasError);
-    console.log('errorerror', isSubmitting);
   }, [values]);
 
   const checkErrors = (name: string) => {
+    const error =
+      name === 'confirmPassword'
+        ? verifyPassword()
+        : !checkError({ name, value: values[name] });
     setErrorsMessage({
       ...errorsMessages,
-      [name]:
-        name === 'confirmPassword'
-          ? verifPassword()
-          : !checkError({ name, value: values[name] })
-          ? errors[name]
-          : '',
+      [name]: error ? errors[name] : '',
     });
   };
 
   return {
     handleChange,
-    handleSubmit,
     checkErrors,
     values,
     errorsMessages,

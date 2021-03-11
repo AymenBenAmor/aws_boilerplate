@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
@@ -19,15 +17,13 @@ type Props = {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep: React.FC<Props> = ({
+const SignUpStep = ({
   navigation,
   loading,
   setLoading,
   email,
   setMessage,
-}) => {
-  console.log(email);
-
+}: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -40,27 +36,21 @@ const SignUpStep: React.FC<Props> = ({
     },
     {
       verificationCode: 'Invalid verification code',
-    }
+    },
   );
-
-  console.log('isSubmitting');
 
   async function confirmSignUp() {
     setLoading(true);
-    console.log('loading', loading);
 
     authFun({
       func: Auth.confirmSignUp(email, values.verificationCode),
-      onSuccessFn: (res) => {
-        console.log('res', res);
-
+      onSuccessFn: () => {
         navigation.reset({
           index: 0,
           routes: [{ name: 'SignIn' }],
         });
       },
-      onFailedFn: (err) => {
-        console.log('err', err);
+      onFailedFn: err => {
         setMessage(err.message);
       },
       callback: () => setLoading(false),
@@ -70,12 +60,6 @@ const SignUpStep: React.FC<Props> = ({
   async function resendConfirmationCode() {
     authFun({
       func: Auth.resendSignUp(email),
-      onSuccessFn: (res) => {
-        console.log('okiii', res);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-      },
       callback: () => setLoading(false),
     });
   }
@@ -86,7 +70,7 @@ const SignUpStep: React.FC<Props> = ({
 
       <AppTextInput
         value={values.verificationCode}
-        onChangeText={(value) =>
+        onChangeText={value =>
           handleChange({ name: 'verificationCode', value })
         }
         leftIcon="lock-outline"

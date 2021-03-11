@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Spinner } from '@ui-kitten/components';
 import { EvaSize, EvaStatus } from '@ui-kitten/components/devsupport';
 import React from 'react';
@@ -6,12 +5,14 @@ import { StyleSheet, View } from 'react-native';
 
 type Props = {
   color?: EvaStatus;
-  styleContainer?: any;
-  style?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  styleContainer?: any; // todo => fix this type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  style?: any; // todo => fix this type
   size: EvaSize;
 };
 
-const SpinnerComponent: React.FC<Props> = ({
+const SpinnerComponent = ({
   color = 'basic',
   styleContainer = null,
   style,

@@ -20,15 +20,15 @@ const AuthenticationNavigator = ({ updateAuthState }: NavigatorProp) => {
   return (
     <AuthenticationStack.Navigator>
       <AuthenticationStack.Screen name="SignIn">
-        {(screenProps) => (
+        {screenProps => (
           <SignIn {...screenProps} updateAuthState={updateAuthState} />
         )}
       </AuthenticationStack.Screen>
       <AuthenticationStack.Screen name="SignUp">
-        {(screenProps) => <SignUp {...screenProps} />}
+        {screenProps => <SignUp {...screenProps} />}
       </AuthenticationStack.Screen>
       <AuthenticationStack.Screen name="ForgotPassword">
-        {(screenProps) => <ForgotPassword {...screenProps} />}
+        {screenProps => <ForgotPassword {...screenProps} />}
       </AuthenticationStack.Screen>
     </AuthenticationStack.Navigator>
   );

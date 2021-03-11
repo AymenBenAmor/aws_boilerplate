@@ -7,7 +7,7 @@ export const checkError = ({
   name: string;
   value: string;
 }): boolean => {
-  let errorValue = false;
+  let errorValue;
   switch (name) {
     case 'email':
       errorValue = REGEX[name].test(value);
@@ -26,32 +26,45 @@ export const checkError = ({
   return errorValue;
 };
 
+// todo fix this by setting the return type
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function authFun({
   func,
   onSuccessFn,
   onFailedFn,
-  callback = () => {},
+  callback,
 }: {
-  func: Promise<any>;
-  onSuccessFn: (value: any) => void;
-  onFailedFn: (value: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  func: Promise<any>; // todo fix this type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSuccessFn?: (value: any) => void; // todo fix this type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onFailedFn?: (value: any) => void; // todo fix this type
   callback?: () => void;
 }) {
   try {
     const user = await func;
+    // eslint-disable-next-line no-console
     console.log(
       '<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/11/svg/2705.svg"> Success',
       'user',
-      user
+      user,
     );
-    onSuccessFn(user);
+    if (onSuccessFn) {
+      onSuccessFn(user);
+    }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(
       '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> Error signing in...',
-      error
+      error,
     );
-    onFailedFn(error);
+    if (onFailedFn) {
+      onFailedFn(error);
+    }
   } finally {
-    callback();
+    if (callback) {
+      callback();
+    }
   }
 }
