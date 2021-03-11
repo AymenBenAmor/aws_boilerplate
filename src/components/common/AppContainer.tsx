@@ -18,7 +18,9 @@ const AppContainer: React.FC<Props> = ({ children }: Props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container]}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback
+        onPress={Platform.OS !== 'web' ? Keyboard.dismiss : undefined}
+      >
         {children}
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
