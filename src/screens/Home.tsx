@@ -1,20 +1,25 @@
-import React from 'react';
-import { Button, Layout, Text } from '@ui-kitten/components';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Button, Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import { updateAuth } from '../../App';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
+
+import { updateAuth } from '../navigation/AppNavigator';
+import { ParamList } from '../navigation/ParamList';
 
 type Props = {
+  navigation: StackNavigationProp<ParamList, 'SignIn'>;
   updateAuthState: updateAuth;
 };
 
-const Home: React.FC<Props> = ({ updateAuthState }: Props) => {
+const Home = ({ updateAuthState, navigation }: Props) => {
   async function signOut() {
     try {
       await Auth.signOut();
       updateAuthState('loggedOut');
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('Error signing out: ', error);
     }
   }
@@ -23,6 +28,12 @@ const Home: React.FC<Props> = ({ updateAuthState }: Props) => {
     <Layout style={styles.container}>
       <Text>React Native + Amplify</Text>
       <StatusBar style="auto" />
+      <Button
+        style={{ marginVertical: 20 }}
+        onPress={() => navigation.navigate('Profile')}
+      >
+        Profile
+      </Button>
       <Button onPress={signOut}>Logout</Button>
     </Layout>
   );

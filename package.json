@@ -5,18 +5,26 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint --ext .ts,.tsx . --ignore-path .gitignore",
+    "test": "jest --watch --coverage=false --changedSince=origin/master",
+    "testDebug": "jest -o --watch --coverage=false",
+    "testFinal": "jest",
+    "updateSnapshots": "jest -u --coverage=false"
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
     "@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/netinfo": "^6.0.0",
     "@react-navigation/native": "^5.7.4",
     "@react-navigation/stack": "^5.9.1",
+    "@types/jest": "^26.0.20",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "aws-amplify": "^3.3.2",
     "aws-amplify-react-native": "^4.2.7",
     "expo": "~39.0.2",
+    "expo-image-picker": "~9.1.0",
     "expo-status-bar": "~1.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -30,13 +38,23 @@
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.12.35",
+    "@testing-library/jest-native": "^4.0.1",
+    "@testing-library/react-native": "^7.2.0",
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
-    "eslint": "^7.9.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "18.2.1",
     "eslint-config-universe": "^4.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "husky": "=4",
+    "jest-expo": "^40.0.2",
+    "lint-staged": ">=10",
     "prettier": "^2.1.2",
     "react-native-web": "~0.13.7",
     "typescript": "~3.9.5"
@@ -44,5 +62,27 @@
   "eslintConfig": {
     "extends": "universe/native"
   },
-  "private": true
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --ext .ts,.tsx . --ignore-path .gitignore"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.tsx",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/babel.config.js",
+      "!**/jest.setup.js"
+    ]
+  }
 }
