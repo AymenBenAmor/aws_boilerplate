@@ -1,15 +1,21 @@
-import React from 'react';
-import { Button, Layout, Text } from '@ui-kitten/components';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Button, Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import { updateAuth } from '../../App';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { updateAuth } from '../navigation/AppNavigator';
+import { ParamList } from '../navigation/ParamList';
 
 type Props = {
+  navigation: StackNavigationProp<ParamList, 'SignIn'>;
+
   updateAuthState: updateAuth;
 };
 
-const Home: React.FC<Props> = ({ updateAuthState }: Props) => {
+const Home: React.FC<Props> = ({ updateAuthState, navigation }: Props) => {
   async function signOut() {
     try {
       await Auth.signOut();
@@ -23,6 +29,18 @@ const Home: React.FC<Props> = ({ updateAuthState }: Props) => {
     <Layout style={styles.container}>
       <Text>React Native + Amplify</Text>
       <StatusBar style="auto" />
+      <Button
+        style={{ marginTop: 20 }}
+        onPress={() => navigation.navigate('Profil')}
+      >
+        Profil
+      </Button>
+      <Button
+        style={{ marginVertical: 20 }}
+        onPress={() => navigation.navigate('Chat')}
+      >
+        Chat
+      </Button>
       <Button onPress={signOut}>Logout</Button>
     </Layout>
   );
