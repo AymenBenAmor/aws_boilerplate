@@ -3,6 +3,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -10,18 +11,15 @@ import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
+import { useAsync } from '../common/custemHook/useAsync';
 
 type Props = {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep1: React.FC<Props> = ({
-  loading,
-  setLoading,
   setIsConfirmStep,
   setEmail,
   setMessage,
@@ -34,7 +32,7 @@ const SignUpStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@merseybasin.org',
+      email: 'jiancehenj@anikamenon.com',
       family_name: 'firstName',
       given_name: 'lastname',
       address: 'address',
@@ -51,11 +49,9 @@ const SignUpStep1: React.FC<Props> = ({
     }
   );
 
-  async function signUp() {
-    setLoading(true);
-    console.log('loading', loading);
-    authFun({
-      func: Auth.signUp({
+  const { message, loading, loadData: signUp } = useAsync({
+    fetchFn: () =>
+      Auth.signUp({
         username: values.email,
         password: values.password,
         attributes: {
@@ -64,18 +60,17 @@ const SignUpStep1: React.FC<Props> = ({
           address: values.address,
         },
       }),
-      onSuccessFn: (res) => {
-        setIsConfirmStep(true);
-        console.log('res', res);
-        setEmail(values.email);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+    onSuccessFn: () => {
+      setIsConfirmStep(true);
+      setEmail(values.email);
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
+
+  useEffect(() => {
+    setMessage(message);
+  }, [message]);
 
   return (
     <ScrollView contentContainerStyle={[styles.subcontainer]}>
@@ -151,7 +146,7 @@ const SignUpStep1: React.FC<Props> = ({
       <AppButton
         loading={loading}
         title="confirmSignUp"
-        onPress={() => signUp()}
+        onPress={signUp}
         disabled={isSubmitting}
       />
     </ScrollView>

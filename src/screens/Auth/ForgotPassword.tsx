@@ -18,7 +18,6 @@ type Props = {
 const ForgotPassword: React.FC<Props> = ({ navigation }) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
   const [email, setEmail] = React.useState('jiancehenj@mikes.cd');
-  const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState('');
   const [messageType] = React.useState('error');
 
@@ -28,8 +27,6 @@ const ForgotPassword: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.title}>Forgot Password </Text>
         {!isConfirmStep ? (
           <ForgotPasswordStep1
-            loading={loading}
-            setLoading={setLoading}
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
             setMessage={setMessage}
@@ -38,8 +35,6 @@ const ForgotPassword: React.FC<Props> = ({ navigation }) => {
           <ForgotPasswordStep2
             navigation={navigation}
             email={email}
-            loading={loading}
-            setLoading={setLoading}
             setMessage={setMessage}
           />
         )}

@@ -1,22 +1,16 @@
-import { Button, Layout } from '@ui-kitten/components';
+import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
+
 import AppButton from '../components/common/AppButton';
 import AppContainer from '../components/common/AppContainer';
 import AppTextInput from '../components/common/AppTextInput';
+import Toast from '../components/common/Toast';
+import { useAsync } from '../components/common/custemHook/useAsync';
 import useForm from '../components/common/custemHook/useForm';
-import { authFun } from '../helpers/functions';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { updateAuth } from '../navigation/AppNavigator';
-
-type Props = {
-  updateAuthState: updateAuth;
-};
-
-const Profil: React.FC<Props> = ({}: Props) => {
-  const [loading, setLoading] = React.useState(false);
+const Profil = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
   const [userDetails, setuserDetails] = React.useState<any>({});
 
@@ -42,50 +36,50 @@ const Profil: React.FC<Props> = ({}: Props) => {
     }
   );
 
-  React.useEffect(() => {
-    getUserDetails();
-  }, []);
+  const { result, loadData: getUserDetails } = useAsync({
+    fetchFn: () => Auth.currentAuthenticatedUser(),
+    onSuccessFn: (res) => {
+      updateAllValues(() => {
+        const { email, family_name, given_name, address } = res.attributes;
 
-  async function getUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: (res) => {
-        console.log('res', res);
         setuserDetails(res);
-        updateAllValues(() => {
-          const { email, family_name, given_name, address } = res.attributes;
-          return { email, family_name, given_name, address };
-        });
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-      },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+        return { email, family_name, given_name, address };
+      });
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+    loadOnMount: true,
+  });
 
-  async function updateUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.updateUserAttributes(userDetails, {
+  const {
+    message,
+    setMessage,
+    messageType,
+    loadData: updateUserDetails,
+  } = useAsync({
+    fetchFn: () =>
+      Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-      onSuccessFn: (res) => {
-        console.log('res', res);
-        getUserDetails();
-        setIsEditStep(false);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-      },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+    onSuccessFn: (res) => {
+      getUserDetails();
+      setIsEditStep(false);
+    },
+    onFailedFn: () => {},
+    callback: () => {
+      console.log('callback');
+    },
+  });
+
+  React.useEffect(() => {
+    result &&
+      updateAllValues(() => {
+        const { email, family_name, given_name, address } = result?.attributes;
+        setuserDetails(result);
+        return { email, family_name, given_name, address };
+      });
+  }, [result]);
+
   return (
     <AppContainer>
       <Layout style={styles.container}>
@@ -151,6 +145,8 @@ const Profil: React.FC<Props> = ({}: Props) => {
             />
           </Layout>
         )}
+
+        <Toast message={message} callback={setMessage} type={messageType} />
 
         <AppButton
           onPress={() =>

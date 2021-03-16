@@ -9,21 +9,18 @@ import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
+import { useAsync } from '../common/custemHook/useAsync';
 import useForm from '../common/custemHook/useForm';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
   email: string;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ForgotPasswordStep2: React.FC<Props> = ({
   navigation,
   email,
-  loading,
-  setLoading,
   setMessage,
 }) => {
   const {
@@ -45,31 +42,50 @@ const ForgotPasswordStep2: React.FC<Props> = ({
     }
   );
 
-  async function confirmForgotPassword() {
-    setLoading(true);
-    console.log('loading', loading);
-
-    authFun({
-      func: Auth.forgotPasswordSubmit(
+  const { message, loading, loadData: confirmForgotPassword } = useAsync({
+    fetchFn: () =>
+      Auth.forgotPasswordSubmit(
         email,
         values.verificationCode,
         values.password
       ),
-      onSuccessFn: (res) => {
-        console.log('res', res);
+    onSuccessFn: (res) => {
+      console.log('res', res);
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'SignIn' }],
-        });
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
+
+  // async function confirmForgotPassword() {
+  //   setLoading(true);
+  //   console.log('loading', loading);
+
+  //   authFun({
+  //     func: Auth.forgotPasswordSubmit(
+  //       email,
+  //       values.verificationCode,
+  //       values.password
+  //     ),
+  //     onSuccessFn: (res) => {
+  //       console.log('res', res);
+
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'SignIn' }],
+  //       });
+  //     },
+  //     onFailedFn: (err) => {
+  //       console.log('err', err);
+  //       setMessage(err.message);
+  //     },
+  //     callback: () => setLoading(false),
+  //   });
+  // }
 
   return (
     <>

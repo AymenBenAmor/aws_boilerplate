@@ -9,6 +9,7 @@ import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
 import Toast from '../../components/common/Toast';
+import { useAsync } from '../../components/common/custemHook/useAsync';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { updateAuth } from '../../navigation/AppNavigator';
@@ -23,10 +24,6 @@ const SignIn: React.FC<Props> = ({
   updateAuthState = () => {},
   navigation,
 }) => {
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState('');
-  const [messageType, setMessageType] = React.useState('');
-
   const {
     handleChange,
     handleSubmit,
@@ -36,30 +33,28 @@ const SignIn: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@merseybasin.org',
+      email: 'jiancehenj@anikamenon.com',
       password: '1111111111',
     },
     { email: 'Invalid email', password: 'Invalid password' }
   );
 
-  async function signIn() {
-    setLoading(true);
-    authFun({
-      func: Auth.signIn(values.email, values.password),
-      onSuccessFn: (res) => {
-        console.log('res', res);
-        updateAuthState('loggedIn');
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-        setMessage(err.message);
-        setMessageType('error');
-      },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+  const {
+    loading,
+    result,
+    message,
+    messageType,
+    loadData: signIn,
+    setMessage,
+  } = useAsync({
+    fetchFn: () => Auth.signIn(values.email, values.password),
+    onSuccessFn: (res) => {
+      console.log('res', res);
+      updateAuthState('loggedIn');
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
 
   return (
     <AppContainer>

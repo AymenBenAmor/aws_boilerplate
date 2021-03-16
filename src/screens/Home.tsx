@@ -30,10 +30,16 @@ const Home: React.FC<Props> = ({ updateAuthState, navigation }: Props) => {
       <Text>React Native + Amplify</Text>
       <StatusBar style="auto" />
       <Button
-        style={{ marginVertical: 20 }}
+        style={{ marginTop: 20 }}
         onPress={() => navigation.navigate('Profil')}
       >
         Profil
+      </Button>
+      <Button
+        style={{ marginVertical: 20 }}
+        onPress={() => navigation.navigate('Chat')}
+      >
+        Chat
       </Button>
       <Button onPress={signOut}>Logout</Button>
     </Layout>

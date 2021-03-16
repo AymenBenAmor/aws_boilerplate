@@ -10,19 +10,17 @@ import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
+import { useAsync } from '../common/custemHook/useAsync';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   email: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep: React.FC<Props> = ({
   navigation,
-  loading,
-  setLoading,
+
   email,
   setMessage,
 }) => {
@@ -45,40 +43,58 @@ const SignUpStep: React.FC<Props> = ({
 
   console.log('isSubmitting');
 
-  async function confirmSignUp() {
-    setLoading(true);
-    console.log('loading', loading);
+  const { loading, loadData: confirmSignUp } = useAsync({
+    fetchFn: () => Auth.confirmSignUp(email, values.verificationCode),
+    onSuccessFn: (res) => {
+      console.log('res', res);
 
-    authFun({
-      func: Auth.confirmSignUp(email, values.verificationCode),
-      onSuccessFn: (res) => {
-        console.log('res', res);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    },
+    onFailedFn: (err) => {
+      console.log('err', err);
+      setMessage(err.message);
+    },
+    callback: () => {},
+  });
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'SignIn' }],
-        });
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+  // async function confirmSignUp() {
+  //    console.log('loading', loading);
 
-  async function resendConfirmationCode() {
-    authFun({
-      func: Auth.resendSignUp(email),
-      onSuccessFn: (res) => {
-        console.log('okiii', res);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+  //   authFun({
+  //     func: Auth.confirmSignUp(email, values.verificationCode),
+  //     onSuccessFn: (res) => {
+  //       console.log('res', res);
+
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'SignIn' }],
+  //       });
+  //     },
+  //     onFailedFn: (err) => {
+  //       console.log('err', err);
+  //       setMessage(err.message);
+  //     },
+  //     callback: () => setLoading(false),
+  //   });
+  // }
+
+  const {
+    loading: resendCodeLoading,
+    loadData: resendConfirmationCode,
+  } = useAsync({
+    fetchFn: () => Auth.resendSignUp(email),
+    onSuccessFn: (res) => {
+      console.log('okiii', res);
+    },
+
+    onFailedFn: (err) => {
+      console.log('err', err);
+    },
+    callback: () => {},
+  });
 
   return (
     <View style={[styles.subcontainer]}>
@@ -106,7 +122,7 @@ const SignUpStep: React.FC<Props> = ({
           disabled={isSubmitting}
         />
         <AppButton
-          loading={loading}
+          loading={resendCodeLoading}
           title="Resend Code"
           onPress={resendConfirmationCode}
         />

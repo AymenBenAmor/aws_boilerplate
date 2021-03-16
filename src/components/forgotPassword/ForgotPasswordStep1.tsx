@@ -8,19 +8,16 @@ import { StyleSheet, View } from 'react-native';
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import { authFun } from '../../helpers/functions';
+import { useAsync } from '../common/custemHook/useAsync';
 import useForm from '../common/custemHook/useForm';
 
 type Props = {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ForgotPasswordStep1: React.FC<Props> = ({
-  loading,
-  setLoading,
   setIsConfirmStep,
   setEmail,
   setMessage,
@@ -33,30 +30,44 @@ const ForgotPasswordStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@salesoperationsconference.org',
+      email: 'jiancehenj@anikamenon.com',
     },
     {
       email: 'Invalid email',
     }
   );
 
-  async function forgotPassword() {
-    setLoading(true);
-    authFun({
-      func: Auth.forgotPassword(values.email),
-      onSuccessFn: (res) => {
-        setIsConfirmStep(true);
-        setEmail(values.email);
+  const { message, loading, loadData: forgotPassword } = useAsync({
+    fetchFn: () => Auth.forgotPassword(values.email),
+    onSuccessFn: (res) => {
+      setIsConfirmStep(true);
+      setEmail(values.email);
 
-        console.log('res', res);
-      },
-      onFailedFn: (err) => {
-        console.log('err', err);
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+      console.log('res', res);
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
+  React.useEffect(() => {
+    setMessage(message);
+  }, [message]);
+  // async function forgotPassword() {
+  //   setLoading(true);
+  //   authFun({
+  //     func: Auth.forgotPassword(values.email),
+  //     onSuccessFn: (res) => {
+  //       setIsConfirmStep(true);
+  //       setEmail(values.email);
+
+  //       console.log('res', res);
+  //     },
+  //     onFailedFn: (err) => {
+  //       console.log('err', err);
+  //       setMessage(err.message);
+  //     },
+  //     callback: () => setLoading(false),
+  //   });
+  // }
 
   return (
     <>
