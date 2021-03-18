@@ -1,15 +1,18 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
+
 import AppButton from '../components/common/AppButton';
 import AppContainer from '../components/common/AppContainer';
 import AppTextInput from '../components/common/AppTextInput';
+import Toast from '../components/common/Toast';
+import { useAsync } from '../components/common/custemHook/useAsync';
 import useForm from '../components/common/custemHook/useForm';
-import { authFun } from '../helpers/functions';
 
 const Profile = () => {
-  const [, setLoading] = React.useState(false);
   const [isEditStep, setIsEditStep] = React.useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
@@ -33,48 +36,54 @@ const Profile = () => {
       family_name: 'Invalid firstName',
       given_name: 'Invalid lastname',
       address: 'Invalid address',
-    },
+    }
   );
 
-  /* eslint-disable */
-  React.useEffect(() => {
-    getUserDetails(); // todo check why we need to do all of that
-  }, []);
-  /* eslint-enable */
+  const { result, loadData: getUserDetails } = useAsync({
+    fetchFn: () => Auth.currentAuthenticatedUser(),
+    onSuccessFn: (res) => {
+      updateAllValues(() => {
+        // eslint-disable-next-line camelcase
+        const { email, family_name, given_name, address } = res.attributes;
 
-  async function getUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: res => {
         setuserDetails(res);
-        updateAllValues(() => {
-          // eslint-disable-next-line camelcase
-          const { email, family_name, given_name, address } = res.attributes;
-          return { email, family_name, given_name, address };
-        });
-      },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+        return { email, family_name, given_name, address };
+      });
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+    loadOnMount: true,
+  });
 
-  async function updateUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.updateUserAttributes(userDetails, {
+  const {
+    message,
+    setMessage,
+    messageType,
+    loadData: updateUserDetails,
+  } = useAsync({
+    fetchFn: () =>
+      Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-      onSuccessFn: () => {
-        getUserDetails();
-        setIsEditStep(false);
-      },
-      callback: () => {
-        setLoading(false);
-      },
+    onSuccessFn: (res) => {
+      getUserDetails();
+      setIsEditStep(false);
+    },
+    onFailedFn: () => {},
+    callback: () => {
+      console.log('callback');
+    },
+  });
+
+  React.useEffect(() => {
+    updateAllValues(() => {
+      // eslint-disable-next-line camelcase
+      const { email, family_name, given_name, address } = result?.attributes;
+      setuserDetails(result);
+      return { email, family_name, given_name, address };
     });
-  }
+  }, [result, updateAllValues]);
+
   return (
     <AppContainer>
       <Layout style={styles.container}>
@@ -98,7 +107,7 @@ const Profile = () => {
           <Layout>
             <AppTextInput
               value={values.email || ''}
-              onChangeText={value => handleChange({ name: 'email', value })}
+              onChangeText={(value) => handleChange({ name: 'email', value })}
               leftIcon="person-outline"
               placeholder="Enter email"
               autoCapitalize="none"
@@ -109,7 +118,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.family_name || ''}
-              onChangeText={value =>
+              onChangeText={(value) =>
                 handleChange({ name: 'family_name', value })
               }
               leftIcon="person-outline"
@@ -120,7 +129,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.given_name || ''}
-              onChangeText={value =>
+              onChangeText={(value) =>
                 handleChange({ name: 'given_name', value })
               }
               leftIcon="person-outline"
@@ -131,7 +140,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.address || ''}
-              onChangeText={value => handleChange({ name: 'address', value })}
+              onChangeText={(value) => handleChange({ name: 'address', value })}
               leftIcon="person-outline"
               placeholder="Enter address"
               autoCapitalize="none"
@@ -140,6 +149,8 @@ const Profile = () => {
             />
           </Layout>
         )}
+
+        <Toast message={message} callback={setMessage} type={messageType} />
 
         <AppButton
           onPress={() =>

@@ -17,15 +17,11 @@ const SignUp = ({ navigation }: Props) => {
   const [message, setMessage] = React.useState('');
   const [messageType] = React.useState('error');
 
-  const [loading, setLoading] = React.useState(false);
-
   return (
     <AppContainer>
       <>
         {!isConfirmStep ? (
           <SignUpStep1
-            loading={loading}
-            setLoading={setLoading}
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
             setMessage={setMessage}
@@ -33,8 +29,6 @@ const SignUp = ({ navigation }: Props) => {
         ) : (
           <SignUpStep2
             navigation={navigation}
-            loading={loading}
-            setLoading={setLoading}
             email={email}
             setMessage={setMessage}
           />

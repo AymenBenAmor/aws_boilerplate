@@ -5,7 +5,7 @@ import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
 import Spinner from './SpinnerComponent';
 
 type Props = {
-  title: string;
+  title?: string;
   loading?: boolean;
   disabled?: boolean;
   onPress: (event: GestureResponderEvent) => void;
@@ -18,6 +18,7 @@ const AppButton = ({
   loading = false,
   disabled = false,
   style,
+  ...buttonProps
 }: Props) => {
   const loadingIndicator = () => (loading ? <Spinner size="small" /> : <></>);
 
@@ -33,6 +34,7 @@ const AppButton = ({
       onPress={handleClick}
       accessoryLeft={() => loadingIndicator()}
       disabled={disabled}
+      {...buttonProps}
     >
       {title}
     </Button>

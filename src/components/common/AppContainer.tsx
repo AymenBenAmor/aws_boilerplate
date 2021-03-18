@@ -8,14 +8,16 @@ import {
 } from 'react-native';
 
 type Props = {
-  children: React.ReactNode;
+  children: any;
+  style?: Record<string, unknown>;
 };
 
-const AppContainer = ({ children }: Props) => {
+const AppContainer: React.FC<Props> = ({ children, style }: Props) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[styles.container]}
+      style={[styles.container, style]}
+      keyboardVerticalOffset={130}
     >
       <TouchableWithoutFeedback
         onPress={Platform.OS !== 'web' ? Keyboard.dismiss : undefined}
@@ -28,7 +30,7 @@ const AppContainer = ({ children }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '100%',
     backgroundColor: 'white',
     paddingHorizontal: 15,
   },

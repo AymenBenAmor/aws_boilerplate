@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
@@ -8,6 +10,7 @@ import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
 import Toast from '../../components/common/Toast';
+import { useAsync } from '../../components/common/custemHook/useAsync';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { updateAuth } from '../../navigation/AppNavigator';
@@ -18,11 +21,10 @@ type Props = {
   updateAuthState: updateAuth;
 };
 
-const SignIn = ({ updateAuthState, navigation }: Props) => {
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState('');
-  const [messageType, setMessageType] = React.useState('');
-
+const SignIn: React.FC<Props> = ({
+  updateAuthState = () => {},
+  navigation,
+}) => {
   const {
     handleChange,
     checkErrors,
@@ -31,28 +33,28 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@merseybasin.org',
-      password: '1111111111',
+      email: 'jiancehenj@anikamenon.com',
+      password: '1111111112',
     },
-    { email: 'Invalid email', password: 'Invalid password' },
+    { email: 'Invalid email', password: 'Invalid password' }
   );
 
-  async function signIn() {
-    setLoading(true);
-    authFun({
-      func: Auth.signIn(values.email, values.password),
-      onSuccessFn: () => {
-        updateAuthState('loggedIn');
-      },
-      onFailedFn: err => {
-        setMessage(err.message);
-        setMessageType('error');
-      },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+  const {
+    loading,
+    result,
+    message,
+    messageType,
+    loadData: signIn,
+    setMessage,
+  } = useAsync({
+    fetchFn: () => Auth.signIn(values.email, values.password),
+    onSuccessFn: (res) => {
+      console.log('res', res);
+      updateAuthState('loggedIn');
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
 
   return (
     <AppContainer>
@@ -61,7 +63,7 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
         <View>
           <AppTextInput
             value={values.email || ''}
-            onChangeText={value => handleChange({ name: 'email', value })}
+            onChangeText={(value) => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
             autoCapitalize="none"
@@ -72,7 +74,7 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
           />
           <AppTextInput
             value={values.password || ''}
-            onChangeText={value => handleChange({ name: 'password', value })}
+            onChangeText={(value) => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
             autoCapitalize="none"

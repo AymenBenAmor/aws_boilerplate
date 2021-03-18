@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable prettier/prettier */
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
@@ -8,19 +10,17 @@ import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
+import { useAsync } from '../common/custemHook/useAsync';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   email: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep = ({
   navigation,
-  loading,
-  setLoading,
+
   email,
   setMessage,
 }: Props) => {
@@ -36,33 +36,63 @@ const SignUpStep = ({
     },
     {
       verificationCode: 'Invalid verification code',
-    },
+    }
   );
 
-  async function confirmSignUp() {
-    setLoading(true);
+  console.log('isSubmitting');
 
-    authFun({
-      func: Auth.confirmSignUp(email, values.verificationCode),
-      onSuccessFn: () => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'SignIn' }],
-        });
-      },
-      onFailedFn: err => {
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+  const { loading, loadData: confirmSignUp } = useAsync({
+    fetchFn: () => Auth.confirmSignUp(email, values.verificationCode),
+    onSuccessFn: (res) => {
+      console.log('res', res);
 
-  async function resendConfirmationCode() {
-    authFun({
-      func: Auth.resendSignUp(email),
-      callback: () => setLoading(false),
-    });
-  }
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    },
+    onFailedFn: (err) => {
+      console.log('err', err);
+      setMessage(err.message);
+    },
+    callback: () => {},
+  });
+
+  // async function confirmSignUp() {
+  //    console.log('loading', loading);
+
+  //   authFun({
+  //     func: Auth.confirmSignUp(email, values.verificationCode),
+  //     onSuccessFn: (res) => {
+  //       console.log('res', res);
+
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'SignIn' }],
+  //       });
+  //     },
+  //     onFailedFn: (err) => {
+  //       console.log('err', err);
+  //       setMessage(err.message);
+  //     },
+  //     callback: () => setLoading(false),
+  //   });
+  // }
+
+  const {
+    loading: resendCodeLoading,
+    loadData: resendConfirmationCode,
+  } = useAsync({
+    fetchFn: () => Auth.resendSignUp(email),
+    onSuccessFn: (res) => {
+      console.log('okiii', res);
+    },
+
+    onFailedFn: (err) => {
+      console.log('err', err);
+    },
+    callback: () => {},
+  });
 
   return (
     <View style={[styles.subcontainer]}>
@@ -70,7 +100,7 @@ const SignUpStep = ({
 
       <AppTextInput
         value={values.verificationCode}
-        onChangeText={value =>
+        onChangeText={(value) =>
           handleChange({ name: 'verificationCode', value })
         }
         leftIcon="lock-outline"
@@ -90,7 +120,7 @@ const SignUpStep = ({
           disabled={isSubmitting}
         />
         <AppButton
-          loading={loading}
+          loading={resendCodeLoading}
           title="Resend Code"
           onPress={resendConfirmationCode}
         />

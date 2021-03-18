@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable prettier/prettier */
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
@@ -7,23 +9,16 @@ import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
+import { useAsync } from '../common/custemHook/useAsync';
 import useForm from '../common/custemHook/useForm';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
   email: string;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ForgotPasswordStep2 = ({
-  navigation,
-  email,
-  loading,
-  setLoading,
-  setMessage,
-}: Props) => {
+const ForgotPasswordStep2 = ({ navigation, email, setMessage }: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -40,36 +35,60 @@ const ForgotPasswordStep2 = ({
       verificationCode: 'Invalid verification code',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
-    },
+    }
   );
 
-  async function confirmForgotPassword() {
-    setLoading(true);
-    authFun({
-      func: Auth.forgotPasswordSubmit(
+  const { message, loading, loadData: confirmForgotPassword } = useAsync({
+    fetchFn: () =>
+      Auth.forgotPasswordSubmit(
         email,
         values.verificationCode,
-        values.password,
+        values.password
       ),
-      onSuccessFn: () => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'SignIn' }],
-        });
-      },
-      onFailedFn: err => {
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+    onSuccessFn: (res) => {
+      console.log('res', res);
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
+
+  // async function confirmForgotPassword() {
+  //   setLoading(true);
+  //   console.log('loading', loading);
+
+  //   authFun({
+  //     func: Auth.forgotPasswordSubmit(
+  //       email,
+  //       values.verificationCode,
+  //       values.password
+  //     ),
+  //     onSuccessFn: (res) => {
+  //       console.log('res', res);
+
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'SignIn' }],
+  //       });
+  //     },
+  //     onFailedFn: (err) => {
+  //       console.log('err', err);
+  //       setMessage(err.message);
+  //     },
+  //     callback: () => setLoading(false),
+  //   });
+  // }
 
   return (
     <>
       <View>
         <AppTextInput
           value={values.verificationCode || ''}
-          onChangeText={value =>
+          onChangeText={(value) =>
             handleChange({ name: 'verificationCode', value })
           }
           leftIcon="lock-outline"
@@ -82,7 +101,7 @@ const ForgotPasswordStep2 = ({
         />
         <AppTextInput
           value={values.password || ''}
-          onChangeText={value => handleChange({ name: 'password', value })}
+          onChangeText={(value) => handleChange({ name: 'password', value })}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -94,7 +113,7 @@ const ForgotPasswordStep2 = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={value =>
+          onChangeText={(value) =>
             handleChange({ name: 'confirmPassword', value })
           }
           leftIcon="lock-outline"

@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable prettier/prettier */
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -7,18 +10,15 @@ import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { authFun } from '../../helpers/functions';
+import { useAsync } from '../common/custemHook/useAsync';
 
 type Props = {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep1 = ({
-  loading,
-  setLoading,
+const SignUpStep1: React.FC<Props> = ({
   setIsConfirmStep,
   setEmail,
   setMessage,
@@ -31,7 +31,7 @@ const SignUpStep1 = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@merseybasin.org',
+      email: 'jiancehenj@anikamenon.com',
       family_name: 'firstName',
       given_name: 'lastname',
       address: 'address',
@@ -45,13 +45,12 @@ const SignUpStep1 = ({
       address: 'Invalid address',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
-    },
+    }
   );
 
-  async function signUp() {
-    setLoading(true);
-    authFun({
-      func: Auth.signUp({
+  const { message, loading, loadData: signUp } = useAsync({
+    fetchFn: () =>
+      Auth.signUp({
         username: values.email,
         password: values.password,
         attributes: {
@@ -60,16 +59,17 @@ const SignUpStep1 = ({
           address: values.address,
         },
       }),
-      onSuccessFn: () => {
-        setIsConfirmStep(true);
-        setEmail(values.email);
-      },
-      onFailedFn: err => {
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
-    });
-  }
+    onSuccessFn: () => {
+      setIsConfirmStep(true);
+      setEmail(values.email);
+    },
+    onFailedFn: () => {},
+    callback: () => {},
+  });
+
+  useEffect(() => {
+    setMessage(message);
+  }, [message, setMessage]);
 
   return (
     <ScrollView contentContainerStyle={[styles.subcontainer]}>
@@ -78,7 +78,7 @@ const SignUpStep1 = ({
       <View>
         <AppTextInput
           value={values.email || ''}
-          onChangeText={value => handleChange({ name: 'email', value })}
+          onChangeText={(value) => handleChange({ name: 'email', value })}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"
@@ -89,7 +89,7 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.family_name || ''}
-          onChangeText={value => handleChange({ name: 'family_name', value })}
+          onChangeText={(value) => handleChange({ name: 'family_name', value })}
           leftIcon="person-outline"
           placeholder="Enter first name"
           autoCapitalize="none"
@@ -98,7 +98,7 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.given_name || ''}
-          onChangeText={value => handleChange({ name: 'given_name', value })}
+          onChangeText={(value) => handleChange({ name: 'given_name', value })}
           leftIcon="person-outline"
           placeholder="Enter last name"
           autoCapitalize="none"
@@ -107,7 +107,7 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.address || ''}
-          onChangeText={value => handleChange({ name: 'address', value })}
+          onChangeText={(value) => handleChange({ name: 'address', value })}
           leftIcon="person-outline"
           placeholder="Enter address"
           autoCapitalize="none"
@@ -116,7 +116,7 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.password || ''}
-          onChangeText={value => handleChange({ name: 'password', value })}
+          onChangeText={(value) => handleChange({ name: 'password', value })}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -128,7 +128,7 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={value =>
+          onChangeText={(value) =>
             handleChange({ name: 'confirmPassword', value })
           }
           leftIcon="lock-outline"
@@ -145,7 +145,7 @@ const SignUpStep1 = ({
       <AppButton
         loading={loading}
         title="confirmSignUp"
-        onPress={() => signUp()}
+        onPress={signUp}
         disabled={isSubmitting}
       />
     </ScrollView>
