@@ -36,8 +36,8 @@ const AppNavigator = ({ updateAuthState }: NavigatorProp) => {
         name="ChatMessage"
         options={({ route }) => ({ title: route?.params?.name || '' })}
       >
-        {(screenProps) => (
-          <ChatMessage updateAuthState={updateAuthState} {...screenProps} />
+        {( ) => (
+          <ChatMessage   />
         )}
       </AppStack.Screen>
     </AppStack.Navigator>

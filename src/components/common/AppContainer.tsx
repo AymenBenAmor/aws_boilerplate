@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 type Props = {
-  children: any;
+  children: React.ReactNode;
   style?: Record<string, unknown>;
 };
 

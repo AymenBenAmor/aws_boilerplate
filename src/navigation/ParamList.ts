@@ -5,7 +5,6 @@ export type ParamList = {
   Home: undefined;
   ForgotPassword: undefined;
   Profile: undefined;
-  Profil: undefined;
   Chat: undefined;
   ChatMessage: undefined;
 };

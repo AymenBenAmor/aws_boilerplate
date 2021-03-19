@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { RouteProp } from '@react-navigation/native';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList } from 'react-native';
 
@@ -30,7 +26,7 @@ const ChatMessageList = ({ array }: Props) => {
         onContentSizeChange={() =>
           flatListRef.current.scrollToEnd({ animated: false })
         }
-        keyExtractor={(item: object, index: number) => index.toString()}
+        keyExtractor={(item: any, index: number) => index.toString()}
       />
     </>
   );

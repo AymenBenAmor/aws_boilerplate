@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import React from 'react';
@@ -14,7 +12,6 @@ import useForm from '../components/common/custemHook/useForm';
 
 const Profile = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
 
   const {
@@ -36,22 +33,19 @@ const Profile = () => {
       family_name: 'Invalid firstName',
       given_name: 'Invalid lastname',
       address: 'Invalid address',
-    }
+    },
   );
 
-  const { result, loadData: getUserDetails } = useAsync({
+  const { loadData: getUserDetails } = useAsync({
     fetchFn: () => Auth.currentAuthenticatedUser(),
-    onSuccessFn: (res) => {
+    onSuccessFn: res => {
       updateAllValues(() => {
         // eslint-disable-next-line camelcase
         const { email, family_name, given_name, address } = res.attributes;
-
         setuserDetails(res);
         return { email, family_name, given_name, address };
       });
     },
-    onFailedFn: () => {},
-    callback: () => {},
     loadOnMount: true,
   });
 
@@ -65,24 +59,11 @@ const Profile = () => {
       Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-    onSuccessFn: (res) => {
+    onSuccessFn: () => {
       getUserDetails();
       setIsEditStep(false);
     },
-    onFailedFn: () => {},
-    callback: () => {
-      console.log('callback');
-    },
   });
-
-  React.useEffect(() => {
-    updateAllValues(() => {
-      // eslint-disable-next-line camelcase
-      const { email, family_name, given_name, address } = result?.attributes;
-      setuserDetails(result);
-      return { email, family_name, given_name, address };
-    });
-  }, [result, updateAllValues]);
 
   return (
     <AppContainer>
@@ -107,7 +88,7 @@ const Profile = () => {
           <Layout>
             <AppTextInput
               value={values.email || ''}
-              onChangeText={(value) => handleChange({ name: 'email', value })}
+              onChangeText={value => handleChange({ name: 'email', value })}
               leftIcon="person-outline"
               placeholder="Enter email"
               autoCapitalize="none"
@@ -118,7 +99,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.family_name || ''}
-              onChangeText={(value) =>
+              onChangeText={value =>
                 handleChange({ name: 'family_name', value })
               }
               leftIcon="person-outline"
@@ -129,7 +110,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.given_name || ''}
-              onChangeText={(value) =>
+              onChangeText={value =>
                 handleChange({ name: 'given_name', value })
               }
               leftIcon="person-outline"
@@ -140,7 +121,7 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.address || ''}
-              onChangeText={(value) => handleChange({ name: 'address', value })}
+              onChangeText={value => handleChange({ name: 'address', value })}
               leftIcon="person-outline"
               placeholder="Enter address"
               autoCapitalize="none"
@@ -154,7 +135,7 @@ const Profile = () => {
 
         <AppButton
           onPress={() =>
-            !isEditStep ? setIsEditStep(true) : updateUserDetails()
+            !isEditStep ? setIsEditStep(true) : updateUserDetails
           }
           disabled={!isEditStep ? false : isSubmitting}
           title={!isEditStep ? 'updateUserDetails' : 'Update'}

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable prettier/prettier */
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
@@ -8,7 +6,6 @@ import { StyleSheet, View, Text } from 'react-native';
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
 import { useAsync } from '../common/custemHook/useAsync';
 
@@ -36,62 +33,27 @@ const SignUpStep = ({
     },
     {
       verificationCode: 'Invalid verification code',
-    }
+    },
   );
-
-  console.log('isSubmitting');
 
   const { loading, loadData: confirmSignUp } = useAsync({
     fetchFn: () => Auth.confirmSignUp(email, values.verificationCode),
-    onSuccessFn: (res) => {
-      console.log('res', res);
-
+    onSuccessFn: () => {
       navigation.reset({
         index: 0,
         routes: [{ name: 'SignIn' }],
       });
     },
-    onFailedFn: (err) => {
-      console.log('err', err);
+    onFailedFn: err => {
       setMessage(err.message);
     },
-    callback: () => {},
   });
-
-  // async function confirmSignUp() {
-  //    console.log('loading', loading);
-
-  //   authFun({
-  //     func: Auth.confirmSignUp(email, values.verificationCode),
-  //     onSuccessFn: (res) => {
-  //       console.log('res', res);
-
-  //       navigation.reset({
-  //         index: 0,
-  //         routes: [{ name: 'SignIn' }],
-  //       });
-  //     },
-  //     onFailedFn: (err) => {
-  //       console.log('err', err);
-  //       setMessage(err.message);
-  //     },
-  //     callback: () => setLoading(false),
-  //   });
-  // }
 
   const {
     loading: resendCodeLoading,
     loadData: resendConfirmationCode,
   } = useAsync({
     fetchFn: () => Auth.resendSignUp(email),
-    onSuccessFn: (res) => {
-      console.log('okiii', res);
-    },
-
-    onFailedFn: (err) => {
-      console.log('err', err);
-    },
-    callback: () => {},
   });
 
   return (
@@ -100,7 +62,7 @@ const SignUpStep = ({
 
       <AppTextInput
         value={values.verificationCode}
-        onChangeText={(value) =>
+        onChangeText={value =>
           handleChange({ name: 'verificationCode', value })
         }
         leftIcon="lock-outline"

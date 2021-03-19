@@ -1,35 +1,23 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { RouteProp } from '@react-navigation/native';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Icon, Button } from '@ui-kitten/components';
+import { Icon, Button, IconProps } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View, TextInput, Platform } from 'react-native';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { updateAuth } from '../../navigation/AppNavigator';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ParamList } from '../../navigation/ParamList';
 import AppContainer from '../common/AppContainer';
 import ChatMessageList from './ChatMessageList';
 
-type Props = {
-  updateAuthState: updateAuth;
-  navigation?: StackNavigationProp<ParamList, 'ChatMessage'>;
-  route?: any;
-};
-
-const ChatMessage: React.FC<Props> = ({ route, navigation }: Props) => {
+const ChatMessage = () => {
   const [message, setMessage] = React.useState('');
 
-  const SendIcon = (props: any) => (
+  const SendIcon = (props: IconProps) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
     <Icon {...props} fill="black" name="paper-plane-outline" />
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
   return (
-    <AppContainer style={[styles.container]}>
+    <AppContainer style={styles.container}>
       <>
         <ChatMessageList array={test} />
         <View
@@ -55,7 +43,6 @@ const ChatMessage: React.FC<Props> = ({ route, navigation }: Props) => {
             numberOfLines={Platform.OS === 'ios' ? undefined : 4}
           />
           <Button
-            onPress={() => {}}
             appearance="ghost"
             status="danger"
             accessoryLeft={SendIcon}

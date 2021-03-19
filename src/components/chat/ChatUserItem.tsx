@@ -1,32 +1,31 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
 type Props = {
   id: string;
-  image?: string;
-  name?: string;
-  lastMessage?: string;
+  imageUri?: string;
+  firstName?: string;
+  lastName?: string;
+  status?: string;
+  onClick: () => void;
 };
 
-const ChatListItem: React.FC<Props> = ({
+const ChatUserItem: React.FC<Props> = ({
   id,
-  image = 'https://loja02.uberflow.com.br/wordpress/wp-content/files/loja02.uberflow.com.br/2019/11/dep_01.jpg',
-  name = 'Patric ' + id,
-  lastMessage = 'whyy dwdw ldwdwdw dwdw ',
+  imageUri = 'https://loja02.uberflow.com.br/wordpress/wp-content/files/loja02.uberflow.com.br/2019/11/dep_01.jpg',
+  firstName = `Patric ${id}`,
+  lastName = 'whyy dwdw ldwdwdw dwdw ',
+  status,
+  onClick,
 }: Props) => {
-  const navigation = useNavigation();
-
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={{
         paddingVertical: 15,
       }}
-      onPress={() => navigation.navigate('ChatMessage', { id, name })}
+      onPress={onClick}
     >
       <View
         style={{
@@ -37,13 +36,14 @@ const ChatListItem: React.FC<Props> = ({
         <Image
           style={styles.image}
           source={{
-            uri:
-              'https://loja02.uberflow.com.br/wordpress/wp-content/files/loja02.uberflow.com.br/2019/11/dep_01.jpg',
+            uri: imageUri,
           }}
         />
         <View>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.message}>{lastMessage}</Text>
+          <Text style={styles.name}>
+            {firstName} {lastName}
+          </Text>
+          <Text style={styles.message}>{status}</Text>
         </View>
       </View>
       <View style={styles.border} />
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatListItem;
+export default ChatUserItem;

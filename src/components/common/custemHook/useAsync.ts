@@ -8,8 +8,8 @@ export const useAsync = ({
   loadOnMount = false,
 }: {
   fetchFn: () => Promise<any>;
-  onSuccessFn: (value?: any) => void;
-  onFailedFn: (value?: any) => void;
+  onSuccessFn?: (value?: any) => void;
+  onFailedFn?: (value?: any) => void;
   callback?: () => void;
   loadOnMount?: boolean;
 }) => {
@@ -26,7 +26,7 @@ export const useAsync = ({
       console.log(
         '<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/11/svg/2705.svg"> Success',
         'user',
-        res
+        res,
       );
       onSuccessFn(res);
       setResult(res);
@@ -34,7 +34,7 @@ export const useAsync = ({
     } catch (error) {
       console.log(
         '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> Error signing in...',
-        error
+        error,
       );
       onFailedFn(error);
       setMessage(error.message);
@@ -46,6 +46,7 @@ export const useAsync = ({
   }
   useEffect(() => {
     !!loadOnMount && loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { loading, result, message, setMessage, loadData, messageType };

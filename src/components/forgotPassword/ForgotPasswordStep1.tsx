@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable prettier/prettier */
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
-import { authFun } from '../../helpers/functions';
 import { useAsync } from '../common/custemHook/useAsync';
 import useForm from '../common/custemHook/useForm';
 
@@ -33,47 +30,26 @@ const ForgotPasswordStep1: React.FC<Props> = ({
     },
     {
       email: 'Invalid email',
-    }
+    },
   );
 
   const { message, loading, loadData: forgotPassword } = useAsync({
     fetchFn: () => Auth.forgotPassword(values.email),
-    onSuccessFn: (res) => {
+    onSuccessFn: () => {
       setIsConfirmStep(true);
       setEmail(values.email);
-
-      console.log('res', res);
     },
-    onFailedFn: () => {},
-    callback: () => {},
   });
   React.useEffect(() => {
     setMessage(message);
   }, [message, setMessage]);
-  // async function forgotPassword() {
-  //   setLoading(true);
-  //   authFun({
-  //     func: Auth.forgotPassword(values.email),
-  //     onSuccessFn: (res) => {
-  //       setIsConfirmStep(true);
-  //       setEmail(values.email);
-
-  //       console.log('res', res);
-  //     },
-  //     onFailedFn: (err) => {
-  //       console.log('err', err);
-  //       setMessage(err.message);
-  //     },
-  //     callback: () => setLoading(false),
-  //   });
-  // }
 
   return (
     <>
       <View>
         <AppTextInput
           value={values.email || ''}
-          onChangeText={(value) => handleChange({ name: 'email', value })}
+          onChangeText={value => handleChange({ name: 'email', value })}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"

@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { RouteProp } from '@react-navigation/native';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -10,6 +6,7 @@ type Props = {
   index: number;
 };
 const ChatMessageItem = ({ isMymessage, index }: Props) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
   return (

@@ -8,7 +8,6 @@ type ErrorsType = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 const useForm = (initialValue: any, errors: ErrorsType) => {
-  // todo fix type of initialValue here (use generics)
   const [values, setValues] = useState(initialValue);
   const [errorsMessages, setErrorsMessage] = useState<ErrorsType>({});
   const [isSubmitting, setIsSubmitting] = useState(false);

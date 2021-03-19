@@ -1,4 +1,4 @@
-import { REGEX } from './constants';
+import { REGEX, images } from './constants';
 
 export const checkError = ({
   value,
@@ -26,7 +26,6 @@ export const checkError = ({
   return errorValue;
 };
 
-// todo fix this by setting the return type
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function authFun({
   func,
@@ -68,3 +67,8 @@ export async function authFun({
     }
   }
 }
+
+export const getRandomImage = (): string => {
+  const random = Math.floor(Math.random() * images.length);
+  return images[random];
+};

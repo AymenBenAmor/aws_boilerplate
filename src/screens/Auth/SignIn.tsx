@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
@@ -21,10 +19,7 @@ type Props = {
   updateAuthState: updateAuth;
 };
 
-const SignIn: React.FC<Props> = ({
-  updateAuthState = () => {},
-  navigation,
-}) => {
+const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
   const {
     handleChange,
     checkErrors,
@@ -33,27 +28,23 @@ const SignIn: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@anikamenon.com',
-      password: '1111111112',
+      email: 'jiancehenj@chesstr.com',
+      password: '1111111111',
     },
-    { email: 'Invalid email', password: 'Invalid password' }
+    { email: 'Invalid email', password: 'Invalid password' },
   );
 
   const {
     loading,
-    result,
     message,
     messageType,
     loadData: signIn,
     setMessage,
   } = useAsync({
     fetchFn: () => Auth.signIn(values.email, values.password),
-    onSuccessFn: (res) => {
-      console.log('res', res);
+    onSuccessFn: () => {
       updateAuthState('loggedIn');
     },
-    onFailedFn: () => {},
-    callback: () => {},
   });
 
   return (
@@ -63,7 +54,7 @@ const SignIn: React.FC<Props> = ({
         <View>
           <AppTextInput
             value={values.email || ''}
-            onChangeText={(value) => handleChange({ name: 'email', value })}
+            onChangeText={value => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
             autoCapitalize="none"
@@ -74,7 +65,7 @@ const SignIn: React.FC<Props> = ({
           />
           <AppTextInput
             value={values.password || ''}
-            onChangeText={(value) => handleChange({ name: 'password', value })}
+            onChangeText={value => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
             autoCapitalize="none"

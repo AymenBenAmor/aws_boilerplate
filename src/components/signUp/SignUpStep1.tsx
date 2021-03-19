@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable prettier/prettier */
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -9,7 +7,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
 import { useAsync } from '../common/custemHook/useAsync';
 
 type Props = {
@@ -31,7 +28,7 @@ const SignUpStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@anikamenon.com',
+      email: 'jiancehenj@chesstr.com',
       family_name: 'firstName',
       given_name: 'lastname',
       address: 'address',
@@ -45,7 +42,7 @@ const SignUpStep1: React.FC<Props> = ({
       address: 'Invalid address',
       password: 'Invalid password',
       confirmPassword: 'Password mismatch',
-    }
+    },
   );
 
   const { message, loading, loadData: signUp } = useAsync({
@@ -63,8 +60,6 @@ const SignUpStep1: React.FC<Props> = ({
       setIsConfirmStep(true);
       setEmail(values.email);
     },
-    onFailedFn: () => {},
-    callback: () => {},
   });
 
   useEffect(() => {
@@ -78,7 +73,7 @@ const SignUpStep1: React.FC<Props> = ({
       <View>
         <AppTextInput
           value={values.email || ''}
-          onChangeText={(value) => handleChange({ name: 'email', value })}
+          onChangeText={value => handleChange({ name: 'email', value })}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"
@@ -89,7 +84,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.family_name || ''}
-          onChangeText={(value) => handleChange({ name: 'family_name', value })}
+          onChangeText={value => handleChange({ name: 'family_name', value })}
           leftIcon="person-outline"
           placeholder="Enter first name"
           autoCapitalize="none"
@@ -98,7 +93,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.given_name || ''}
-          onChangeText={(value) => handleChange({ name: 'given_name', value })}
+          onChangeText={value => handleChange({ name: 'given_name', value })}
           leftIcon="person-outline"
           placeholder="Enter last name"
           autoCapitalize="none"
@@ -107,7 +102,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.address || ''}
-          onChangeText={(value) => handleChange({ name: 'address', value })}
+          onChangeText={value => handleChange({ name: 'address', value })}
           leftIcon="person-outline"
           placeholder="Enter address"
           autoCapitalize="none"
@@ -116,7 +111,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.password || ''}
-          onChangeText={(value) => handleChange({ name: 'password', value })}
+          onChangeText={value => handleChange({ name: 'password', value })}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -128,7 +123,7 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={(value) =>
+          onChangeText={value =>
             handleChange({ name: 'confirmPassword', value })
           }
           leftIcon="lock-outline"
