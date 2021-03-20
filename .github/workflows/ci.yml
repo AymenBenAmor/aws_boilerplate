@@ -7,14 +7,6 @@ on:
       branches: [ master ]
 
 jobs:
-  install:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: yarn
   lint:
 
     runs-on: ubuntu-latest
@@ -22,7 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: lint code
-        run: yarn lint
+      - run: yarn install
+      - run: yarn lint
 
   test:
 
@@ -31,4 +24,5 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: test app
-        run: yarn test
+      - run: yarn install
+      - run: yarn testFinal
