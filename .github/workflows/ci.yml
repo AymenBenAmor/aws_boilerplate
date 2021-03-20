@@ -18,9 +18,6 @@ jobs:
   lint:
 
     runs-on: ubuntu-latest
-
-    needs: install
-
     steps:
       - uses: actions/checkout@v1
       - name: lint code
@@ -29,9 +26,6 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-
-    needs: install
-
     steps:
       - uses: actions/checkout@v1
       - name: test app
