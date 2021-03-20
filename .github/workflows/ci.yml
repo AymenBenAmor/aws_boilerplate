@@ -19,8 +19,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    needs: install
+
     steps:
       - uses: actions/checkout@v1
+      - name: install
+        run: yarn
       - name: lint code
         run: yarn lint
 
@@ -28,7 +32,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    needs: install
+
     steps:
       - uses: actions/checkout@v1
+      - name: install
+        run: yarn
       - name: test app
         run: yarn test
