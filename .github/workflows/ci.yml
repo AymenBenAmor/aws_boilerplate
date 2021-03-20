@@ -13,10 +13,8 @@ jobs:
 
     steps:
       - id: install
-        uses: actions/setup-node@v1
         run: yarn install
       - id: lint
-        uses: actions/setup-node@v1
         run: yarn lint
 
   test:
@@ -25,8 +23,6 @@ jobs:
 
     steps:
       - id: install
-        uses: actions/setup-node@v1
         run: yarn install
       - id: test
-        uses: actions/setup-node@v1
         run: yarn testFinal
