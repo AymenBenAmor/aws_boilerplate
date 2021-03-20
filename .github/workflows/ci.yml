@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-      branches: [ master ]
+    branches: [ master ]
 
 jobs:
   lint:
@@ -12,17 +12,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: lint code
-      - run: yarn install
-      - run: yarn lint
+      - id: install
+        uses: actions/setup-node@v1
+        run: yarn install
+      - id: lint
+        uses: actions/setup-node@v1
+        run: yarn lint
 
   test:
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: test app
-      - run: yarn install
-      - run: yarn testFinal
+      - id: install
+        uses: actions/setup-node@v1
+        run: yarn install
+      - id: test
+        uses: actions/setup-node@v1
+        run: yarn testFinal
