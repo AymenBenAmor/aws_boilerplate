@@ -12,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: setup
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - id: install
         run: yarn install
       - id: lint
@@ -24,8 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: setup
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - id: install
         run: yarn install
       - id: test
