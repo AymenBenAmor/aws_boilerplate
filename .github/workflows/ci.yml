@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: lint code
-        run: yarn lint
+        run: yarn && yarn lint
 
   test:
 
@@ -31,4 +31,4 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: test app
-        run: yarn test
+        run: yarn && yarn testFinal
