@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - id: install
+      - uses: actions/checkout@v1
+      - name: install
         run: yarn install
-      - id: lint
+      - name: lint code
         run: yarn lint
 
   test:
@@ -23,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - id: install
+      - uses: actions/checkout@v1
+      - name: install
         run: yarn install
-      - id: test
-        run: yarn testFinal
+      - name: test app
+        run: yarn test
