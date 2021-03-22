@@ -14,7 +14,7 @@ const Toast = ({ message, type, callback }: Props) => {
       if (message) {
         callback('');
       }
-    }, 2000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [callback, message]);
 

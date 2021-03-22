@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';

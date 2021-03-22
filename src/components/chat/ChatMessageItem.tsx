@@ -2,13 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 type Props = {
-  isMymessage: boolean;
+  isMyMessage: boolean;
   index: number;
 };
-const ChatMessageItem = ({ isMymessage, index }: Props) => {
+const ChatMessageItem = ({ isMyMessage, index }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
+  /* todo put these styles in the stylesheet */
   return (
     <View
       style={{
@@ -16,9 +17,9 @@ const ChatMessageItem = ({ isMymessage, index }: Props) => {
         paddingVertical: 10,
         paddingHorizontal: 5,
         marginVertical: 10,
-        marginRight: isMymessage ? 50 : 0,
-        marginLeft: isMymessage ? 0 : 50,
-        backgroundColor: isMymessage ? 'white' : '#d7e4c4',
+        marginRight: isMyMessage ? 50 : 0,
+        marginLeft: isMyMessage ? 0 : 50,
+        backgroundColor: isMyMessage ? 'white' : '#d7e4c4',
       }}
     >
       <Text style={styles.message}>

@@ -7,6 +7,7 @@ import Toast from '../../components/common/Toast';
 import ForgotPasswordStep1 from '../../components/forgotPassword/ForgotPasswordStep1';
 import ForgotPasswordStep2 from '../../components/forgotPassword/ForgotPasswordStep2';
 import { ParamList } from '../../navigation/ParamList';
+import useForm from '../../components/common/custemHook/useForm';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
@@ -14,10 +15,22 @@ type Props = {
 
 const ForgotPassword = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
-  const [email, setEmail] = React.useState('jiancehenj@mikes.cd');
   const [message, setMessage] = React.useState('');
-  const [messageType] = React.useState('error');
-
+  const { handleChange, checkErrors, values, errorsMessages } = useForm(
+    {
+      verificationCode: '818302',
+      password: '1111111112',
+      confirmPassword: '1111111112',
+      email: 'jiancehenj@mikes.cd',
+    },
+    {
+      verificationCode: 'Invalid verification code',
+      password: 'Invalid password',
+      confirmPassword: 'Password mismatch',
+      email: 'Invalid email',
+    },
+  );
+  const setEmail = (value: string) => handleChange({ name: 'email', value });
   return (
     <AppContainer>
       <View style={[styles.subcontainer]}>
@@ -26,16 +39,20 @@ const ForgotPassword = ({ navigation }: Props) => {
           <ForgotPasswordStep1
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
-            setMessage={setMessage}
+            checkErrors={checkErrors}
+            email={values.email}
+            errorsMessages={errorsMessages}
           />
         ) : (
           <ForgotPasswordStep2
             navigation={navigation}
-            email={email}
-            setMessage={setMessage}
+            values={values}
+            checkErrors={checkErrors}
+            handleChange={handleChange}
+            errorsMessages={errorsMessages}
           />
         )}
-        <Toast message={message} callback={setMessage} type={messageType} />
+        <Toast message={message} callback={setMessage} type="error" />
       </View>
     </AppContainer>
   );

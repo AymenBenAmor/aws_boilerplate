@@ -19,9 +19,9 @@ const ChatMessageList = ({ array }: Props) => {
           flexGrow: 1,
         }}
         renderItem={({ index }) => {
-          const isMymessage = index % 2 === 0;
+          const isMyMessage = index % 2 === 0;
 
-          return <ChatMessageItem isMymessage={isMymessage} index={index} />;
+          return <ChatMessageItem isMyMessage={isMyMessage} index={index} />;
         }}
         onContentSizeChange={() =>
           flatListRef.current.scrollToEnd({ animated: false })

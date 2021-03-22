@@ -9,7 +9,6 @@ const ChatMessage = () => {
   const [message, setMessage] = React.useState('');
 
   const SendIcon = (props: IconProps) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
     <Icon {...props} fill="black" name="paper-plane-outline" />
   );
 
@@ -20,6 +19,7 @@ const ChatMessage = () => {
     <AppContainer style={styles.container}>
       <>
         <ChatMessageList array={test} />
+        {/* todo put these styles in the stylesheet */}
         <View
           style={{
             backgroundColor: 'white',
@@ -30,6 +30,7 @@ const ChatMessage = () => {
             marginBottom: 10,
           }}
         >
+          {/* todo put these styles in the stylesheet */}
           <TextInput
             value={message}
             onChangeText={(value: string) => setMessage(value)}
@@ -42,6 +43,7 @@ const ChatMessage = () => {
             }}
             numberOfLines={Platform.OS === 'ios' ? undefined : 4}
           />
+          {/* todo put these styles in the stylesheet */}
           <Button
             appearance="ghost"
             status="danger"

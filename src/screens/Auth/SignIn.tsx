@@ -10,7 +10,6 @@ import AppTextInput from '../../components/common/AppTextInput';
 import Toast from '../../components/common/Toast';
 import { useAsync } from '../../components/common/custemHook/useAsync';
 import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
 
