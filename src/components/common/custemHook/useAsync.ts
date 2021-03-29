@@ -28,7 +28,7 @@ export const useAsync = ({
         'user',
         res,
       );
-      onSuccessFn(res);
+      onSuccessFn && onSuccessFn(res);
       setResult(res);
       setMessage('');
     } catch (error) {
@@ -36,7 +36,7 @@ export const useAsync = ({
         '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> Error signing in...',
         error,
       );
-      onFailedFn(error);
+      onFailedFn && onFailedFn(error);
       setMessage(error.message);
       setMessageType('error');
     } finally {

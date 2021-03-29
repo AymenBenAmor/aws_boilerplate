@@ -1,11 +1,14 @@
+import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 type Props = {
   isMymessage: boolean;
-  index: number;
+  message: string;
+  createdAt: string;
+  name: string;
 };
-const ChatMessageItem = ({ isMymessage, index }: Props) => {
+const ChatMessageItem = ({ isMymessage, message, createdAt, name }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
@@ -16,22 +19,27 @@ const ChatMessageItem = ({ isMymessage, index }: Props) => {
         paddingVertical: 10,
         paddingHorizontal: 5,
         marginVertical: 10,
-        marginRight: isMymessage ? 50 : 0,
-        marginLeft: isMymessage ? 0 : 50,
+        marginRight: isMymessage ? 0 : 50,
+        marginLeft: isMymessage ? 50 : 0,
         backgroundColor: isMymessage ? 'white' : '#d7e4c4',
       }}
     >
-      <Text style={styles.message}>
-        message edwed fwef wefklfwe f fwelknfwew {index}
-      </Text>
-      <Text style={styles.time}>09:45</Text>
+      {!isMymessage && <Text style={styles.name}>{name}</Text>}
+      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.time}> {moment(createdAt).fromNow()}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f0eff1',
+    backgroundColor: '#64907a',
+  },
+  name: {
+    fontSize: 15,
+    color: '#889d9c',
+    fontWeight: '600',
+    marginBottom: 5,
   },
   message: {
     fontSize: 15,

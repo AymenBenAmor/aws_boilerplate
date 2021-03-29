@@ -28,7 +28,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@chesstr.com',
+      email: 'ansiosid@holladayutah.com',
       password: '1111111111',
     },
     { email: 'Invalid email', password: 'Invalid password' },

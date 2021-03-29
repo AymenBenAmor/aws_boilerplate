@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   message: { fontSize: 15, color: '#606060' },
   border: {
     height: 10,
-    width: '80%',
+    width: '90%',
     borderBottomColor: '#bdbcbc',
     borderBottomWidth: 1,
     alignSelf: 'center',

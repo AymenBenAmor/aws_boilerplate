@@ -28,7 +28,7 @@ const SignUpStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'jiancehenj@chesstr.com',
+      email: 'ansiosid@oormi.com',
       family_name: 'firstName',
       given_name: 'lastname',
       address: 'address',

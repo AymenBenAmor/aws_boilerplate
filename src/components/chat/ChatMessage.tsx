@@ -1,54 +1,33 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Icon, Button, IconProps } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View, TextInput, Platform } from 'react-native';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { messagesByChatRoom } from '../../graphql/queries';
+import { useAsync } from '../common/custemHook/useAsync';
+import { AppStackParamList } from '../../navigation/AppNavigator';
 
 import AppContainer from '../common/AppContainer';
 import ChatMessageList from './ChatMessageList';
+import InputBoxChat from './InputBoxChat';
 
-const ChatMessage = () => {
-  const [message, setMessage] = React.useState('');
-
-  const SendIcon = (props: IconProps) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <Icon {...props} fill="black" name="paper-plane-outline" />
-  );
-
+type Props = {
+  navigation: StackNavigationProp<AppStackParamList, 'ChatMessage'>;
+  route: RouteProp<AppStackParamList, 'ChatMessage'>;
+};
+const ChatMessage: React.FC<Props> = ({ navigation, route }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
   return (
     <AppContainer style={styles.container}>
       <>
-        <ChatMessageList array={test} />
-        <View
-          style={{
-            backgroundColor: 'white',
-            flexDirection: 'row',
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            marginBottom: 10,
-          }}
-        >
-          <TextInput
-            value={message}
-            onChangeText={(value: string) => setMessage(value)}
-            multiline
-            placeholder="Type a message"
-            style={{
-              maxHeight: 60,
-              width: '90%',
-              borderRightWidth: 1,
-            }}
-            numberOfLines={Platform.OS === 'ios' ? undefined : 4}
-          />
-          <Button
-            appearance="ghost"
-            status="danger"
-            accessoryLeft={SendIcon}
-            style={{ width: '10%' }}
-          />
-        </View>
+        <ChatMessageList
+          chatRoomID={route.params.chatRoomID}
+          myUserId={route.params.myUserId}
+        />
+        <InputBoxChat chatRoomID={route.params.chatRoomID} />
       </>
     </AppContainer>
   );
@@ -57,17 +36,6 @@ const ChatMessage = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f0eff1',
-  },
-  message: {
-    fontSize: 15,
-    color: '#202020',
-    fontWeight: '500',
-    marginBottom: 5,
-  },
-  time: {
-    fontSize: 12,
-    color: '#202020',
-    alignSelf: 'flex-end',
   },
 });
 
