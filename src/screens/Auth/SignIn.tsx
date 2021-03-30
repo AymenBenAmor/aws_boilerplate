@@ -8,7 +8,7 @@ import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
 import Toast from '../../components/common/Toast';
-import { useAsync } from '../../components/common/custemHook/useAsync';
+import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import useForm from '../../components/common/custemHook/useForm';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
@@ -19,13 +19,7 @@ type Props = {
 };
 
 const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
-  const {
-    handleChange,
-    checkErrors,
-    values,
-    isSubmitting,
-    errorsMessages,
-  } = useForm(
+  const { handleChange, checkErrors, values, errorsMessages } = useForm(
     {
       email: 'jiancehenj@chesstr.com',
       password: '1111111111',
@@ -33,18 +27,17 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
     { email: 'Invalid email', password: 'Invalid password' },
   );
 
-  const {
-    loading,
-    message,
-    messageType,
-    loadData: signIn,
-    setMessage,
-  } = useAsync({
-    fetchFn: () => Auth.signIn(values.email, values.password),
-    onSuccessFn: () => {
-      updateAuthState('loggedIn');
-    },
-  });
+  const { status, run } = useAsync<any>();
+  const signIn = () => {
+    run(Auth.signIn(values.email, values.password)).then(
+      () => {
+        updateAuthState('loggedIn');
+      },
+      error => {
+        // setMessage();
+      },
+    );
+  };
 
   return (
     <AppContainer>
@@ -78,10 +71,10 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
 
         <Layout style={styles.footerButtonContainer}>
           <AppButton
-            loading={loading}
+            loading={status === PossibleActionType.LOADING}
             title="Login"
             onPress={signIn}
-            disabled={isSubmitting}
+            disabled={status === PossibleActionType.LOADING}
           />
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('ForgotPassword')}
@@ -93,7 +86,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
         <Button onPress={() => navigation.navigate('SignUp')}>
           Don&apos;t have an account? Sign Up
         </Button>
-        <Toast message={message} callback={setMessage} type={messageType} />
+        {/*<Toast message={message} callback={setMessage} type={messageType} />*/}
       </Layout>
     </AppContainer>
   );

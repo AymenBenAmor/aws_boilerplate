@@ -3,7 +3,7 @@ import * as React from 'react';
 function useSafeDispatch<T>(dispatch: React.Dispatch<FetchingActions<T>>) {
   const mounted = React.useRef(false);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
@@ -12,7 +12,7 @@ function useSafeDispatch<T>(dispatch: React.Dispatch<FetchingActions<T>>) {
 
   return React.useCallback(
     val => {
-      if (mounted) {
+      if (mounted.current) {
         dispatch(val);
       }
     },
@@ -44,6 +44,7 @@ function createAsyncReducer<T>() {
     state: FetchingStateType<T>,
     action: FetchingActions<T>,
   ): FetchingStateType<T> {
+    console.log('reducer');
     switch (action.type) {
       case PossibleActionType.IDLE:
         return {
@@ -95,7 +96,6 @@ export function useAsync<StateType>(): {
         },
         (error: Error) => {
           dispatch({ type: PossibleActionType.ERROR });
-          // eslint-disable-next-line prefer-promise-reject-errors
           return Promise.reject(error);
         },
       );
