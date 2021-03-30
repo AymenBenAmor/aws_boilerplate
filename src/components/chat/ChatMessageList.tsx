@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useAsync } from '../common/custemHook/useAsync';
+import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import { messagesByChatRoom } from '../../graphql/queries';
 import { onCreateMessage } from '../../graphql/subscriptions';
 
@@ -15,6 +15,28 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
   const flatListRef: any = React.useRef();
 
   const [messages, setMessages] = React.useState([]);
+
+  const { status, run } = useAsync<any>();
+
+  const getMessageList = React.useCallback(() => {
+    run(
+      API.graphql(
+        graphqlOperation(messagesByChatRoom, {
+          chatRoomID,
+          sortDirection: 'ASC',
+        }),
+      ),
+    ).then(
+      result => {
+        if (result?.data?.messagesByChatRoom?.items) {
+          setMessages(result?.data?.messagesByChatRoom?.items);
+        }
+      },
+      error => {
+        setMessages(error.message);
+      },
+    );
+  }, [chatRoomID, run]);
 
   const { result } = useAsync({
     fetchFn: async () =>
@@ -31,9 +53,8 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
   });
 
   React.useEffect(() => {
-    if (result?.data?.messagesByChatRoom?.items)
-      setMessages(result?.data?.messagesByChatRoom?.items);
-  }, [result]);
+    getMessageList();
+  }, [getMessageList]);
 
   React.useEffect(() => {
     const subscription = API.graphql(
@@ -42,7 +63,7 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
       next: (data: any) => {
         console.log('dataaaaaaaaa', data);
       },
-      error: (error: any) => console.log('error', error),
+      error: (error: any) => console.log('error'),
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -70,9 +91,9 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
             </>
           );
         }}
-        onContentSizeChange={() =>
-          flatListRef.current.scrollToEnd({ animated: false })
-        }
+        onContentSizeChange={() => {
+          return flatListRef.current.scrollToEnd({ animated: false });
+        }}
         keyExtractor={(item: any, index: number) => index.toString()}
       />
     </>

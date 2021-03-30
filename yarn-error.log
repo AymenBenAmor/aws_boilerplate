@@ -1,4 +1,5 @@
 Arguments: 
+<<<<<<< HEAD
   /usr/local/bin/node /usr/local/bin/yarn
 
 PATH: 
@@ -9,11 +10,24 @@ Yarn version:
 
 Node version: 
   14.15.5
+=======
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/kv47ve/epicreact/aws_boilerplate/node_modules/.bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  14.15.0
+>>>>>>> e20fd463c31903d5a3fc195b8ce6bfa9a9f3ed92
 
 Platform: 
   darwin x64
 
 Trace: 
+<<<<<<< HEAD
   SyntaxError: Invalid value type 7451:0 in /Users/sadikmilliti/new-new-bol/yarn.lock
       at Parser.unexpected (/usr/local/lib/node_modules/yarn/lib/cli.js:64333:11)
       at Parser.parse (/usr/local/lib/node_modules/yarn/lib/cli.js:64461:16)
@@ -24,6 +38,18 @@ Trace:
       at Generator.next (<anonymous>)
       at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
       at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
+=======
+  SyntaxError: Invalid value type 7451:0 in /Users/kv47ve/epicreact/aws_boilerplate/yarn.lock
+      at Parser.unexpected (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:64314:11)
+      at Parser.parse (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:64442:16)
+      at Parser.parse (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:64419:26)
+      at parse (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:64517:19)
+      at module.exports.exports.default (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:64081:96)
+      at Function.<anonymous> (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:3064:63)
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:321:13
+>>>>>>> e20fd463c31903d5a3fc195b8ce6bfa9a9f3ed92
 
 npm manifest: 
   {

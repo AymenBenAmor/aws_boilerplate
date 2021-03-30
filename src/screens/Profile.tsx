@@ -7,12 +7,13 @@ import AppButton from '../components/common/AppButton';
 import AppContainer from '../components/common/AppContainer';
 import AppTextInput from '../components/common/AppTextInput';
 import Toast from '../components/common/Toast';
-import { useAsync } from '../components/common/custemHook/useAsync';
+import { useAsync } from '../helpers/customHooks';
 import useForm from '../components/common/custemHook/useForm';
 
 const Profile = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
   const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
+  const [message, setMessage] = React.useState('');
 
   const {
     handleChange,
@@ -36,34 +37,44 @@ const Profile = () => {
     },
   );
 
-  const { loadData: getUserDetails } = useAsync({
-    fetchFn: () => Auth.currentAuthenticatedUser(),
-    onSuccessFn: res => {
-      updateAllValues(() => {
-        // eslint-disable-next-line camelcase
-        const { email, family_name, given_name, address } = res.attributes;
-        setuserDetails(res);
-        return { email, family_name, given_name, address };
-      });
-    },
-    loadOnMount: true,
-  });
+  const { run } = useAsync<any>();
 
-  const {
-    message,
-    setMessage,
-    messageType,
-    loadData: updateUserDetails,
-  } = useAsync({
-    fetchFn: () =>
+  const getUserDetails = React.useCallback(() => {
+    run(Auth.currentAuthenticatedUser()).then(
+      res => {
+        updateAllValues(() => {
+          // eslint-disable-next-line camelcase
+          const { email, family_name, given_name, address } = res.attributes;
+          setuserDetails(res);
+          return { email, family_name, given_name, address };
+        });
+      },
+
+      error => {
+        setMessage(error.message);
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const updateUserDetails = () => {
+    run(
       Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-    onSuccessFn: () => {
-      getUserDetails();
-      setIsEditStep(false);
-    },
-  });
+    ).then(
+      () => {
+        getUserDetails();
+        setIsEditStep(false);
+      },
+      error => {
+        setMessage(error.message);
+      },
+    );
+  };
+  React.useEffect(() => {
+    getUserDetails();
+  }, [getUserDetails]);
 
   return (
     <AppContainer>
@@ -72,16 +83,20 @@ const Profile = () => {
         {!isEditStep ? (
           <Layout>
             <Text style={styles.title}>
-              Email: {userDetails?.attributes?.email}
+              Email:
+              {userDetails?.attributes?.email}
             </Text>
             <Text style={styles.title}>
-              first name: {userDetails?.attributes?.family_name}
+              first name:
+              {userDetails?.attributes?.family_name}
             </Text>
             <Text style={styles.title}>
-              last name: {userDetails?.attributes?.given_name}
+              last name:
+              {userDetails?.attributes?.given_name}
             </Text>
             <Text style={styles.title}>
-              address: {userDetails?.attributes?.address}
+              address:
+              {userDetails?.attributes?.address}
             </Text>
           </Layout>
         ) : (
@@ -99,9 +114,9 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.family_name || ''}
-              onChangeText={value =>
-                handleChange({ name: 'family_name', value })
-              }
+              onChangeText={value => {
+                return handleChange({ name: 'family_name', value });
+              }}
               leftIcon="person-outline"
               placeholder="Enter first name"
               autoCapitalize="none"
@@ -110,9 +125,9 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.given_name || ''}
-              onChangeText={value =>
-                handleChange({ name: 'given_name', value })
-              }
+              onChangeText={value => {
+                return handleChange({ name: 'given_name', value });
+              }}
               leftIcon="person-outline"
               placeholder="Enter last name"
               autoCapitalize="none"
@@ -131,12 +146,12 @@ const Profile = () => {
           </Layout>
         )}
 
-        <Toast message={message} callback={setMessage} type={messageType} />
+        <Toast message={message} callback={setMessage} />
 
         <AppButton
-          onPress={() =>
-            !isEditStep ? setIsEditStep(true) : updateUserDetails
-          }
+          onPress={() => {
+            return !isEditStep ? setIsEditStep(true) : updateUserDetails();
+          }}
           disabled={!isEditStep ? false : isSubmitting}
           title={!isEditStep ? 'updateUserDetails' : 'Update'}
         />

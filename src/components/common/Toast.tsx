@@ -4,17 +4,17 @@ import { StyleSheet, View, Text } from 'react-native';
 
 type Props = {
   message: string;
-  type: string;
+  type?: string;
   callback: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Toast = ({ message, type, callback }: Props) => {
+const Toast = ({ message, type = 'error', callback }: Props) => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       if (message) {
         callback('');
       }
-    }, 2000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [callback, message]);
 

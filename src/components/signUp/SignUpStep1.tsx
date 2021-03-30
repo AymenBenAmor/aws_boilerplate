@@ -1,13 +1,12 @@
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
-import { useAsync } from '../common/custemHook/useAsync';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 
 type Props = {
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,7 +27,7 @@ const SignUpStep1: React.FC<Props> = ({
     errorsMessages,
   } = useForm(
     {
-      email: 'ansiosid@oormi.com',
+      email: 'ansiosid@macnausa.com',
       family_name: 'firstName',
       given_name: 'lastname',
       address: 'address',
@@ -45,8 +44,10 @@ const SignUpStep1: React.FC<Props> = ({
     },
   );
 
-  const { message, loading, loadData: signUp } = useAsync({
-    fetchFn: () =>
+  const { status, run } = useAsync<any>();
+
+  const signUpStep1 = () => {
+    run(
       Auth.signUp({
         username: values.email,
         password: values.password,
@@ -56,15 +57,16 @@ const SignUpStep1: React.FC<Props> = ({
           address: values.address,
         },
       }),
-    onSuccessFn: () => {
-      setIsConfirmStep(true);
-      setEmail(values.email);
-    },
-  });
-
-  useEffect(() => {
-    setMessage(message);
-  }, [message, setMessage]);
+    ).then(
+      () => {
+        setIsConfirmStep(true);
+        setEmail(values.email);
+      },
+      error => {
+        setMessage(error.message);
+      },
+    );
+  };
 
   return (
     <ScrollView contentContainerStyle={[styles.subcontainer]}>
@@ -123,9 +125,9 @@ const SignUpStep1: React.FC<Props> = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={value =>
-            handleChange({ name: 'confirmPassword', value })
-          }
+          onChangeText={value => {
+            return handleChange({ name: 'confirmPassword', value });
+          }}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -138,9 +140,9 @@ const SignUpStep1: React.FC<Props> = ({
       </View>
 
       <AppButton
-        loading={loading}
+        loading={status === PossibleActionType.LOADING}
         title="confirmSignUp"
-        onPress={signUp}
+        onPress={signUpStep1}
         disabled={isSubmitting}
       />
     </ScrollView>

@@ -1,55 +1,42 @@
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
-import { useAsync } from '../common/custemHook/useAsync';
-import useForm from '../common/custemHook/useForm';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 
 type Props = {
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: (value: string) => void;
+  email: string;
+  checkErrors: (value: string) => void;
+  errorsMessages: Record<string, string>;
 };
 
-const ForgotPasswordStep1: React.FC<Props> = ({
+type UserType = {
+  email: string;
+};
+
+const ForgotPasswordStep1 = ({
   setIsConfirmStep,
   setEmail,
-  setMessage,
+  email,
+  checkErrors,
+  errorsMessages,
 }: Props) => {
-  const {
-    handleChange,
-    checkErrors,
-    values,
-    isSubmitting,
-    errorsMessages,
-  } = useForm(
-    {
-      email: 'jiancehenj@anikamenon.com',
-    },
-    {
-      email: 'Invalid email',
-    },
-  );
-
-  const { message, loading, loadData: forgotPassword } = useAsync({
-    fetchFn: () => Auth.forgotPassword(values.email),
-    onSuccessFn: () => {
+  const { run, status } = useAsync<UserType>();
+  const forgotPassword = () => {
+    run(Auth.forgotPassword(email)).then(() => {
       setIsConfirmStep(true);
-      setEmail(values.email);
-    },
-  });
-  React.useEffect(() => {
-    setMessage(message);
-  }, [message, setMessage]);
-
+    });
+  };
   return (
     <>
       <View>
         <AppTextInput
-          value={values.email || ''}
-          onChangeText={value => handleChange({ name: 'email', value })}
+          value={email || ''}
+          onChangeText={value => setEmail(value)}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"
@@ -59,13 +46,17 @@ const ForgotPasswordStep1: React.FC<Props> = ({
           errorMessage={errorsMessages.email || ''}
         />
       </View>
-
+      {status === PossibleActionType.ERROR ? (
+        <Text>Something wrong happened. Please try again!</Text>
+      ) : (
+        ''
+      )}
       <View style={styles.footerButtonContainer}>
         <AppButton
-          loading={loading}
+          loading={status === PossibleActionType.LOADING}
           title="Validate"
           onPress={forgotPassword}
-          disabled={isSubmitting}
+          disabled={status === PossibleActionType.LOADING}
         />
       </View>
     </>
@@ -73,21 +64,10 @@ const ForgotPasswordStep1: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    color: '#202020',
-    fontWeight: '500',
-    marginVertical: 15,
-  },
   footerButtonContainer: {
     alignItems: 'center',
     justifyContent: 'space-around',
     width: '100%',
-  },
-  forgotPasswordButtonText: {
-    color: 'tomato',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });
 

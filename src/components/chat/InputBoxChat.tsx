@@ -1,14 +1,12 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import { Icon, Button, IconProps } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet, View, TextInput, Platform } from 'react-native';
+import { View, TextInput, Platform } from 'react-native';
 import { createMessage } from '../../graphql/mutations';
-import { AppStackParamList } from '../../navigation/AppNavigator';
 
-import { useAsync } from '../common/custemHook/useAsync';
+import { useAsync } from '../../helpers/customHooks';
 
 type Props = {
   chatRoomID: string;
@@ -17,16 +15,24 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
   const [message, setMessage] = React.useState('');
   const [myUserId, setMyUserId] = React.useState('');
 
-  useAsync({
-    fetchFn: () => Auth.currentAuthenticatedUser(),
-    onSuccessFn: res => {
-      setMyUserId(res.attributes.sub);
-    },
+  const { status, run } = useAsync<any>();
+  const getMyDetails = React.useCallback(() => {
+    run(Auth.currentAuthenticatedUser()).then(
+      res => {
+        setMyUserId(res.attributes.sub);
+      },
+      error => {
+        setMessage(error.message);
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  React.useEffect(() => {
+    getMyDetails();
+  }, [getMyDetails]);
 
-    loadOnMount: true,
-  });
-  const { loadData: onSendPress } = useAsync({
-    fetchFn: async () =>
+  const onSendPress = () => {
+    run(
       API.graphql(
         graphqlOperation(createMessage, {
           input: {
@@ -36,10 +42,15 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
           },
         }),
       ),
-    onSuccessFn: res => {
-      setMessage('');
-    },
-  });
+    ).then(
+      () => {
+        setMessage('');
+      },
+      error => {
+        setMessage(error.message);
+      },
+    );
+  };
 
   const SendIcon = (props: IconProps) => (
     // eslint-disable-next-line react/jsx-props-no-spreading

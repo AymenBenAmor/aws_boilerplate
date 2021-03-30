@@ -12,6 +12,7 @@ const ChatMessageItem = ({ isMymessage, message, createdAt, name }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
+  /* todo put these styles in the stylesheet */
   return (
     <View
       style={{
@@ -26,7 +27,7 @@ const ChatMessageItem = ({ isMymessage, message, createdAt, name }: Props) => {
     >
       {!isMymessage && <Text style={styles.name}>{name}</Text>}
       <Text style={styles.message}>{message}</Text>
-      <Text style={styles.time}> {moment(createdAt).fromNow()}</Text>
+      <Text style={styles.time}>{moment(createdAt).fromNow()}</Text>
     </View>
   );
 };

@@ -1,11 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Icon, Button, IconProps } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet, View, TextInput, Platform } from 'react-native';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { messagesByChatRoom } from '../../graphql/queries';
-import { useAsync } from '../common/custemHook/useAsync';
+import { StyleSheet } from 'react-native';
 import { AppStackParamList } from '../../navigation/AppNavigator';
 
 import AppContainer from '../common/AppContainer';
@@ -16,10 +12,7 @@ type Props = {
   navigation: StackNavigationProp<AppStackParamList, 'ChatMessage'>;
   route: RouteProp<AppStackParamList, 'ChatMessage'>;
 };
-const ChatMessage: React.FC<Props> = ({ navigation, route }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const test: any = [];
-  test.length = 15;
+const ChatMessage: React.FC<Props> = ({ route }) => {
   return (
     <AppContainer style={styles.container}>
       <>

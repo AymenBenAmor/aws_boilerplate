@@ -7,7 +7,7 @@ import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { ParamList } from '../../navigation/ParamList';
-import { useAsync } from '../common/custemHook/useAsync';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
@@ -35,26 +35,24 @@ const SignUpStep = ({
       verificationCode: 'Invalid verification code',
     },
   );
+  const { status, run } = useAsync<any>();
 
-  const { loading, loadData: confirmSignUp } = useAsync({
-    fetchFn: () => Auth.confirmSignUp(email, values.verificationCode),
-    onSuccessFn: () => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'SignIn' }],
-      });
-    },
-    onFailedFn: err => {
-      setMessage(err.message);
-    },
-  });
-
-  const {
-    loading: resendCodeLoading,
-    loadData: resendConfirmationCode,
-  } = useAsync({
-    fetchFn: () => Auth.resendSignUp(email),
-  });
+  const signUpStep2 = () => {
+    run(Auth.confirmSignUp(email, values.verificationCode)).then(
+      () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'SignIn' }],
+        });
+      },
+      error => {
+        setMessage(error.message);
+      },
+    );
+  };
+  const resendConfirmationCode = () => {
+    run(Auth.resendSignUp(email)).then();
+  };
 
   return (
     <View style={[styles.subcontainer]}>
@@ -62,9 +60,9 @@ const SignUpStep = ({
 
       <AppTextInput
         value={values.verificationCode}
-        onChangeText={value =>
-          handleChange({ name: 'verificationCode', value })
-        }
+        onChangeText={value => {
+          return handleChange({ name: 'verificationCode', value });
+        }}
         leftIcon="lock-outline"
         placeholder="Enter verification code "
         autoCapitalize="none"
@@ -76,13 +74,12 @@ const SignUpStep = ({
 
       <View style={styles.footerButtonContainer}>
         <AppButton
-          loading={loading}
           title="confirmSignUp"
-          onPress={() => confirmSignUp()}
+          onPress={() => signUpStep2()}
           disabled={isSubmitting}
         />
         <AppButton
-          loading={resendCodeLoading}
+          loading={status === PossibleActionType.LOADING}
           title="Resend Code"
           onPress={resendConfirmationCode}
         />
