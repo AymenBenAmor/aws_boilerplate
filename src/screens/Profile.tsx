@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import React from 'react';
@@ -10,9 +11,17 @@ import Toast from '../components/common/Toast';
 import { useAsync } from '../helpers/customHooks';
 import useForm from '../components/common/custemHook/useForm';
 
+type userDetailsType = {
+  attributes: {
+    email: string;
+    family_name: string;
+    given_name: string;
+    address: string;
+  };
+};
 const Profile = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
-  const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
+  const [userDetails, setuserDetails] = React.useState<userDetailsType>(); // todo fix this type
   const [message, setMessage] = React.useState('');
 
   const {

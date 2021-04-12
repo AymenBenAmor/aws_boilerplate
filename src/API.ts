@@ -1122,6 +1122,52 @@ export type MessagesByChatRoomQuery = {
   } | null,
 };
 
+export type OnUpdateByRoomUserIdSubscriptionVariables = {
+  chatRoomID?: string,
+};
+
+export type OnUpdateByRoomUserIdSubscription = {
+  onUpdateByRoomUserId?:  {
+    __typename: "Message",
+    id: string,
+    createdAt: string,
+    content: string,
+    userID: string,
+    chatRoomID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      address?: string | null,
+      imageUri?: string | null,
+      status?: string | null,
+      chatRoomUser?:  {
+        __typename: "ModelChatRoomUserConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    chatRoom?:  {
+      __typename: "ChatRoom",
+      id: string,
+      chatRoomUsers?:  {
+        __typename: "ModelChatRoomUserConnection",
+        nextToken?: string | null,
+      } | null,
+      messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateUserSubscription = {
   onCreateUser?:  {
     __typename: "User",

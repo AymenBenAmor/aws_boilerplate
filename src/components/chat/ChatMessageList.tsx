@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useAsync, PossibleActionType } from '../../helpers/customHooks';
+import { useAsync } from '../../helpers/customHooks';
 import { messagesByChatRoom } from '../../graphql/queries';
 import { onCreateMessage } from '../../graphql/subscriptions';
 
@@ -11,12 +11,17 @@ type Props = {
   chatRoomID: string;
   myUserId: string;
 };
+type messagesType = {
+  user: { id: string; firstName: string };
+  createdAt: string;
+  content: string;
+};
 const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
   const flatListRef: any = React.useRef();
 
-  const [messages, setMessages] = React.useState([]);
+  const [messages, setMessages] = React.useState<messagesType[]>([]);
 
-  const { status, run } = useAsync<any>();
+  const { run } = useAsync<any>();
 
   const getMessageList = React.useCallback(() => {
     run(
@@ -26,47 +31,31 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
           sortDirection: 'ASC',
         }),
       ),
-    ).then(
-      result => {
-        if (result?.data?.messagesByChatRoom?.items) {
-          setMessages(result?.data?.messagesByChatRoom?.items);
-        }
-      },
-      error => {
-        setMessages(error.message);
-      },
-    );
+    ).then(result => {
+      if (result?.data?.messagesByChatRoom?.items) {
+        setMessages(result?.data?.messagesByChatRoom?.items);
+      }
+    });
   }, [chatRoomID, run]);
-
-  const { result } = useAsync({
-    fetchFn: async () =>
-      API.graphql(
-        graphqlOperation(messagesByChatRoom, {
-          chatRoomID,
-          sortDirection: 'ASC',
-        }),
-      ),
-    // onSuccessFn: res => {
-    //   console.log('res', res);
-    // },
-    loadOnMount: true,
-  });
 
   React.useEffect(() => {
     getMessageList();
   }, [getMessageList]);
 
   React.useEffect(() => {
-    const subscription = API.graphql(
-      graphqlOperation(onCreateMessage),
-    ).subscribe({
+    const subscription = API.graphql({
+      query: onCreateMessage,
+      variables: { chatRoomID },
+    }).subscribe({
       next: (data: any) => {
-        console.log('dataaaaaaaaa', data);
+        const rep = data?.value?.data?.onCreateMessage;
+        if (rep) {
+          setMessages([...messages, rep]);
+        }
       },
-      error: (error: any) => console.log('error'),
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [chatRoomID, messages]);
 
   return (
     <>
@@ -77,7 +66,7 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
         contentContainerStyle={{
           flexGrow: 1,
         }}
-        renderItem={({ index, item }) => {
+        renderItem={({ item }) => {
           return (
             <>
               {item && (
@@ -94,7 +83,7 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
         onContentSizeChange={() => {
           return flatListRef.current.scrollToEnd({ animated: false });
         }}
-        keyExtractor={(item: any, index: number) => index.toString()}
+        keyExtractor={(_, index: number) => index.toString()}
       />
     </>
   );

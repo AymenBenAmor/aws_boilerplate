@@ -43,6 +43,7 @@ const AppNavigator = ({ updateAuthState }: NavigatorProp) => {
         
       >
         {( screenProps) => (
+          // eslint-disable-next-line react/jsx-props-no-multi-spaces
           <ChatMessage  {...screenProps}  />
         )}
       </AppStack.Screen>

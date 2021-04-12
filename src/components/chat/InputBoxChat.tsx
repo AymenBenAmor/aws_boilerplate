@@ -1,11 +1,9 @@
-import { RouteProp } from '@react-navigation/native';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-
-import { Icon, Button, IconProps } from '@ui-kitten/components';
 import React from 'react';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { Icon, Button, IconProps } from '@ui-kitten/components';
 import { View, TextInput, Platform } from 'react-native';
-import { createMessage } from '../../graphql/mutations';
 
+import { createMessage } from '../../graphql/mutations';
 import { useAsync } from '../../helpers/customHooks';
 
 type Props = {
@@ -15,7 +13,7 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
   const [message, setMessage] = React.useState('');
   const [myUserId, setMyUserId] = React.useState('');
 
-  const { status, run } = useAsync<any>();
+  const { run } = useAsync<any>();
   const getMyDetails = React.useCallback(() => {
     run(Auth.currentAuthenticatedUser()).then(
       res => {

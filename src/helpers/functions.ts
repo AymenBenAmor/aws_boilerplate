@@ -1,4 +1,5 @@
 import { REGEX, images } from './constants';
+// eslint-disable @typescript-eslint/no-explicit-any
 
 export const checkError = ({
   value,

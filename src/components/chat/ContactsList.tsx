@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
@@ -10,8 +10,16 @@ import { listUsers } from '../../graphql/queries';
 import { getUser } from './queries';
 import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
 
+type usersListType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  status: string;
+  imageUri: string;
+  chatRoomID: string;
+};
 const ContactsList = () => {
-  const [usersList, setUsersList] = React.useState([]);
+  const [usersList, setUsersList] = React.useState<usersListType[]>([]);
   const [myUserId, setMyUserId] = React.useState('');
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -27,6 +35,7 @@ const ContactsList = () => {
         const myInfo = await Auth.currentAuthenticatedUser();
         setMyUserId(myInfo.attributes.sub);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log('error', error);
       }
     };
@@ -79,7 +88,6 @@ const ContactsList = () => {
         myUserId,
       });
     } catch (error) {
-      console.log(error);
       return null;
     }
   };
@@ -96,17 +104,17 @@ const ContactsList = () => {
               lastName={item.lastName}
               status={item.status}
               imageUri={item.imageUri}
-              onClick={() =>
-                onClick({
+              onClick={() => {
+                return onClick({
                   userID: item.id,
                   name: `${item.firstName} ${item.lastName}`,
-                })
-              }
+                });
+              }}
             />
           )}
         </>
       )}
-      keyExtractor={(item: any, index: number) => index.toString()}
+      keyExtractor={(_, index: number) => index.toString()}
     />
   );
 };

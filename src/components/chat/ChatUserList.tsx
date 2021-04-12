@@ -7,8 +7,17 @@ import ChatListItem from './ChatUserItem';
 import { listUsers } from '../../graphql/queries';
 import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
 
+type usersListType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  status: string;
+  imageUri: string;
+  chatRoomID: string;
+};
+
 const ChatUserList = () => {
-  const [usersList, setUsersList] = React.useState([]);
+  const [usersList, setUsersList] = React.useState<usersListType[]>([]);
   const navigation = useNavigation();
 
   React.useEffect(() => {
@@ -70,15 +79,15 @@ const ChatUserList = () => {
           lastName={item.lastName}
           status={item.status}
           imageUri={item.imageUri}
-          onClick={() =>
-            onClick({
+          onClick={() => {
+            return onClick({
               userID: item.id,
               name: `${item.firstName} ${item.lastName}`,
-            })
-          }
+            });
+          }}
         />
       )}
-      keyExtractor={(item: any, index: number) => index.toString()}
+      keyExtractor={(_, index: number) => index.toString()}
     />
   );
 };

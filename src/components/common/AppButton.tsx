@@ -1,4 +1,5 @@
-import { Button } from '@ui-kitten/components';
+/* eslint-disable react/jsx-props-no-spreading */
+import { Button, ButtonProps } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
 

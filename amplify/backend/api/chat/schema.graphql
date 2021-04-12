@@ -45,3 +45,8 @@ type ChatRoom @model {
    user:User @connection(fields:["userID"])
   chatRoom:ChatRoom @connection(fields:["chatRoomID"])
 }
+
+type Subscription{
+  onUpdateByRoomUserId(chatRoomID:ID!):Message
+   @aws_subscribe(mutations: ["createMessage"])
+}

@@ -41,7 +41,8 @@ const ChatUserItem: React.FC<Props> = ({
         />
         <View>
           <Text style={styles.name}>
-            {firstName} {lastName}
+            {firstName}
+            {lastName}
           </Text>
           <Text style={styles.message}>{status}</Text>
         </View>

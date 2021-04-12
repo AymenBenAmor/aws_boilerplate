@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import { Button, Icon, IconProps } from '@ui-kitten/components';
 import { getContactList } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
-import { listUsers } from '../../graphql/queries';
 import { getUser } from './queries';
-import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
 
+type chatRoomListType = {
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    status: string;
+    imageUri: string;
+  };
+  chatRoomID: string;
+};
 const ChatRoomList = () => {
-  const [chatRoomList, setChatRoomList] = React.useState([]);
+  const [chatRoomList, setChatRoomList] = React.useState<chatRoomListType[]>(
+    [],
+  );
   const [myUserId, setMyUserId] = React.useState('');
 
   const navigation = useNavigation();
@@ -41,6 +51,7 @@ const ChatRoomList = () => {
         setChatRoomList(chatRoomID);
         setMyUserId(myInfo.attributes.sub);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log('error', error);
       }
     };
@@ -80,18 +91,18 @@ const ChatRoomList = () => {
                   lastName={user.lastName}
                   status={user.status}
                   imageUri={user.imageUri}
-                  onClick={() =>
-                    onClick({
+                  onClick={() => {
+                    return onClick({
                       chatRoomID,
                       name: `${user.firstName} ${user.lastName}`,
-                    })
-                  }
+                    });
+                  }}
                 />
               )}
             </>
           );
         }}
-        keyExtractor={(item: any, index: number) => index.toString()}
+        keyExtractor={(_, index: number) => index.toString()}
       />
 
       <Button
