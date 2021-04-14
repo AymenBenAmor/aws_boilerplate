@@ -1,7 +1,6 @@
-/* eslint-disable camelcase */
+import * as React from 'react';
 import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
-import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 
 import AppButton from '../components/common/AppButton';
@@ -11,17 +10,19 @@ import Toast from '../components/common/Toast';
 import { useAsync } from '../helpers/customHooks';
 import useForm from '../components/common/custemHook/useForm';
 
-type userDetailsType = {
+type UserDetailsType = {
   attributes: {
     email: string;
+    // eslint-disable-next-line camelcase
     family_name: string;
+    // eslint-disable-next-line camelcase
     given_name: string;
     address: string;
   };
 };
 const Profile = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
-  const [userDetails, setuserDetails] = React.useState<userDetailsType>(); // todo fix this type
+  const [userDetails, setUserDetails] = React.useState<UserDetailsType>();
   const [message, setMessage] = React.useState('');
 
   const {
@@ -46,15 +47,16 @@ const Profile = () => {
     },
   );
 
-  const { run } = useAsync<any>();
+  const { run: runSetUser } = useAsync<UserDetailsType>();
+  const { run } = useAsync<string>();
 
   const getUserDetails = React.useCallback(() => {
-    run(Auth.currentAuthenticatedUser()).then(
+    runSetUser(Auth.currentAuthenticatedUser()).then(
       res => {
         updateAllValues(() => {
           // eslint-disable-next-line camelcase
           const { email, family_name, given_name, address } = res.attributes;
-          setuserDetails(res);
+          setUserDetails(res);
           return { email, family_name, given_name, address };
         });
       },

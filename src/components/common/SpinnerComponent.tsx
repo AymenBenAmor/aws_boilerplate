@@ -1,12 +1,12 @@
+import * as React from 'react';
 import { Spinner } from '@ui-kitten/components';
 import { EvaSize, EvaStatus } from '@ui-kitten/components/devsupport';
-import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 
 type Props = {
   color?: EvaStatus;
-  styleContainer?: ViewStyle; // todo => fix this type
-  style?: ViewStyle; // todo => fix this type
+  styleContainer?: ViewStyle;
+  style?: ViewStyle;
   size: EvaSize;
 };
 

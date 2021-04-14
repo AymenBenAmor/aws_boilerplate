@@ -15,8 +15,8 @@ type Props = {
 
 const AppTextInput = ({ leftIcon, errorMessage, ...otherProps }: Props) => {
   const isPasswordInput = otherProps.textContentType === 'password';
-
   const [secureTextEntry, setSecureTextEntry] = React.useState(isPasswordInput);
+
   return (
     <Layout style={styles.container}>
       <Input

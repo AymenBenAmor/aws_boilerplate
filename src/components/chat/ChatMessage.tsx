@@ -1,18 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { AppStackParamList } from '../../navigation/AppNavigator';
 
 import AppContainer from '../common/AppContainer';
 import ChatMessageList from './ChatMessageList';
 import InputBoxChat from './InputBoxChat';
+import type { ParamList } from '../../navigation/ParamList';
 
 type Props = {
-  navigation: StackNavigationProp<AppStackParamList, 'ChatMessage'>;
-  route: RouteProp<AppStackParamList, 'ChatMessage'>;
+  route: RouteProp<ParamList, 'ChatMessage'>;
 };
-const ChatMessage: React.FC<Props> = ({ route }) => {
+const ChatMessage = ({ route }: Props) => {
   return (
     <AppContainer style={styles.container}>
       <>

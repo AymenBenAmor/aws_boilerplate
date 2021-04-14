@@ -1,10 +1,12 @@
 import React from 'react';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { Icon, Button, IconProps } from '@ui-kitten/components';
 import { View, TextInput, Platform } from 'react-native';
 
 import { createMessage } from '../../graphql/mutations';
 import { useAsync } from '../../helpers/customHooks';
+import { CreateMessageInput } from '../../API';
 
 type Props = {
   chatRoomID: string;
@@ -13,21 +15,13 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
   const [message, setMessage] = React.useState('');
   const [myUserId, setMyUserId] = React.useState('');
 
+  const { run: runGetUser } = useAsync<any>();
   const { run } = useAsync<any>();
-  const getMyDetails = React.useCallback(() => {
-    run(Auth.currentAuthenticatedUser()).then(
-      res => {
-        setMyUserId(res.attributes.sub);
-      },
-      error => {
-        setMessage(error.message);
-      },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   React.useEffect(() => {
-    getMyDetails();
-  }, [getMyDetails]);
+    runGetUser(Auth.currentAuthenticatedUser()).then(res => {
+      setMyUserId(res.attributes.sub);
+    });
+  }, [setMyUserId, runGetUser]);
 
   const onSendPress = () => {
     run(
@@ -39,19 +33,13 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
             chatRoomID,
           },
         }),
-      ),
-    ).then(
-      () => {
-        setMessage('');
-      },
-      error => {
-        setMessage(error.message);
-      },
-    );
+      ) as Promise<GraphQLResult<CreateMessageInput>>,
+    ).then(() => {
+      setMessage('');
+    });
   };
 
   const SendIcon = (props: IconProps) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
     <Icon {...props} fill="black" name="paper-plane-outline" />
   );
 
@@ -68,7 +56,7 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
     >
       <TextInput
         value={message}
-        onChangeText={(value: string) => setMessage(value)}
+        onChangeText={setMessage}
         multiline
         placeholder="Type a message"
         style={{

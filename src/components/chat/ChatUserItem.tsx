@@ -11,7 +11,7 @@ type Props = {
   onClick: () => void;
 };
 
-const ChatUserItem: React.FC<Props> = ({
+const ChatUserItem = ({
   id,
   imageUri = 'https://loja02.uberflow.com.br/wordpress/wp-content/files/loja02.uberflow.com.br/2019/11/dep_01.jpg',
   firstName = `Patric ${id}`,

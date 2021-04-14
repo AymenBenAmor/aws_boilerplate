@@ -22,6 +22,7 @@ amplify/backend/amplify-meta.json
 amplify/backend/awscloudformation
 amplify/backend/.temp
 build/
+coverage/
 dist/
 node_modules/
 aws-exports.js

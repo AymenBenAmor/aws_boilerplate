@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 
 import { updateAuth } from '../navigation/AppNavigator';

@@ -13,6 +13,7 @@
     "updateSnapshots": "jest -u --coverage=false"
   },
   "dependencies": {
+    "@aws-amplify/api-graphql": "^1.2.29",
     "@eva-design/eva": "^2.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "^6.0.0",
@@ -30,7 +31,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
-    "react-native-gesture-handler": "~1.7.0",
+    "react-native-gesture-handler": "~1.9.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
@@ -44,6 +45,7 @@
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
+    "@types/zen-observable": "^0.8.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "eslint": "^7.2.0",

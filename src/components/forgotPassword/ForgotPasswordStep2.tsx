@@ -24,8 +24,8 @@ const ForgotPasswordStep2 = ({
   errorsMessages,
 }: Props) => {
   const { status, run } = useAsync();
-  const confirmForgotPassword = async () => {
-    await run(
+  const confirmForgotPassword = () => {
+    run(
       Auth.forgotPasswordSubmit(
         values.email,
         values.verificationCode,

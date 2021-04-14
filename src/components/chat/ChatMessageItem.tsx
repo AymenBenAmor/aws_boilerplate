@@ -9,7 +9,6 @@ type Props = {
   name: string;
 };
 const ChatMessageItem = ({ isMymessage, message, createdAt, name }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const test: any = [];
   test.length = 15;
   /* todo put these styles in the stylesheet */

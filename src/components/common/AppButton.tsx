@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Button, ButtonProps } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
@@ -11,7 +10,7 @@ type Props = {
   disabled?: boolean;
   onPress: (event: GestureResponderEvent) => void;
   style?: ViewStyle;
-};
+} & ButtonProps;
 
 const AppButton = ({
   title,
@@ -33,7 +32,7 @@ const AppButton = ({
     <Button
       style={[styles.button, style]}
       onPress={handleClick}
-      accessoryLeft={() => loadingIndicator()}
+      accessoryLeft={loadingIndicator}
       disabled={disabled}
       {...buttonProps}
     >
@@ -48,7 +47,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'tomato',
     width: '100%',
   },

@@ -28,7 +28,6 @@ const ChatRoomList = () => {
   const isFocused = useIsFocused();
   const MessegeIcon = (props: IconProps) => (
     <Icon
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
       name="message-square-outline"
       size="large"

@@ -50,7 +50,7 @@
       "html": "enforce",
       "custom": "enforce",
       "explicitSpread": "enforce",
-      "exceptions": ["ApplicationProvider", "Input", "Home", "Profile", "ForgotPassword", "SignUp", "SignIn", "Icon"]
+      "exceptions": ["ApplicationProvider", "Input", "Icon"]
     }],
     "react/require-default-props": "off",
     "@typescript-eslint/no-shadow": ["error"]
