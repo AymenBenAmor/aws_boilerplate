@@ -4,11 +4,14 @@ import { FlatList } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import { StackNavigationProp } from '@react-navigation/stack';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { useAsync } from '../../helpers/customHooks';
 import { verifExistChatRoomUsers } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
 import { listUsers } from '../../graphql/queries';
 import { getUser } from './queries';
 import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
+import { ListUsersQuery } from '../../API';
 
 type usersListType = {
   id: string;
@@ -20,7 +23,9 @@ type usersListType = {
 };
 const ContactsList = () => {
   const [usersList, setUsersList] = React.useState<usersListType[]>([]);
-  const [myUserId, setMyUserId] = React.useState('');
+  const [UserId, setMyUserId] = React.useState('');
+
+  const { run } = useAsync();
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const navigation = useNavigation<StackNavigationProp<{ ChatMessage: {} }>>();
@@ -28,11 +33,16 @@ const ContactsList = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersListData: any = await API.graphql(
-          graphqlOperation(listUsers),
+        /* eslint-disable @typescript-eslint/no-explicit-any  */
+        const usersListData: any = await run(
+          API.graphql(graphqlOperation(listUsers)) as Promise<
+            GraphQLResult<ListUsersQuery>
+          >,
         );
         setUsersList(usersListData.data?.listUsers.items);
-        const myInfo = await Auth.currentAuthenticatedUser();
+
+        /* eslint-disable @typescript-eslint/no-explicit-any  */
+        const myInfo: any = await run(Auth.currentAuthenticatedUser());
         setMyUserId(myInfo.attributes.sub);
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -41,7 +51,7 @@ const ContactsList = () => {
     };
 
     fetchData();
-  }, []);
+  }, [run]);
 
   const onClick = async ({
     userID,
@@ -52,7 +62,7 @@ const ContactsList = () => {
   }) => {
     try {
       const userData: any = await API.graphql(
-        graphqlOperation(getUser, { id: myUserId }),
+        graphqlOperation(getUser, { id: UserId }),
       );
 
       let chatRoomID = verifExistChatRoomUsers({ userData, userID })
@@ -74,7 +84,7 @@ const ContactsList = () => {
         await API.graphql(
           graphqlOperation(createChatRoomUser, {
             input: {
-              userID: myUserId,
+              userID: UserId,
               chatRoomID: newChatRoom.id,
             },
           }),
@@ -85,7 +95,7 @@ const ContactsList = () => {
       return navigation.replace('ChatMessage', {
         chatRoomID,
         name,
-        myUserId,
+        UserId,
       });
     } catch (error) {
       return null;
@@ -97,7 +107,7 @@ const ContactsList = () => {
       data={usersList}
       renderItem={({ item }) => (
         <>
-          {!!(item.id !== myUserId) && (
+          {!!(item.id !== UserId) && (
             <ChatListItem
               id={item.id}
               firstName={item.firstName}

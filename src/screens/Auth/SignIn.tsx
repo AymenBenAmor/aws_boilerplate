@@ -1,17 +1,18 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
+import UikittenButton from '../../components/common/UikittenButton';
 import AppButton from '../../components/common/AppButton';
 import AppContainer from '../../components/common/AppContainer';
 import AppTextInput from '../../components/common/AppTextInput';
-import Toast from '../../components/common/Toast';
 import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import useForm from '../../components/common/custemHook/useForm';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
+import UikittenLayout from '../../components/common/UikittenLayout';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
@@ -19,7 +20,6 @@ type Props = {
 };
 
 const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
-  const [message, setMessage] = React.useState('');
   const { handleChange, checkErrors, values, errorsMessages } = useForm(
     {
       email: 'ansiosid@holladayutah.com',
@@ -29,20 +29,24 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
   );
 
   const { status, run } = useAsync<any>();
+  const { show } = React.useContext(ToastContext);
+
   const signIn = () => {
     run(Auth.signIn(values.email, values.password)).then(
       () => {
         updateAuthState('loggedIn');
       },
-      error => {
-        setMessage(error.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
     );
   };
 
   return (
     <AppContainer>
-      <Layout style={styles.container}>
+      <UikittenLayout style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
@@ -70,7 +74,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           />
         </View>
 
-        <Layout style={styles.footerButtonContainer}>
+        <UikittenLayout style={styles.footerButtonContainer}>
           <AppButton
             loading={status === PossibleActionType.LOADING}
             title="Login"
@@ -82,13 +86,12 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           >
             <Text style={styles.forgotPassword}>Forgot Password ?</Text>
           </TouchableWithoutFeedback>
-        </Layout>
+        </UikittenLayout>
 
-        <Button onPress={() => navigation.navigate('SignUp')}>
+        <UikittenButton onPress={() => navigation.navigate('SignUp')}>
           Don&apos;t have an account? Sign Up
-        </Button>
-        <Toast message={message} callback={setMessage} />
-      </Layout>
+        </UikittenButton>
+      </UikittenLayout>
     </AppContainer>
   );
 };

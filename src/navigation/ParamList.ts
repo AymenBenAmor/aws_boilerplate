@@ -6,6 +6,6 @@ export type ParamList = {
   ForgotPassword: undefined;
   Profile: undefined;
   Chat: undefined;
-  ChatMessage: { name: string; chatRoomID: string; myUserId: '' };
+  ChatMessage: { name: string; chatRoomID: string; UserId: '' };
   ContactsList: undefined;
 };

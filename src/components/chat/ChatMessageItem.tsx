@@ -1,6 +1,10 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 type Props = {
   isMymessage: boolean;
@@ -9,31 +13,32 @@ type Props = {
   name: string;
 };
 const ChatMessageItem = ({ isMymessage, message, createdAt, name }: Props) => {
-  const test: any = [];
-  test.length = 15;
-  /* todo put these styles in the stylesheet */
   return (
     <View
-      style={{
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 5,
-        marginVertical: 10,
-        marginRight: isMymessage ? 0 : 50,
-        marginLeft: isMymessage ? 50 : 0,
-        backgroundColor: isMymessage ? 'white' : '#d7e4c4',
-      }}
+      style={[
+        styles.container,
+        {
+          marginRight: isMymessage ? 0 : 50,
+          marginLeft: isMymessage ? 50 : 0,
+          backgroundColor: isMymessage ? 'white' : '#d7e4c4',
+        },
+      ]}
     >
       {!isMymessage && <Text style={styles.name}>{name}</Text>}
       <Text style={styles.message}>{message}</Text>
-      <Text style={styles.time}>{moment(createdAt).fromNow()}</Text>
+      <Text style={styles.time}>
+        {createdAt && dayjs(createdAt).fromNow(true)}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#64907a',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    marginVertical: 10,
   },
   name: {
     fontSize: 15,

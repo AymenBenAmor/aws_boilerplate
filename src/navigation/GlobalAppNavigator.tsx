@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Layout, Spinner } from '@ui-kitten/components';
 import { UsernameAttributesType } from 'aws-amplify-react-native/types';
 
 import { Auth } from 'aws-amplify';
 import AppNavigator from './AppNavigator';
 import AuthenticationNavigator from './AuthenticationNavigator';
 import { useAsync } from '../helpers/customHooks';
+import UikittenLayout from '../components/common/UikittenLayout';
+import SpinnerComponent from '../components/common/SpinnerComponent';
 
 const Initializing = () => {
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Spinner size="large" />
-    </Layout>
+    <UikittenLayout
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+    >
+      <SpinnerComponent size="large" />
+    </UikittenLayout>
   );
 };
 

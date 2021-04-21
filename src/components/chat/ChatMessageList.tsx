@@ -8,17 +8,18 @@ import ChatMessageItem from './ChatMessageItem';
 
 type Props = {
   chatRoomID: string;
-  myUserId: string;
+  UserId: string;
 };
 type messagesType = {
   user: { id: string; firstName: string };
   createdAt: string;
   content: string;
 };
-const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
+const ChatMessageList = ({ chatRoomID, UserId }: Props) => {
   // todo aymen check type for this.
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
   const flatListRef: any = React.useRef();
-  const { data: messages, status } = useListSubscription<messagesType>(
+  const { data: messages } = useListSubscription<messagesType>(
     {
       query: messagesByChatRoom,
       variables: { chatRoomID, sortDirection: 'ASC' },
@@ -45,7 +46,7 @@ const ChatMessageList = ({ chatRoomID, myUserId }: Props) => {
             <>
               {item && (
                 <ChatMessageItem
-                  isMymessage={!!(item?.user?.id === myUserId)}
+                  isMymessage={!!(item?.user?.id === UserId)}
                   createdAt={item.createdAt}
                   message={item.content}
                   name={item?.user?.firstName}

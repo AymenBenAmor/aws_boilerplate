@@ -3,7 +3,9 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { FlatList, View, StyleSheet } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
-import { Button, Icon, IconProps } from '@ui-kitten/components';
+import { IconProps } from '@ui-kitten/components';
+import UikittenButton from '../../components/common/UikittenButton';
+import UikittenIcon from '../../components/common/UikittenIcon';
 import { getContactList } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
 import { getUser } from './queries';
@@ -22,12 +24,13 @@ const ChatRoomList = () => {
   const [chatRoomList, setChatRoomList] = React.useState<chatRoomListType[]>(
     [],
   );
-  const [myUserId, setMyUserId] = React.useState('');
+  const [UserId, setMyUserId] = React.useState('');
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const MessegeIcon = (props: IconProps) => (
-    <Icon
+    <UikittenIcon
+      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
       name="message-square-outline"
       size="large"
@@ -72,7 +75,7 @@ const ChatRoomList = () => {
     return navigation.navigate('ChatMessage', {
       chatRoomID,
       name,
-      myUserId,
+      UserId,
     });
   };
 
@@ -83,7 +86,7 @@ const ChatRoomList = () => {
         renderItem={({ item: { user, chatRoomID } }) => {
           return (
             <>
-              {!!(user.id !== myUserId) && (
+              {!!(user.id !== UserId) && (
                 <ChatListItem
                   id={user.id}
                   firstName={user.firstName}
@@ -104,7 +107,7 @@ const ChatRoomList = () => {
         keyExtractor={(_, index: number) => index.toString()}
       />
 
-      <Button
+      <UikittenButton
         appearance="ghost"
         status="danger"
         accessoryLeft={MessegeIcon}

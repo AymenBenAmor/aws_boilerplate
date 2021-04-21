@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Observable from 'zen-observable';
 
 import { MessagesByChatRoomQuery } from '../API';
@@ -123,6 +124,7 @@ export function useAsync<StateType>(): {
 }
 
 type SubscriptionParams = {
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
   query: any;
   variables: any;
   key: string;

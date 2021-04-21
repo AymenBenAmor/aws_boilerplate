@@ -8,19 +8,14 @@ import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { ParamList } from '../../navigation/ParamList';
 import { PossibleActionType, useAsync } from '../../helpers/customHooks';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
   email: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep = ({
-  navigation,
-
-  email,
-  setMessage,
-}: Props) => {
+const SignUpStep = ({ navigation, email }: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -35,7 +30,9 @@ const SignUpStep = ({
       verificationCode: 'Invalid verification code',
     },
   );
-  const { status, run } = useAsync<any>();
+  const { show } = React.useContext(ToastContext);
+
+  const { status, run } = useAsync();
 
   const signUpStep2 = () => {
     run(Auth.confirmSignUp(email, values.verificationCode)).then(
@@ -45,8 +42,10 @@ const SignUpStep = ({
           routes: [{ name: 'SignIn' }],
         });
       },
-      error => {
-        setMessage(error.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
     );
   };

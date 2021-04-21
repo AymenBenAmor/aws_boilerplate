@@ -11,12 +11,16 @@ import { CreateMessageInput } from '../../API';
 type Props = {
   chatRoomID: string;
 };
+type UserType = {
+  attributes: { sub: string };
+};
+
 const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
   const [message, setMessage] = React.useState('');
-  const [myUserId, setMyUserId] = React.useState('');
+  const [UserId, setMyUserId] = React.useState('');
 
-  const { run: runGetUser } = useAsync<any>();
-  const { run } = useAsync<any>();
+  const { run: runGetUser } = useAsync<UserType>();
+  const { run } = useAsync<GraphQLResult<CreateMessageInput>>();
   React.useEffect(() => {
     runGetUser(Auth.currentAuthenticatedUser()).then(res => {
       setMyUserId(res.attributes.sub);
@@ -29,7 +33,7 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
         graphqlOperation(createMessage, {
           input: {
             content: message,
-            userID: myUserId,
+            userID: UserId,
             chatRoomID,
           },
         }),

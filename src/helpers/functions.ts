@@ -31,13 +31,17 @@ export const getRandomImage = (): string => {
   const random = Math.floor(Math.random() * images.length);
   return images[random];
 };
+type UserDataType = {
+  data: { getUser: { chatRoomUser: { items: [] } } };
+};
 
 export const verifExistChatRoomUsers = ({
   userData,
   userID,
 }: {
-  userData: any;
+  userData: UserDataType;
   userID: string;
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
 }): any => {
   const { items }: { items: [] } = userData.data.getUser.chatRoomUser;
 
@@ -67,7 +71,7 @@ export const getContactList = ({
   userData,
   userID,
 }: {
-  userData: any;
+  userData: UserDataType;
   userID: string;
 }): any => {
   const { items }: { items: [] } = userData.data.getUser.chatRoomUser;

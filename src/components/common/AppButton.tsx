@@ -34,6 +34,7 @@ const AppButton = ({
       onPress={handleClick}
       accessoryLeft={loadingIndicator}
       disabled={disabled}
+      // eslint-disable-next-line react/jsx-props-no-spreading
       {...buttonProps}
     >
       {title}

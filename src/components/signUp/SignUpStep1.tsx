@@ -1,23 +1,21 @@
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
 import useForm from '../../components/common/custemHook/useForm';
 import { PossibleActionType, useAsync } from '../../helpers/customHooks';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SignUpStep1: React.FC<Props> = ({
   setIsConfirmStep,
   setEmail,
-  setMessage,
 }: Props) => {
   const {
     handleChange,
@@ -43,8 +41,9 @@ const SignUpStep1: React.FC<Props> = ({
       confirmPassword: 'Password mismatch',
     },
   );
+  const { show } = React.useContext(ToastContext);
 
-  const { status, run } = useAsync<any>();
+  const { status, run } = useAsync();
 
   const signUpStep1 = () => {
     run(
@@ -62,8 +61,10 @@ const SignUpStep1: React.FC<Props> = ({
         setIsConfirmStep(true);
         setEmail(values.email);
       },
-      error => {
-        setMessage(error.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
     );
   };

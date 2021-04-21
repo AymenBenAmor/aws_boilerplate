@@ -54,6 +54,7 @@
     }],
     "react/require-default-props": "off",
     "@typescript-eslint/no-shadow": ["error"]
+    
   },
   "overrides": [
     {

@@ -16,7 +16,7 @@ const ChatMessage = ({ route }: Props) => {
       <>
         <ChatMessageList
           chatRoomID={route.params.chatRoomID}
-          myUserId={route.params.myUserId}
+          UserId={route.params.UserId}
         />
         <InputBoxChat chatRoomID={route.params.chatRoomID} />
       </>

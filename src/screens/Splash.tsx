@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout } from '@ui-kitten/components';
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
+import UikittenLayout from '../components/common/UikittenLayout';
 import { ParamList } from '../navigation/ParamList';
 
 interface SplashProps {
@@ -18,9 +18,9 @@ const Splash = ({ navigation }: SplashProps) => {
     }, 2000);
   }, [navigation]);
   return (
-    <Layout style={styles.container}>
+    <UikittenLayout style={styles.container}>
       <Text style={styles.title}>Splash</Text>
-    </Layout>
+    </UikittenLayout>
   );
 };
 

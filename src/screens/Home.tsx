@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text } from 'react-native';
 
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
+import UikittenButton from '../components/common/UikittenButton';
+import UikittenLayout from '../components/common/UikittenLayout';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
@@ -25,23 +26,23 @@ const Home = ({ updateAuthState, navigation }: Props) => {
   }
 
   return (
-    <Layout style={styles.container}>
+    <UikittenLayout style={styles.container}>
       <Text>React Native + Amplify</Text>
       <StatusBar style="auto" />
-      <Button
+      <UikittenButton
         style={{ marginTop: 20 }}
         onPress={() => navigation.navigate('Profile')}
       >
         Profile
-      </Button>
-      <Button
+      </UikittenButton>
+      <UikittenButton
         style={{ marginVertical: 20 }}
         onPress={() => navigation.navigate('Chat')}
       >
         Chat
-      </Button>
-      <Button onPress={signOut}>Logout</Button>
-    </Layout>
+      </UikittenButton>
+      <UikittenButton onPress={signOut}>Logout</UikittenButton>
+    </UikittenLayout>
   );
 };
 

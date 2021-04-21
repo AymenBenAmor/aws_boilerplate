@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Layout } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import { StyleSheet, Text } from 'react-native';
 
+import UikittenLayout from '../components/common/UikittenLayout';
 import AppButton from '../components/common/AppButton';
 import AppContainer from '../components/common/AppContainer';
 import AppTextInput from '../components/common/AppTextInput';
-import Toast from '../components/common/Toast';
 import { useAsync } from '../helpers/customHooks';
 import useForm from '../components/common/custemHook/useForm';
+import { ToastContext } from '../context/Toast/ToastContext';
 
 type UserDetailsType = {
   attributes: {
@@ -23,7 +23,7 @@ type UserDetailsType = {
 const Profile = () => {
   const [isEditStep, setIsEditStep] = React.useState(false);
   const [userDetails, setUserDetails] = React.useState<UserDetailsType>();
-  const [message, setMessage] = React.useState('');
+  const { show } = React.useContext(ToastContext);
 
   const {
     handleChange,
@@ -61,8 +61,10 @@ const Profile = () => {
         });
       },
 
-      error => {
-        setMessage(error.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,8 +80,10 @@ const Profile = () => {
         getUserDetails();
         setIsEditStep(false);
       },
-      error => {
-        setMessage(error.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
     );
   };
@@ -89,10 +93,10 @@ const Profile = () => {
 
   return (
     <AppContainer>
-      <Layout style={styles.container}>
+      <UikittenLayout style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         {!isEditStep ? (
-          <Layout>
+          <UikittenLayout>
             <Text style={styles.title}>
               Email:
               {userDetails?.attributes?.email}
@@ -109,9 +113,9 @@ const Profile = () => {
               address:
               {userDetails?.attributes?.address}
             </Text>
-          </Layout>
+          </UikittenLayout>
         ) : (
-          <Layout>
+          <UikittenLayout>
             <AppTextInput
               value={values.email || ''}
               onChangeText={value => handleChange({ name: 'email', value })}
@@ -154,10 +158,8 @@ const Profile = () => {
               onBlur={() => checkErrors('address')}
               errorMessage={errorsMessages.address || ''}
             />
-          </Layout>
+          </UikittenLayout>
         )}
-
-        <Toast message={message} callback={setMessage} />
 
         <AppButton
           onPress={() => {
@@ -166,7 +168,7 @@ const Profile = () => {
           disabled={!isEditStep ? false : isSubmitting}
           title={!isEditStep ? 'updateUserDetails' : 'Update'}
         />
-      </Layout>
+      </UikittenLayout>
     </AppContainer>
   );
 };

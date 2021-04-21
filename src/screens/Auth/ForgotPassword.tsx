@@ -3,7 +3,6 @@ import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import AppContainer from '../../components/common/AppContainer';
-import Toast from '../../components/common/Toast';
 import ForgotPasswordStep1 from '../../components/forgotPassword/ForgotPasswordStep1';
 import ForgotPasswordStep2 from '../../components/forgotPassword/ForgotPasswordStep2';
 import { ParamList } from '../../navigation/ParamList';
@@ -15,7 +14,7 @@ type Props = {
 
 const ForgotPassword = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
-  const [message, setMessage] = React.useState('');
+
   const { handleChange, checkErrors, values, errorsMessages } = useForm(
     {
       verificationCode: '818302',
@@ -52,7 +51,6 @@ const ForgotPassword = ({ navigation }: Props) => {
             errorsMessages={errorsMessages}
           />
         )}
-        <Toast message={message} callback={setMessage} type="error" />
       </View>
     </AppContainer>
   );
