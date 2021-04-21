@@ -4,11 +4,14 @@ import { FlatList, View, StyleSheet } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
 import { IconProps } from '@ui-kitten/components';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
 import UikittenButton from '../../components/common/UikittenButton';
 import UikittenIcon from '../../components/common/UikittenIcon';
 import { getContactList } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
 import { getUser } from './queries';
+import { useAsync } from '../../helpers/customHooks';
+import { GetUserQuery } from '../../API';
 
 type chatRoomListType = {
   user: {
@@ -28,6 +31,8 @@ const ChatRoomList = () => {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const { status, run } = useAsync();
+
   const MessegeIcon = (props: IconProps) => (
     <UikittenIcon
       // eslint-disable-next-line react/jsx-props-no-spreading
@@ -42,8 +47,10 @@ const ChatRoomList = () => {
     const fetchData = async () => {
       try {
         const myInfo = await Auth.currentAuthenticatedUser();
-        const userData = await API.graphql(
-          graphqlOperation(getUser, { id: myInfo.attributes.sub }),
+        const userData: any = await run(
+          API.graphql(
+            graphqlOperation(getUser, { id: myInfo.attributes.sub }),
+          ) as Promise<GraphQLResult<GetUserQuery>>,
         );
         const chatRoomID = getContactList({
           userData,
@@ -121,7 +128,6 @@ const ChatRoomList = () => {
 };
 
 export default ChatRoomList;
-
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,

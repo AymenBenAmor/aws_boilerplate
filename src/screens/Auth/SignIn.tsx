@@ -28,7 +28,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
     { email: 'Invalid email', password: 'Invalid password' },
   );
 
-  const { status, run } = useAsync<any>();
+  const { status, run } = useAsync();
   const { show } = React.useContext(ToastContext);
 
   const signIn = () => {
