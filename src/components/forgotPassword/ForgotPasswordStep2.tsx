@@ -14,6 +14,7 @@ type Props = {
   checkErrors: (value: string) => void;
   handleChange: ({ name, value }: { name: string; value: string }) => void;
   errorsMessages: Record<string, string>;
+  isSubmitting: boolean;
 };
 
 const ForgotPasswordStep2 = ({
@@ -22,6 +23,7 @@ const ForgotPasswordStep2 = ({
   checkErrors,
   handleChange,
   errorsMessages,
+  isSubmitting,
 }: Props) => {
   const { status, run } = useAsync();
   const confirmForgotPassword = () => {
@@ -83,15 +85,13 @@ const ForgotPasswordStep2 = ({
       </View>
       {status === PossibleActionType.ERROR ? (
         <Text>Something wrong happened. Please try again!</Text>
-      ) : (
-        ''
-      )}
+      ) : null}
       <View style={styles.footerButtonContainer}>
         <AppButton
           loading={status === PossibleActionType.LOADING}
           title="Validate"
           onPress={confirmForgotPassword}
-          disabled={status === PossibleActionType.LOADING}
+          disabled={status === PossibleActionType.LOADING || isSubmitting}
         />
       </View>
     </>

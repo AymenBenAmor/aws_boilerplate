@@ -9,13 +9,14 @@ import ChatMessageItem from './ChatMessageItem';
 type Props = {
   chatRoomID: string;
   UserId: string;
+  firstMessage: string;
 };
 type messagesType = {
   user: { id: string; firstName: string };
   createdAt: string;
   content: string;
 };
-const ChatMessageList = ({ chatRoomID, UserId }: Props) => {
+const ChatMessageList = ({ chatRoomID, UserId, firstMessage }: Props) => {
   // todo aymen check type for this.
   /* eslint-disable @typescript-eslint/no-explicit-any  */
   const flatListRef: any = React.useRef();
@@ -36,7 +37,18 @@ const ChatMessageList = ({ chatRoomID, UserId }: Props) => {
     <>
       <FlatList
         ref={flatListRef}
-        data={messages}
+        data={
+          firstMessage
+            ? [
+                {
+                  user: { id: UserId, firstName: '' },
+                  createdAt: new Date().toString(),
+                  content: firstMessage,
+                },
+                ...messages,
+              ]
+            : messages
+        }
         style={{ marginBottom: 10 }}
         contentContainerStyle={{
           flexGrow: 1,

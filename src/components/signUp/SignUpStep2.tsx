@@ -3,9 +3,9 @@ import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-import AppButton from '../../components/common/AppButton';
-import AppTextInput from '../../components/common/AppTextInput';
-import useForm from '../../components/common/custemHook/useForm';
+import AppButton from 'components/common/AppButton';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
 import { ParamList } from '../../navigation/ParamList';
 import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 import { ToastContext } from '../../context/Toast/ToastContext';
@@ -22,14 +22,15 @@ const SignUpStep = ({ navigation, email }: Props) => {
     values,
     isSubmitting,
     errorsMessages,
-  } = useForm(
-    {
-      verificationCode: '958338',
+  } = useForm({
+    verificationCode: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid address',
     },
-    {
-      verificationCode: 'Invalid verification code',
-    },
-  );
+  });
   const { show } = React.useContext(ToastContext);
 
   const { status, run } = useAsync();
@@ -87,6 +88,7 @@ const SignUpStep = ({ navigation, email }: Props) => {
   );
 };
 
+export default SignUpStep;
 const styles = StyleSheet.create({
   subcontainer: {
     flex: 1,
@@ -106,5 +108,3 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
-export default SignUpStep;

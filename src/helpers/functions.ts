@@ -13,7 +13,6 @@ export const checkError = ({
     case 'email':
       errorValue = REGEX[name].test(value);
       break;
-
     case 'password':
       errorValue = value?.trim().length >= 10;
       break;
@@ -22,7 +21,7 @@ export const checkError = ({
       break;
 
     default:
-      errorValue = value?.trim().length >= 3;
+      errorValue = true;
   }
   return errorValue;
 };

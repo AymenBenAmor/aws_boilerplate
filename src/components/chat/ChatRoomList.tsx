@@ -31,7 +31,7 @@ const ChatRoomList = () => {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const { status, run } = useAsync();
+  const { run } = useAsync();
 
   const MessegeIcon = (props: IconProps) => (
     <UikittenIcon
@@ -47,6 +47,7 @@ const ChatRoomList = () => {
     const fetchData = async () => {
       try {
         const myInfo = await Auth.currentAuthenticatedUser();
+        /* eslint-disable @typescript-eslint/no-explicit-any  */
         const userData: any = await run(
           API.graphql(
             graphqlOperation(getUser, { id: myInfo.attributes.sub }),
@@ -82,7 +83,7 @@ const ChatRoomList = () => {
     return navigation.navigate('ChatMessage', {
       chatRoomID,
       name,
-      UserId,
+      currentUserId: UserId,
     });
   };
 

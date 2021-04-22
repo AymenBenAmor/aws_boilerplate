@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Auth } from 'aws-amplify';
 import { StyleSheet, Text } from 'react-native';
 
-import UikittenLayout from '../components/common/UikittenLayout';
-import AppButton from '../components/common/AppButton';
-import AppContainer from '../components/common/AppContainer';
-import AppTextInput from '../components/common/AppTextInput';
+import UikittenLayout from 'components/common/UikittenLayout';
+import AppButton from 'components/common/AppButton';
+import AppContainer from 'components/common/AppContainer';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
 import { useAsync } from '../helpers/customHooks';
-import useForm from '../components/common/custemHook/useForm';
 import { ToastContext } from '../context/Toast/ToastContext';
 
 type UserDetailsType = {
@@ -32,20 +32,36 @@ const Profile = () => {
     updateAllValues,
     errorsMessages,
     isSubmitting,
-  } = useForm(
-    {
-      email: 'd',
-      family_name: 'd',
-      given_name: 'd',
-      address: 'd',
+  } = useForm({
+    email: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid email',
     },
-    {
-      email: 'Invalid email',
-      family_name: 'Invalid firstName',
-      given_name: 'Invalid lastname',
-      address: 'Invalid address',
+    family_name: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid firstName',
     },
-  );
+    given_name: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid lastname',
+    },
+    address: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid address',
+    },
+  });
 
   const { run: runSetUser } = useAsync<UserDetailsType>();
   const { run } = useAsync<string>();

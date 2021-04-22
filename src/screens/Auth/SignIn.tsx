@@ -3,15 +3,15 @@ import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
-import UikittenButton from '../../components/common/UikittenButton';
-import AppButton from '../../components/common/AppButton';
-import AppContainer from '../../components/common/AppContainer';
-import AppTextInput from '../../components/common/AppTextInput';
+import UikittenButton from 'components/common/UikittenButton';
+import AppButton from 'components/common/AppButton';
+import AppContainer from 'components/common/AppContainer';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
+import UikittenLayout from 'components/common/UikittenLayout';
 import { useAsync, PossibleActionType } from '../../helpers/customHooks';
-import useForm from '../../components/common/custemHook/useForm';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
-import UikittenLayout from '../../components/common/UikittenLayout';
 import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
@@ -20,13 +20,32 @@ type Props = {
 };
 
 const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
-  const { handleChange, checkErrors, values, errorsMessages } = useForm(
-    {
-      email: 'ansiosid@holladayutah.com',
-      password: '1111111111',
+  const {
+    handleChange,
+    checkErrors,
+    values,
+    errorsMessages,
+    isSubmitting,
+  } = useForm({
+    email: {
+      defaultValue: 'ansiosid@holladayutah.com',
+      errorsCondition: {
+        max: 110,
+        min: 16,
+        required: true,
+      },
+
+      errorMessage: 'Invalid email',
     },
-    { email: 'Invalid email', password: 'Invalid password' },
-  );
+    password: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid password',
+    },
+  });
 
   const { status, run } = useAsync();
   const { show } = React.useContext(ToastContext);
@@ -50,7 +69,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
-            value={values.email || ''}
+            value={values?.email || ''}
             onChangeText={value => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
@@ -61,7 +80,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
             errorMessage={errorsMessages.email || ''}
           />
           <AppTextInput
-            value={values.password || ''}
+            value={values?.password || ''}
             onChangeText={value => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
@@ -79,7 +98,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
             loading={status === PossibleActionType.LOADING}
             title="Login"
             onPress={signIn}
-            disabled={status === PossibleActionType.LOADING}
+            disabled={status === PossibleActionType.LOADING || isSubmitting}
           />
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('ForgotPassword')}
@@ -96,6 +115,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
   );
 };
 
+export default SignIn;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -131,5 +151,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-export default SignIn;

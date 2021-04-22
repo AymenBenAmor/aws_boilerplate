@@ -10,8 +10,7 @@ import { verifExistChatRoomUsers } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
 import { listUsers } from '../../graphql/queries';
 import { getUser } from './queries';
-import { createChatRoom, createChatRoomUser } from '../../graphql/mutations';
-import { ListUsersQuery } from '../../API';
+import { ListUsersQuery, GetUserQuery } from '../../API';
 
 type usersListType = {
   id: string;
@@ -23,7 +22,7 @@ type usersListType = {
 };
 const ContactsList = () => {
   const [usersList, setUsersList] = React.useState<usersListType[]>([]);
-  const [UserId, setMyUserId] = React.useState('');
+  const [currentUserId, setCurrentUserId] = React.useState('');
 
   const { run } = useAsync();
 
@@ -43,7 +42,7 @@ const ContactsList = () => {
 
         /* eslint-disable @typescript-eslint/no-explicit-any  */
         const myInfo: any = await run(Auth.currentAuthenticatedUser());
-        setMyUserId(myInfo.attributes.sub);
+        setCurrentUserId(myInfo.attributes.sub);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log('error', error);
@@ -61,41 +60,19 @@ const ContactsList = () => {
     name: string;
   }) => {
     try {
-      const userData: any = await API.graphql(
-        graphqlOperation(getUser, { id: UserId }),
+      const userData: any = await run(
+        API.graphql(
+          graphqlOperation(getUser, { id: currentUserId }),
+        ) as Promise<GraphQLResult<GetUserQuery>>,
       );
-
-      let chatRoomID = verifExistChatRoomUsers({ userData, userID })
+      const chatRoomID = verifExistChatRoomUsers({ userData, userID })
         ?.chatRoomID;
-
-      if (!chatRoomID) {
-        // create a new chat Room
-
-        const newChatRoomData: any = await API.graphql(
-          graphqlOperation(createChatRoom, { input: {} }),
-        );
-        const newChatRoom = newChatRoomData.data.createChatRoom;
-        // add user to chat Room
-        await API.graphql(
-          graphqlOperation(createChatRoomUser, {
-            input: { userID, chatRoomID: newChatRoom.id },
-          }),
-        );
-        await API.graphql(
-          graphqlOperation(createChatRoomUser, {
-            input: {
-              userID: UserId,
-              chatRoomID: newChatRoom.id,
-            },
-          }),
-        );
-        chatRoomID = newChatRoom.id;
-      }
 
       return navigation.replace('ChatMessage', {
         chatRoomID,
         name,
-        UserId,
+        currentUserId,
+        userID,
       });
     } catch (error) {
       return null;
@@ -107,7 +84,7 @@ const ContactsList = () => {
       data={usersList}
       renderItem={({ item }) => (
         <>
-          {!!(item.id !== UserId) && (
+          {!!(item.id !== currentUserId) && (
             <ChatListItem
               id={item.id}
               firstName={item.firstName}

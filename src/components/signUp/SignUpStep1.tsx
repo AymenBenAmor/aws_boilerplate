@@ -2,9 +2,9 @@ import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
-import AppButton from '../../components/common/AppButton';
-import AppTextInput from '../../components/common/AppTextInput';
-import useForm from '../../components/common/custemHook/useForm';
+import AppButton from 'components/common/AppButton';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
 import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 import { ToastContext } from '../../context/Toast/ToastContext';
 
@@ -23,24 +23,56 @@ const SignUpStep1: React.FC<Props> = ({
     values,
     isSubmitting,
     errorsMessages,
-  } = useForm(
-    {
-      email: 'ansiosid@macnausa.com',
-      family_name: 'firstName',
-      given_name: 'lastname',
-      address: 'address',
-      password: '1111111111',
-      confirmPassword: '1111111111',
+  } = useForm({
+    email: {
+      defaultValue: 'leslief3@zplotsuu.com',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid email',
     },
-    {
-      email: 'Invalid email',
-      family_name: 'Invalid firstName',
-      given_name: 'Invalid lastname',
-      address: 'Invalid address',
-      password: 'Invalid password',
-      confirmPassword: 'Password mismatch',
+    family_name: {
+      defaultValue: 'firstName',
+      errorsCondition: {
+        min: 3,
+        required: true,
+      },
+      errorMessage: 'Invalid firstName',
     },
-  );
+    given_name: {
+      defaultValue: 'lastname',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid lastname',
+    },
+    address: {
+      defaultValue: 'address',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid address',
+    },
+    password: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid password',
+    },
+    confirmPassword: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Password mismatch',
+    },
+  });
   const { show } = React.useContext(ToastContext);
 
   const { status, run } = useAsync();

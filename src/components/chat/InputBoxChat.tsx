@@ -10,12 +10,16 @@ import { CreateMessageInput } from '../../API';
 
 type Props = {
   chatRoomID: string;
+  createChatRoomUserFn: (message: string) => void;
 };
 type UserType = {
   attributes: { sub: string };
 };
 
-const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
+const InputBoxChat: React.FC<Props> = ({
+  chatRoomID,
+  createChatRoomUserFn,
+}) => {
   const [message, setMessage] = React.useState('');
   const [UserId, setMyUserId] = React.useState('');
 
@@ -27,7 +31,7 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
     });
   }, [setMyUserId, runGetUser]);
 
-  const onSendPress = () => {
+  const onSendPress = React.useCallback(() => {
     run(
       API.graphql(
         graphqlOperation(createMessage, {
@@ -41,7 +45,13 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
     ).then(() => {
       setMessage('');
     });
-  };
+  }, [UserId, chatRoomID, message, run]);
+  React.useEffect(() => {
+    if (chatRoomID && !!message) {
+      onSendPress();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatRoomID]);
 
   const SendIcon = (props: IconProps) => (
     <Icon {...props} fill="black" name="paper-plane-outline" />
@@ -75,7 +85,7 @@ const InputBoxChat: React.FC<Props> = ({ chatRoomID }) => {
         status="danger"
         accessoryLeft={SendIcon}
         style={{ width: '10%' }}
-        onPress={onSendPress}
+        onPress={chatRoomID ? onSendPress : () => createChatRoomUserFn(message)}
       />
     </View>
   );

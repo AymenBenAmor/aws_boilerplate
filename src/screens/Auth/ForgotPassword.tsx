@@ -15,21 +15,44 @@ type Props = {
 const ForgotPassword = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
 
-  const { handleChange, checkErrors, values, errorsMessages } = useForm(
-    {
-      verificationCode: '818302',
-      password: '1111111112',
-      confirmPassword: '1111111112',
-      email: 'jiancehenj@mikes.cd',
+  const {
+    handleChange,
+    checkErrors,
+    values,
+    errorsMessages,
+    isSubmitting,
+  } = useForm({
+    verificationCode: {
+      defaultValue: '818302',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid verification code',
     },
-    {
-      verificationCode: 'Invalid verification code',
-      password: 'Invalid password',
-      confirmPassword: 'Password mismatch',
-      email: 'Invalid email',
+    password: {
+      defaultValue: '1111111112',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid password',
     },
-  );
+    confirmPassword: {
+      defaultValue: '1111111112',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Password mismatch',
+    },
+    email: {
+      defaultValue: 'jiancehenj@mikes.cd',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid email',
+    },
+  });
   const setEmail = (value: string) => handleChange({ name: 'email', value });
+
   return (
     <AppContainer>
       <View style={[styles.subcontainer]}>
@@ -39,7 +62,7 @@ const ForgotPassword = ({ navigation }: Props) => {
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
             checkErrors={checkErrors}
-            email={values.email}
+            email={values?.email}
             errorsMessages={errorsMessages}
           />
         ) : (
@@ -49,6 +72,7 @@ const ForgotPassword = ({ navigation }: Props) => {
             checkErrors={checkErrors}
             handleChange={handleChange}
             errorsMessages={errorsMessages}
+            isSubmitting={isSubmitting}
           />
         )}
       </View>

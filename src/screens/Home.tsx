@@ -4,10 +4,10 @@ import { Auth } from 'aws-amplify';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text } from 'react-native';
 
+import UikittenButton from 'components/common/UikittenButton';
+import UikittenLayout from 'components/common/UikittenLayout';
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
-import UikittenButton from '../components/common/UikittenButton';
-import UikittenLayout from '../components/common/UikittenLayout';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
