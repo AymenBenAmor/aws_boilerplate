@@ -1,27 +1,21 @@
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
-import AppButton from '../../components/common/AppButton';
-import AppTextInput from '../../components/common/AppTextInput';
-import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
+import AppButton from 'components/common/AppButton';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep1 = ({
-  loading,
-  setLoading,
+const SignUpStep1: React.FC<Props> = ({
   setIsConfirmStep,
   setEmail,
-  setMessage,
 }: Props) => {
   const {
     handleChange,
@@ -29,29 +23,63 @@ const SignUpStep1 = ({
     values,
     isSubmitting,
     errorsMessages,
-  } = useForm(
-    {
-      email: 'jiancehenj@merseybasin.org',
-      family_name: 'firstName',
-      given_name: 'lastname',
-      address: 'address',
-      password: '1111111111',
-      confirmPassword: '1111111111',
+  } = useForm({
+    email: {
+      defaultValue: 'leslief3@zplotsuu.com',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid email',
     },
-    {
-      email: 'Invalid email',
-      family_name: 'Invalid firstName',
-      given_name: 'Invalid lastname',
-      address: 'Invalid address',
-      password: 'Invalid password',
-      confirmPassword: 'Password mismatch',
+    family_name: {
+      defaultValue: 'firstName',
+      errorsCondition: {
+        min: 3,
+        required: true,
+      },
+      errorMessage: 'Invalid firstName',
     },
-  );
+    given_name: {
+      defaultValue: 'lastname',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid lastname',
+    },
+    address: {
+      defaultValue: 'address',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid address',
+    },
+    password: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid password',
+    },
+    confirmPassword: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Password mismatch',
+    },
+  });
+  const { show } = React.useContext(ToastContext);
 
-  async function signUp() {
-    setLoading(true);
-    authFun({
-      func: Auth.signUp({
+  const { status, run } = useAsync();
+
+  const signUpStep1 = () => {
+    run(
+      Auth.signUp({
         username: values.email,
         password: values.password,
         attributes: {
@@ -60,16 +88,18 @@ const SignUpStep1 = ({
           address: values.address,
         },
       }),
-      onSuccessFn: () => {
+    ).then(
+      () => {
         setIsConfirmStep(true);
         setEmail(values.email);
       },
-      onFailedFn: err => {
-        setMessage(err.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
-      callback: () => setLoading(false),
-    });
-  }
+    );
+  };
 
   return (
     <ScrollView contentContainerStyle={[styles.subcontainer]}>
@@ -128,9 +158,9 @@ const SignUpStep1 = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={value =>
-            handleChange({ name: 'confirmPassword', value })
-          }
+          onChangeText={value => {
+            return handleChange({ name: 'confirmPassword', value });
+          }}
           leftIcon="lock-outline"
           placeholder="Enter password"
           autoCapitalize="none"
@@ -143,9 +173,9 @@ const SignUpStep1 = ({
       </View>
 
       <AppButton
-        loading={loading}
+        loading={status === PossibleActionType.LOADING}
         title="confirmSignUp"
-        onPress={() => signUp()}
+        onPress={signUpStep1}
         disabled={isSubmitting}
       />
     </ScrollView>

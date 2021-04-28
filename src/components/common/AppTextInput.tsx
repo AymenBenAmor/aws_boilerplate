@@ -15,8 +15,8 @@ type Props = {
 
 const AppTextInput = ({ leftIcon, errorMessage, ...otherProps }: Props) => {
   const isPasswordInput = otherProps.textContentType === 'password';
-
   const [secureTextEntry, setSecureTextEntry] = React.useState(isPasswordInput);
+
   return (
     <Layout style={styles.container}>
       <Input
@@ -26,15 +26,15 @@ const AppTextInput = ({ leftIcon, errorMessage, ...otherProps }: Props) => {
         ]}
         placeholderTextColor="#6e6869"
         {...otherProps}
-        accessoryLeft={() =>
-          leftIcon ? (
+        accessoryLeft={() => {
+          return leftIcon ? (
             <Icon name={leftIcon} fill="#6e6869" style={styles.icon} />
           ) : (
             <></>
-          )
-        }
-        accessoryRight={() =>
-          otherProps.textContentType === 'password' ? (
+          );
+        }}
+        accessoryRight={() => {
+          return otherProps.textContentType === 'password' ? (
             <TouchableWithoutFeedback
               onPress={() => setSecureTextEntry(!secureTextEntry)}
             >
@@ -46,11 +46,11 @@ const AppTextInput = ({ leftIcon, errorMessage, ...otherProps }: Props) => {
             </TouchableWithoutFeedback>
           ) : (
             <></>
-          )
-        }
+          );
+        }}
         secureTextEntry={secureTextEntry}
       />
-      <Text style={styles.errorMessage}>{errorMessage} </Text>
+      <Text style={styles.errorMessage}>{errorMessage}</Text>
     </Layout>
   );
 };

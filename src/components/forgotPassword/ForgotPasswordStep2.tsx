@@ -1,77 +1,53 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
-import { authFun } from '../../helpers/functions';
 import { ParamList } from '../../navigation/ParamList';
-import useForm from '../common/custemHook/useForm';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
-  email: string;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  values: Record<string, string>;
+  checkErrors: (value: string) => void;
+  handleChange: ({ name, value }: { name: string; value: string }) => void;
+  errorsMessages: Record<string, string>;
+  isSubmitting: boolean;
 };
 
 const ForgotPasswordStep2 = ({
   navigation,
-  email,
-  loading,
-  setLoading,
-  setMessage,
+  values,
+  checkErrors,
+  handleChange,
+  errorsMessages,
+  isSubmitting,
 }: Props) => {
-  const {
-    handleChange,
-    checkErrors,
-    values,
-    isSubmitting,
-    errorsMessages,
-  } = useForm(
-    {
-      verificationCode: '818302',
-      password: '1111111112',
-      confirmPassword: '1111111112',
-    },
-    {
-      verificationCode: 'Invalid verification code',
-      password: 'Invalid password',
-      confirmPassword: 'Password mismatch',
-    },
-  );
-
-  async function confirmForgotPassword() {
-    setLoading(true);
-    authFun({
-      func: Auth.forgotPasswordSubmit(
-        email,
+  const { status, run } = useAsync();
+  const confirmForgotPassword = () => {
+    run(
+      Auth.forgotPasswordSubmit(
+        values.email,
         values.verificationCode,
         values.password,
       ),
-      onSuccessFn: () => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'SignIn' }],
-        });
-      },
-      onFailedFn: err => {
-        setMessage(err.message);
-      },
-      callback: () => setLoading(false),
+    ).then(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }],
+      });
     });
-  }
-
+  };
   return (
     <>
       <View>
         <AppTextInput
           value={values.verificationCode || ''}
-          onChangeText={value =>
-            handleChange({ name: 'verificationCode', value })
-          }
+          onChangeText={value => {
+            return handleChange({ name: 'verificationCode', value });
+          }}
           leftIcon="lock-outline"
           placeholder="Enter verification code "
           autoCapitalize="none"
@@ -94,9 +70,9 @@ const ForgotPasswordStep2 = ({
         />
         <AppTextInput
           value={values.confirmPassword || ''}
-          onChangeText={value =>
-            handleChange({ name: 'confirmPassword', value })
-          }
+          onChangeText={value => {
+            return handleChange({ name: 'confirmPassword', value });
+          }}
           leftIcon="lock-outline"
           placeholder="Enter confirm password"
           autoCapitalize="none"
@@ -107,12 +83,15 @@ const ForgotPasswordStep2 = ({
           errorMessage={errorsMessages.confirmPassword || ''}
         />
       </View>
+      {status === PossibleActionType.ERROR ? (
+        <Text>Something wrong happened. Please try again!</Text>
+      ) : null}
       <View style={styles.footerButtonContainer}>
         <AppButton
-          loading={loading}
+          loading={status === PossibleActionType.LOADING}
           title="Validate"
           onPress={confirmForgotPassword}
-          disabled={isSubmitting}
+          disabled={status === PossibleActionType.LOADING || isSubmitting}
         />
       </View>
     </>

@@ -3,10 +3,10 @@ import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import AppContainer from '../../components/common/AppContainer';
-import Toast from '../../components/common/Toast';
 import ForgotPasswordStep1 from '../../components/forgotPassword/ForgotPasswordStep1';
 import ForgotPasswordStep2 from '../../components/forgotPassword/ForgotPasswordStep2';
 import { ParamList } from '../../navigation/ParamList';
+import useForm from '../../components/common/custemHook/useForm';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
@@ -14,10 +14,44 @@ type Props = {
 
 const ForgotPassword = ({ navigation }: Props) => {
   const [isConfirmStep, setIsConfirmStep] = React.useState(false);
-  const [email, setEmail] = React.useState('jiancehenj@mikes.cd');
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState('');
-  const [messageType] = React.useState('error');
+
+  const {
+    handleChange,
+    checkErrors,
+    values,
+    errorsMessages,
+    isSubmitting,
+  } = useForm({
+    verificationCode: {
+      defaultValue: '818302',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid verification code',
+    },
+    password: {
+      defaultValue: '1111111112',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid password',
+    },
+    confirmPassword: {
+      defaultValue: '1111111112',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Password mismatch',
+    },
+    email: {
+      defaultValue: 'jiancehenj@mikes.cd',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid email',
+    },
+  });
+  const setEmail = (value: string) => handleChange({ name: 'email', value });
 
   return (
     <AppContainer>
@@ -25,22 +59,22 @@ const ForgotPassword = ({ navigation }: Props) => {
         <Text style={styles.title}>Forgot Password </Text>
         {!isConfirmStep ? (
           <ForgotPasswordStep1
-            loading={loading}
-            setLoading={setLoading}
             setIsConfirmStep={setIsConfirmStep}
             setEmail={setEmail}
-            setMessage={setMessage}
+            checkErrors={checkErrors}
+            email={values?.email}
+            errorsMessages={errorsMessages}
           />
         ) : (
           <ForgotPasswordStep2
             navigation={navigation}
-            email={email}
-            loading={loading}
-            setLoading={setLoading}
-            setMessage={setMessage}
+            values={values}
+            checkErrors={checkErrors}
+            handleChange={handleChange}
+            errorsMessages={errorsMessages}
+            isSubmitting={isSubmitting}
           />
         )}
-        <Toast message={message} callback={setMessage} type={messageType} />
       </View>
     </AppContainer>
   );

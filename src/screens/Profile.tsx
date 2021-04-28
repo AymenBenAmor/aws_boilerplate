@@ -1,18 +1,29 @@
-import { Layout } from '@ui-kitten/components';
+import * as React from 'react';
 import { Auth } from 'aws-amplify';
-import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import AppButton from '../components/common/AppButton';
-import AppContainer from '../components/common/AppContainer';
-import AppTextInput from '../components/common/AppTextInput';
-import useForm from '../components/common/custemHook/useForm';
-import { authFun } from '../helpers/functions';
 
+import UikittenLayout from 'components/common/UikittenLayout';
+import AppButton from 'components/common/AppButton';
+import AppContainer from 'components/common/AppContainer';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
+import { useAsync } from '../helpers/customHooks';
+import { ToastContext } from '../context/Toast/ToastContext';
+
+type UserDetailsType = {
+  attributes: {
+    email: string;
+    // eslint-disable-next-line camelcase
+    family_name: string;
+    // eslint-disable-next-line camelcase
+    given_name: string;
+    address: string;
+  };
+};
 const Profile = () => {
-  const [, setLoading] = React.useState(false);
   const [isEditStep, setIsEditStep] = React.useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [userDetails, setuserDetails] = React.useState<any>({}); // todo fix this type
+  const [userDetails, setUserDetails] = React.useState<UserDetailsType>();
+  const { show } = React.useContext(ToastContext);
 
   const {
     handleChange,
@@ -21,81 +32,106 @@ const Profile = () => {
     updateAllValues,
     errorsMessages,
     isSubmitting,
-  } = useForm(
-    {
-      email: 'd',
-      family_name: 'd',
-      given_name: 'd',
-      address: 'd',
+  } = useForm({
+    email: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid email',
     },
-    {
-      email: 'Invalid email',
-      family_name: 'Invalid firstName',
-      given_name: 'Invalid lastname',
-      address: 'Invalid address',
+    family_name: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid firstName',
     },
-  );
+    given_name: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid lastname',
+    },
+    address: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid address',
+    },
+  });
 
-  /* eslint-disable */
-  React.useEffect(() => {
-    getUserDetails(); // todo check why we need to do all of that
-  }, []);
-  /* eslint-enable */
+  const { run: runSetUser } = useAsync<UserDetailsType>();
+  const { run } = useAsync<string>();
 
-  async function getUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: res => {
-        setuserDetails(res);
+  const getUserDetails = React.useCallback(() => {
+    runSetUser(Auth.currentAuthenticatedUser()).then(
+      res => {
         updateAllValues(() => {
           // eslint-disable-next-line camelcase
           const { email, family_name, given_name, address } = res.attributes;
+          setUserDetails(res);
           return { email, family_name, given_name, address };
         });
       },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
 
-  async function updateUserDetails() {
-    setLoading(true);
-    authFun({
-      func: Auth.updateUserAttributes(userDetails, {
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const updateUserDetails = () => {
+    run(
+      Auth.updateUserAttributes(userDetails, {
         ...values,
       }),
-      onSuccessFn: () => {
+    ).then(
+      () => {
         getUserDetails();
         setIsEditStep(false);
       },
-      callback: () => {
-        setLoading(false);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
-    });
-  }
+    );
+  };
+  React.useEffect(() => {
+    getUserDetails();
+  }, [getUserDetails]);
+
   return (
     <AppContainer>
-      <Layout style={styles.container}>
+      <UikittenLayout style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         {!isEditStep ? (
-          <Layout>
+          <UikittenLayout>
             <Text style={styles.title}>
-              Email: {userDetails?.attributes?.email}
+              Email:
+              {userDetails?.attributes?.email}
             </Text>
             <Text style={styles.title}>
-              first name: {userDetails?.attributes?.family_name}
+              first name:
+              {userDetails?.attributes?.family_name}
             </Text>
             <Text style={styles.title}>
-              last name: {userDetails?.attributes?.given_name}
+              last name:
+              {userDetails?.attributes?.given_name}
             </Text>
             <Text style={styles.title}>
-              address: {userDetails?.attributes?.address}
+              address:
+              {userDetails?.attributes?.address}
             </Text>
-          </Layout>
+          </UikittenLayout>
         ) : (
-          <Layout>
+          <UikittenLayout>
             <AppTextInput
               value={values.email || ''}
               onChangeText={value => handleChange({ name: 'email', value })}
@@ -109,9 +145,9 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.family_name || ''}
-              onChangeText={value =>
-                handleChange({ name: 'family_name', value })
-              }
+              onChangeText={value => {
+                return handleChange({ name: 'family_name', value });
+              }}
               leftIcon="person-outline"
               placeholder="Enter first name"
               autoCapitalize="none"
@@ -120,9 +156,9 @@ const Profile = () => {
             />
             <AppTextInput
               value={values.given_name || ''}
-              onChangeText={value =>
-                handleChange({ name: 'given_name', value })
-              }
+              onChangeText={value => {
+                return handleChange({ name: 'given_name', value });
+              }}
               leftIcon="person-outline"
               placeholder="Enter last name"
               autoCapitalize="none"
@@ -138,17 +174,17 @@ const Profile = () => {
               onBlur={() => checkErrors('address')}
               errorMessage={errorsMessages.address || ''}
             />
-          </Layout>
+          </UikittenLayout>
         )}
 
         <AppButton
-          onPress={() =>
-            !isEditStep ? setIsEditStep(true) : updateUserDetails()
-          }
+          onPress={() => {
+            return !isEditStep ? setIsEditStep(true) : updateUserDetails();
+          }}
           disabled={!isEditStep ? false : isSubmitting}
           title={!isEditStep ? 'updateUserDetails' : 'Update'}
         />
-      </Layout>
+      </UikittenLayout>
     </AppContainer>
   );
 };

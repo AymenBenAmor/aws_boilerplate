@@ -1,63 +1,56 @@
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 import AppButton from '../../components/common/AppButton';
 import AppTextInput from '../../components/common/AppTextInput';
-import { authFun } from '../../helpers/functions';
-import useForm from '../common/custemHook/useForm';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
 
 type Props = {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsConfirmStep: React.Dispatch<React.SetStateAction<boolean>>;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: (value: string) => void;
+  email: string;
+  checkErrors: (value: string) => void;
+  errorsMessages: Record<string, string>;
+};
+
+type UserType = {
+  email: string;
 };
 
 const ForgotPasswordStep1 = ({
-  loading,
-  setLoading,
   setIsConfirmStep,
   setEmail,
-  setMessage,
+  email,
+  checkErrors,
+  errorsMessages,
 }: Props) => {
-  const {
-    handleChange,
-    checkErrors,
-    values,
-    isSubmitting,
-    errorsMessages,
-  } = useForm(
-    {
-      email: 'jiancehenj@salesoperationsconference.org',
-    },
-    {
-      email: 'Invalid email',
-    },
-  );
+  const { run, status } = useAsync<UserType>();
+  const { show } = React.useContext(ToastContext);
 
-  async function forgotPassword() {
-    setLoading(true);
-    authFun({
-      func: Auth.forgotPassword(values.email),
-      onSuccessFn: () => {
+  const forgotPassword = () => {
+    run(Auth.forgotPassword(email)).then(
+      () => {
         setIsConfirmStep(true);
-        setEmail(values.email);
       },
-      onFailedFn: err => {
-        setMessage(err.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
-      callback: () => setLoading(false),
-    });
-  }
+    );
+  };
 
   return (
     <>
       <View>
         <AppTextInput
-          value={values.email || ''}
-          onChangeText={value => handleChange({ name: 'email', value })}
+          value={email || ''}
+          onChangeText={value => {
+            setEmail(value);
+            checkErrors('email');
+          }}
           leftIcon="person-outline"
           placeholder="Enter email"
           autoCapitalize="none"
@@ -67,13 +60,15 @@ const ForgotPasswordStep1 = ({
           errorMessage={errorsMessages.email || ''}
         />
       </View>
-
+      {status === PossibleActionType.ERROR ? <Text /> : null}
       <View style={styles.footerButtonContainer}>
         <AppButton
-          loading={loading}
+          loading={status === PossibleActionType.LOADING}
           title="Validate"
           onPress={forgotPassword}
-          disabled={isSubmitting}
+          disabled={
+            status === PossibleActionType.LOADING || !!errorsMessages.email
+          }
         />
       </View>
     </>
@@ -81,21 +76,10 @@ const ForgotPasswordStep1 = ({
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    color: '#202020',
-    fontWeight: '500',
-    marginVertical: 15,
-  },
   footerButtonContainer: {
     alignItems: 'center',
     justifyContent: 'space-around',
     width: '100%',
-  },
-  forgotPasswordButtonText: {
-    color: 'tomato',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });
 

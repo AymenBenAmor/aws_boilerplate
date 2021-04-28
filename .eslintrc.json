@@ -4,8 +4,6 @@
     "airbnb/hooks",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/react",
-    "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
   "plugins": ["@typescript-eslint", "react", "prettier"],
@@ -41,6 +39,7 @@
       }
     ],
     "no-use-before-define": "off",
+    "import/no-extraneous-dependencies":"off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "import/extensions": ["error", "never"],
@@ -52,10 +51,11 @@
       "html": "enforce",
       "custom": "enforce",
       "explicitSpread": "enforce",
-      "exceptions": ["ApplicationProvider", "Input", "Home", "Profile", "ForgotPassword", "SignUp", "SignIn"]
+      "exceptions": ["ApplicationProvider", "Input", "Icon"]
     }],
     "react/require-default-props": "off",
     "@typescript-eslint/no-shadow": ["error"]
+    
   },
   "overrides": [
     {

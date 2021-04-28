@@ -1,16 +1,16 @@
-import { Button } from '@ui-kitten/components';
+import { Button, ButtonProps } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
 
 import Spinner from './SpinnerComponent';
 
 type Props = {
-  title: string;
+  title?: string;
   loading?: boolean;
   disabled?: boolean;
   onPress: (event: GestureResponderEvent) => void;
   style?: ViewStyle;
-};
+} & ButtonProps;
 
 const AppButton = ({
   title,
@@ -18,6 +18,7 @@ const AppButton = ({
   loading = false,
   disabled = false,
   style,
+  ...buttonProps
 }: Props) => {
   const loadingIndicator = () => (loading ? <Spinner size="small" /> : <></>);
 
@@ -31,8 +32,10 @@ const AppButton = ({
     <Button
       style={[styles.button, style]}
       onPress={handleClick}
-      accessoryLeft={() => loadingIndicator()}
+      accessoryLeft={loadingIndicator}
       disabled={disabled}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...buttonProps}
     >
       {title}
     </Button>
@@ -45,7 +48,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'tomato',
     width: '100%',
   },

@@ -1,39 +1,40 @@
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Layout, Spinner } from '@ui-kitten/components';
-import { Auth } from 'aws-amplify';
-import React, { useState, useEffect } from 'react';
+import { UsernameAttributesType } from 'aws-amplify-react-native/types';
 
-import { authFun } from '../helpers/functions';
+import { Auth } from 'aws-amplify';
 import AppNavigator from './AppNavigator';
 import AuthenticationNavigator from './AuthenticationNavigator';
+import { useAsync } from '../helpers/customHooks';
+import UikittenLayout from '../components/common/UikittenLayout';
+import SpinnerComponent from '../components/common/SpinnerComponent';
 
 const Initializing = () => {
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Spinner size="large" />
-    </Layout>
+    <UikittenLayout
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+    >
+      <SpinnerComponent size="large" />
+    </UikittenLayout>
   );
 };
 
 const GlobalAppNavigator = () => {
-  const [isUserLoggedIn, setUserLoggedIn] = useState('initializing');
+  const [isUserLoggedIn, setUserLoggedIn] = React.useState('initializing');
   function updateAuthState(loggedIn: string) {
     setUserLoggedIn(loggedIn);
   }
-  async function checkAuthState() {
-    authFun({
-      func: Auth.currentAuthenticatedUser(),
-      onSuccessFn: () => {
+  const { run } = useAsync<UsernameAttributesType>();
+  React.useEffect(() => {
+    run(Auth.currentAuthenticatedUser()).then(
+      () => {
         setUserLoggedIn('loggedIn');
       },
-      onFailedFn: () => {
+      () => {
         setUserLoggedIn('loggedOut');
       },
-    });
-  }
-  useEffect(() => {
-    checkAuthState();
-  }, []);
+    );
+  }, [run]);
 
   return (
     <NavigationContainer>

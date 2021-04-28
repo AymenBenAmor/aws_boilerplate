@@ -1,5 +1,6 @@
-import { REGEX } from './constants';
+import { REGEX, images } from './constants';
 
+// todo aymen recheck these
 export const checkError = ({
   value,
   name,
@@ -12,7 +13,6 @@ export const checkError = ({
     case 'email':
       errorValue = REGEX[name].test(value);
       break;
-
     case 'password':
       errorValue = value?.trim().length >= 10;
       break;
@@ -21,50 +21,78 @@ export const checkError = ({
       break;
 
     default:
-      errorValue = value?.trim().length >= 3;
+      errorValue = true;
   }
   return errorValue;
 };
 
-// todo fix this by setting the return type
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function authFun({
-  func,
-  onSuccessFn,
-  onFailedFn,
-  callback,
+export const getRandomImage = (): string => {
+  const random = Math.floor(Math.random() * images.length);
+  return images[random];
+};
+type UserDataType = {
+  data: { getUser: { chatRoomUser: { items: [] } } };
+};
+
+export const verifExistChatRoomUsers = ({
+  userData,
+  userID,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  func: Promise<any>; // todo fix this type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSuccessFn?: (value: any) => void; // todo fix this type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFailedFn?: (value: any) => void; // todo fix this type
-  callback?: () => void;
-}) {
-  try {
-    const user = await func;
-    // eslint-disable-next-line no-console
-    console.log(
-      '<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/11/svg/2705.svg"> Success',
-      'user',
-      user,
-    );
-    if (onSuccessFn) {
-      onSuccessFn(user);
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(
-      '<img draggable="false" class="emoji" alt="❌" src="https://s.w.org/images/core/emoji/11/svg/274c.svg"> Error signing in...',
-      error,
-    );
-    if (onFailedFn) {
-      onFailedFn(error);
-    }
-  } finally {
-    if (callback) {
-      callback();
-    }
+  userData: UserDataType;
+  userID: string;
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
+}): any => {
+  const { items }: { items: [] } = userData.data.getUser.chatRoomUser;
+
+  if (!items || items.length === 0) {
+    return undefined;
   }
-}
+  return items.find(
+    ({
+      chatRoom: {
+        chatRoomUsers: { items: chatRoomUsersItems },
+      },
+    }: {
+      chatRoom: { chatRoomUsers: { items: [] } };
+    }) => {
+      const userChatRoomDetails = chatRoomUsersItems.find(
+        ({ user: { id: chatRoomUsersID } }: { user: { id: string } }) => {
+          return !!(chatRoomUsersID === userID);
+        },
+      );
+
+      return !!userChatRoomDetails;
+    },
+  );
+};
+
+export const getContactList = ({
+  userData,
+  userID,
+}: {
+  userData: UserDataType;
+  userID: string;
+}): any => {
+  const { items }: { items: [] } = userData.data.getUser.chatRoomUser;
+
+  if (!items || items.length === 0) {
+    return [];
+  }
+  return items.map(
+    ({
+      chatRoom: {
+        chatRoomUsers: { items: chatRoomUsersItems },
+      },
+    }: {
+      chatRoom: { chatRoomUsers: { items: [] } };
+    }) => {
+      const userChatRoomDetails = chatRoomUsersItems.find(
+        ({ user }: { user: { id: string }; chatRoomID: string }) => {
+          return user.id !== userID;
+        },
+      );
+
+      return userChatRoomDetails;
+    },
+  );
+};

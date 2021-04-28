@@ -1,66 +1,75 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Layout, Button } from '@ui-kitten/components';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
-import AppButton from '../../components/common/AppButton';
-import AppContainer from '../../components/common/AppContainer';
-import AppTextInput from '../../components/common/AppTextInput';
-import Toast from '../../components/common/Toast';
-import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
+import UikittenButton from 'components/common/UikittenButton';
+import AppButton from 'components/common/AppButton';
+import AppContainer from 'components/common/AppContainer';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
+import UikittenLayout from 'components/common/UikittenLayout';
+import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignIn'>;
   updateAuthState: updateAuth;
 };
 
-const SignIn = ({ updateAuthState, navigation }: Props) => {
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState('');
-  const [messageType, setMessageType] = React.useState('');
-
+const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
   const {
     handleChange,
     checkErrors,
     values,
-    isSubmitting,
     errorsMessages,
-  } = useForm(
-    {
-      email: 'jiancehenj@merseybasin.org',
-      password: '1111111111',
-    },
-    { email: 'Invalid email', password: 'Invalid password' },
-  );
+    isSubmitting,
+  } = useForm({
+    email: {
+      defaultValue: 'ansiosid@holladayutah.com',
+      errorsCondition: {
+        max: 110,
+        min: 16,
+        required: true,
+      },
 
-  async function signIn() {
-    setLoading(true);
-    authFun({
-      func: Auth.signIn(values.email, values.password),
-      onSuccessFn: () => {
+      errorMessage: 'Invalid email',
+    },
+    password: {
+      defaultValue: '1111111111',
+      errorsCondition: {
+        min: 6,
+        required: true,
+      },
+      errorMessage: 'Invalid password',
+    },
+  });
+
+  const { status, run } = useAsync();
+  const { show } = React.useContext(ToastContext);
+
+  const signIn = () => {
+    run(Auth.signIn(values.email, values.password)).then(
+      () => {
         updateAuthState('loggedIn');
       },
-      onFailedFn: err => {
-        setMessage(err.message);
-        setMessageType('error');
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
-      callback: () => {
-        setLoading(false);
-      },
-    });
-  }
+    );
+  };
 
   return (
     <AppContainer>
-      <Layout style={styles.container}>
+      <UikittenLayout style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
-            value={values.email || ''}
+            value={values?.email || ''}
             onChangeText={value => handleChange({ name: 'email', value })}
             leftIcon="person-outline"
             placeholder="Enter username"
@@ -71,7 +80,7 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
             errorMessage={errorsMessages.email || ''}
           />
           <AppTextInput
-            value={values.password || ''}
+            value={values?.password || ''}
             onChangeText={value => handleChange({ name: 'password', value })}
             leftIcon="lock-outline"
             placeholder="Enter password"
@@ -84,29 +93,29 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
           />
         </View>
 
-        <Layout style={styles.footerButtonContainer}>
+        <UikittenLayout style={styles.footerButtonContainer}>
           <AppButton
-            loading={loading}
+            loading={status === PossibleActionType.LOADING}
             title="Login"
             onPress={signIn}
-            disabled={isSubmitting}
+            disabled={status === PossibleActionType.LOADING || isSubmitting}
           />
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('ForgotPassword')}
           >
             <Text style={styles.forgotPassword}>Forgot Password ?</Text>
           </TouchableWithoutFeedback>
-        </Layout>
+        </UikittenLayout>
 
-        <Button onPress={() => navigation.navigate('SignUp')}>
+        <UikittenButton onPress={() => navigation.navigate('SignUp')}>
           Don&apos;t have an account? Sign Up
-        </Button>
-        <Toast message={message} callback={setMessage} type={messageType} />
-      </Layout>
+        </UikittenButton>
+      </UikittenLayout>
     </AppContainer>
   );
 };
 
+export default SignIn;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -142,5 +151,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-export default SignIn;

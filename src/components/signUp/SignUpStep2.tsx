@@ -3,66 +3,56 @@ import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-import AppButton from '../../components/common/AppButton';
-import AppTextInput from '../../components/common/AppTextInput';
-import useForm from '../../components/common/custemHook/useForm';
-import { authFun } from '../../helpers/functions';
+import AppButton from 'components/common/AppButton';
+import AppTextInput from 'components/common/AppTextInput';
+import useForm from 'components/common/custemHook/useForm';
 import { ParamList } from '../../navigation/ParamList';
+import { PossibleActionType, useAsync } from '../../helpers/customHooks';
+import { ToastContext } from '../../context/Toast/ToastContext';
 
 type Props = {
   navigation: StackNavigationProp<ParamList, 'SignUp'>;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   email: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const SignUpStep = ({
-  navigation,
-  loading,
-  setLoading,
-  email,
-  setMessage,
-}: Props) => {
+const SignUpStep = ({ navigation, email }: Props) => {
   const {
     handleChange,
     checkErrors,
     values,
     isSubmitting,
     errorsMessages,
-  } = useForm(
-    {
-      verificationCode: '958338',
+  } = useForm({
+    verificationCode: {
+      defaultValue: '',
+      errorsCondition: {
+        required: true,
+      },
+      errorMessage: 'Invalid address',
     },
-    {
-      verificationCode: 'Invalid verification code',
-    },
-  );
+  });
+  const { show } = React.useContext(ToastContext);
 
-  async function confirmSignUp() {
-    setLoading(true);
+  const { status, run } = useAsync();
 
-    authFun({
-      func: Auth.confirmSignUp(email, values.verificationCode),
-      onSuccessFn: () => {
+  const signUpStep2 = () => {
+    run(Auth.confirmSignUp(email, values.verificationCode)).then(
+      () => {
         navigation.reset({
           index: 0,
           routes: [{ name: 'SignIn' }],
         });
       },
-      onFailedFn: err => {
-        setMessage(err.message);
+      ({ message }: { message: string }) => {
+        if (show) {
+          show({ message });
+        }
       },
-      callback: () => setLoading(false),
-    });
-  }
-
-  async function resendConfirmationCode() {
-    authFun({
-      func: Auth.resendSignUp(email),
-      callback: () => setLoading(false),
-    });
-  }
+    );
+  };
+  const resendConfirmationCode = () => {
+    run(Auth.resendSignUp(email)).then();
+  };
 
   return (
     <View style={[styles.subcontainer]}>
@@ -70,9 +60,9 @@ const SignUpStep = ({
 
       <AppTextInput
         value={values.verificationCode}
-        onChangeText={value =>
-          handleChange({ name: 'verificationCode', value })
-        }
+        onChangeText={value => {
+          return handleChange({ name: 'verificationCode', value });
+        }}
         leftIcon="lock-outline"
         placeholder="Enter verification code "
         autoCapitalize="none"
@@ -84,13 +74,12 @@ const SignUpStep = ({
 
       <View style={styles.footerButtonContainer}>
         <AppButton
-          loading={loading}
           title="confirmSignUp"
-          onPress={() => confirmSignUp()}
+          onPress={() => signUpStep2()}
           disabled={isSubmitting}
         />
         <AppButton
-          loading={loading}
+          loading={status === PossibleActionType.LOADING}
           title="Resend Code"
           onPress={resendConfirmationCode}
         />
@@ -99,6 +88,7 @@ const SignUpStep = ({
   );
 };
 
+export default SignUpStep;
 const styles = StyleSheet.create({
   subcontainer: {
     flex: 1,
@@ -118,5 +108,3 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
-export default SignUpStep;
