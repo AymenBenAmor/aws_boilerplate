@@ -3,12 +3,12 @@ import { Auth } from 'aws-amplify';
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
-import UikittenButton from 'components/common/UikittenButton';
 import AppButton from 'components/common/AppButton';
 import AppContainer from 'components/common/AppContainer';
 import AppTextInput from 'components/common/AppTextInput';
 import useForm from 'components/common/custemHook/useForm';
 import UikittenLayout from 'components/common/UikittenLayout';
+
 import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
@@ -96,7 +96,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
         <UikittenLayout style={styles.footerButtonContainer}>
           <AppButton
             loading={status === PossibleActionType.LOADING}
-            title="Login"
+            label="Login"
             onPress={signIn}
             disabled={status === PossibleActionType.LOADING || isSubmitting}
           />
@@ -107,9 +107,10 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           </TouchableWithoutFeedback>
         </UikittenLayout>
 
-        <UikittenButton onPress={() => navigation.navigate('SignUp')}>
-          Don&apos;t have an account? Sign Up
-        </UikittenButton>
+        <AppButton
+          onPress={() => navigation.navigate('SignUp')}
+          label="Don't have an account? Sign Up"
+        />
       </UikittenLayout>
     </AppContainer>
   );

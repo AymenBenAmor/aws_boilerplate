@@ -89,7 +89,7 @@ const ForgotPasswordStep2 = ({
       <View style={styles.footerButtonContainer}>
         <AppButton
           loading={status === PossibleActionType.LOADING}
-          title="Validate"
+          label="Validate"
           onPress={confirmForgotPassword}
           disabled={status === PossibleActionType.LOADING || isSubmitting}
         />

@@ -74,13 +74,13 @@ const SignUpStep = ({ navigation, email }: Props) => {
 
       <View style={styles.footerButtonContainer}>
         <AppButton
-          title="confirmSignUp"
+          label="confirmSignUp"
           onPress={() => signUpStep2()}
           disabled={isSubmitting}
         />
         <AppButton
           loading={status === PossibleActionType.LOADING}
-          title="Resend Code"
+          label="Resend Code"
           onPress={resendConfirmationCode}
         />
       </View>

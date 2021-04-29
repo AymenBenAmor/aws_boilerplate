@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text } from 'react-native';
 
-import UikittenButton from 'components/common/UikittenButton';
 import UikittenLayout from 'components/common/UikittenLayout';
+import AppButton from 'components/common/AppButton';
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
 
@@ -28,20 +27,12 @@ const Home = ({ updateAuthState, navigation }: Props) => {
   return (
     <UikittenLayout style={styles.container}>
       <Text>React Native + Amplify</Text>
-      <StatusBar style="auto" />
-      <UikittenButton
-        style={{ marginTop: 20 }}
+      <AppButton
         onPress={() => navigation.navigate('Profile')}
-      >
-        Profile
-      </UikittenButton>
-      <UikittenButton
-        style={{ marginVertical: 20 }}
-        onPress={() => navigation.navigate('Chat')}
-      >
-        Chat
-      </UikittenButton>
-      <UikittenButton onPress={signOut}>Logout</UikittenButton>
+        label="Profile"
+      />
+      <AppButton onPress={() => navigation.navigate('Chat')} label="Chat" />
+      <AppButton onPress={signOut} label="Logout" />
     </UikittenLayout>
   );
 };

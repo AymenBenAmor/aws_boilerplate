@@ -174,7 +174,7 @@ const SignUpStep1: React.FC<Props> = ({
 
       <AppButton
         loading={status === PossibleActionType.LOADING}
-        title="confirmSignUp"
+        label="confirmSignUp"
         onPress={signUpStep1}
         disabled={isSubmitting}
       />

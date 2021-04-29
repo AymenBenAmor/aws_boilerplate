@@ -182,7 +182,7 @@ const Profile = () => {
             return !isEditStep ? setIsEditStep(true) : updateUserDetails();
           }}
           disabled={!isEditStep ? false : isSubmitting}
-          title={!isEditStep ? 'updateUserDetails' : 'Update'}
+          label={!isEditStep ? 'updateUserDetails' : 'Update'}
         />
       </UikittenLayout>
     </AppContainer>
