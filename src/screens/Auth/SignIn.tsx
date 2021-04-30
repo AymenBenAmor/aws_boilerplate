@@ -8,7 +8,6 @@ import AppButton from 'components/common/AppButton';
 import AppContainer from 'components/common/AppContainer';
 import AppTextInput from 'components/common/AppTextInput';
 import useForm from 'components/common/custemHook/useForm';
-import UikittenLayout from 'components/common/UikittenLayout';
 import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import { updateAuth } from '../../navigation/AppNavigator';
 import { ParamList } from '../../navigation/ParamList';
@@ -65,7 +64,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
 
   return (
     <AppContainer>
-      <UikittenLayout style={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
@@ -93,7 +92,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           />
         </View>
 
-        <UikittenLayout style={styles.footerButtonContainer}>
+        <View style={styles.footerButtonContainer}>
           <AppButton
             loading={status === PossibleActionType.LOADING}
             title="Login"
@@ -105,12 +104,12 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           >
             <Text style={styles.forgotPassword}>Forgot Password ?</Text>
           </TouchableWithoutFeedback>
-        </UikittenLayout>
+        </View>
 
         <UikittenButton onPress={() => navigation.navigate('SignUp')}>
           Don&apos;t have an account? Sign Up
         </UikittenButton>
-      </UikittenLayout>
+      </View>
     </AppContainer>
   );
 };
