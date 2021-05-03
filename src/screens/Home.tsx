@@ -4,6 +4,7 @@ import { Auth } from 'aws-amplify';
 import { StyleSheet, Text, View } from 'react-native';
 
 import AppButton from 'components/common/AppButton';
+import CardFormScreen from 'components/CardFormScreen/CardFormScreen';
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
 
@@ -26,6 +27,7 @@ const Home = ({ updateAuthState, navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Text>React Native + Amplify</Text>
+      <CardFormScreen />
       <AppButton
         onPress={() => navigation.navigate('Profile')}
         label="Profile"
