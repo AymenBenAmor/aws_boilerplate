@@ -2,11 +2,10 @@ import React from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { FlatList, View, StyleSheet } from 'react-native';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { MaterialIcons } from '@expo/vector-icons';
 
-import { IconProps } from '@ui-kitten/components';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import UikittenButton from '../../components/common/UikittenButton';
-import UikittenIcon from '../../components/common/UikittenIcon';
+import AppButton from 'components/common/AppButton';
 import { getContactList } from '../../helpers/functions';
 import ChatListItem from './ChatUserItem';
 import { getUser } from './queries';
@@ -33,15 +32,8 @@ const ChatRoomList = () => {
   const isFocused = useIsFocused();
   const { run } = useAsync();
 
-  const MessegeIcon = (props: IconProps) => (
-    <UikittenIcon
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-      name="message-square-outline"
-      size="large"
-      fill="white"
-      style={{ width: 25, height: 25 }}
-    />
+  const MessegeIcon = () => (
+    <MaterialIcons name="message" size={24} color="white" />
   );
   React.useEffect(() => {
     const fetchData = async () => {
@@ -115,9 +107,7 @@ const ChatRoomList = () => {
         keyExtractor={(_, index: number) => index.toString()}
       />
 
-      <UikittenButton
-        appearance="ghost"
-        status="danger"
+      <AppButton
         accessoryLeft={MessegeIcon}
         style={styles.button}
         onPress={() => {
@@ -143,5 +133,8 @@ const styles = StyleSheet.create({
     right: 20,
     backgroundColor: '#325e5c',
     borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
   },
 });

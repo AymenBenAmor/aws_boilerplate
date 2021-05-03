@@ -67,7 +67,8 @@ const Profile = () => {
 
   const getUserDetails = React.useCallback(() => {
     runSetUser(Auth.currentAuthenticatedUser()).then(
-      res => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (res: any) => {
         updateAllValues(() => {
           // eslint-disable-next-line camelcase
           const { email, family_name, given_name, address } = res.attributes;
@@ -181,7 +182,7 @@ const Profile = () => {
             return !isEditStep ? setIsEditStep(true) : updateUserDetails();
           }}
           disabled={!isEditStep ? false : isSubmitting}
-          title={!isEditStep ? 'updateUserDetails' : 'Update'}
+          label={!isEditStep ? 'updateUserDetails' : 'Update'}
         />
       </View>
     </AppContainer>

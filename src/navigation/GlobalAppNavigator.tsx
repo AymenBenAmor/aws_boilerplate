@@ -3,16 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { UsernameAttributesType } from 'aws-amplify-react-native/types';
 
 import { Auth } from 'aws-amplify';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import AppNavigator from './AppNavigator';
 import AuthenticationNavigator from './AuthenticationNavigator';
 import { useAsync } from '../helpers/customHooks';
-import SpinnerComponent from '../components/common/SpinnerComponent';
 
 const Initializing = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <SpinnerComponent size="large" />
+      <ActivityIndicator size="large" color="#0000ff" />
     </View>
   );
 };
