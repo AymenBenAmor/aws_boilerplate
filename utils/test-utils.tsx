@@ -1,17 +1,11 @@
 import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { render, RenderOptions } from '@testing-library/react-native';
-import { ApplicationProvider } from '@ui-kitten/components';
-import * as eva from '@eva-design/eva';
 // eslint-disable-next-line import/extensions
-import theme from '../theme.json';
+import { ThemeProvider } from 'components/ThemeContext';
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
-      {children}
-    </ApplicationProvider>
-  );
+  return <ThemeProvider>{children}</ThemeProvider>;
 };
 
 const customRender = (

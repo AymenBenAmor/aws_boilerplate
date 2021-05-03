@@ -2,6 +2,7 @@ import Amplify from 'aws-amplify';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { ThemeProvider } from 'components/ThemeContext';
 import { ToastProvider } from './src/context/Toast/ToastContext';
 
 import config from './aws-exports';
@@ -16,7 +17,9 @@ const App = () => {
       <ToastProvider>
         <ToastComponent />
         <SafeAreaView style={styles.safeAreaContainer}>
-          <GlobalAppNavigator />
+          <ThemeProvider>
+            <GlobalAppNavigator />
+          </ThemeProvider>
         </SafeAreaView>
       </ToastProvider>
     </SafeAreaProvider>
