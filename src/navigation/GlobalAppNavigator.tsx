@@ -3,19 +3,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { UsernameAttributesType } from 'aws-amplify-react-native/types';
 
 import { Auth } from 'aws-amplify';
+import { View, ActivityIndicator } from 'react-native';
 import AppNavigator from './AppNavigator';
 import AuthenticationNavigator from './AuthenticationNavigator';
 import { useAsync } from '../helpers/customHooks';
-import UikittenLayout from '../components/common/UikittenLayout';
-import SpinnerComponent from '../components/common/SpinnerComponent';
 
 const Initializing = () => {
   return (
-    <UikittenLayout
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    >
-      <SpinnerComponent size="large" />
-    </UikittenLayout>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
   );
 };
 

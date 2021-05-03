@@ -1,27 +1,33 @@
-import { Button, ButtonProps } from '@ui-kitten/components';
+import { ButtonProps } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet, ViewStyle, GestureResponderEvent } from 'react-native';
-
-import Spinner from './SpinnerComponent';
+import {
+  StyleSheet,
+  ViewStyle,
+  GestureResponderEvent,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  ViewProps,
+} from 'react-native';
 
 type Props = {
-  title?: string;
+  label?: string;
   loading?: boolean;
   disabled?: boolean;
+  accessoryLeft?: ViewProps;
   onPress: (event: GestureResponderEvent) => void;
   style?: ViewStyle;
 } & ButtonProps;
 
 const AppButton = ({
-  title,
+  label,
   onPress,
   loading = false,
   disabled = false,
   style,
+  accessoryLeft,
   ...buttonProps
 }: Props) => {
-  const loadingIndicator = () => (loading ? <Spinner size="small" /> : <></>);
-
   const handleClick = (e: GestureResponderEvent) => {
     if (!loading) {
       onPress(e);
@@ -29,16 +35,22 @@ const AppButton = ({
   };
 
   return (
-    <Button
-      style={[styles.button, style]}
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={style || styles.button}
       onPress={handleClick}
-      accessoryLeft={loadingIndicator}
       disabled={disabled}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...buttonProps}
     >
-      {title}
-    </Button>
+      {accessoryLeft && accessoryLeft()}
+
+      {loading ? (
+        <ActivityIndicator size="small" color="#0000ff" />
+      ) : (
+        <Text style={styles.label}>{label}</Text>
+      )}
+    </TouchableOpacity>
   );
 };
 
@@ -50,6 +62,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'tomato',
     width: '100%',
+    paddingVertical: 15,
+  },
+  label: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

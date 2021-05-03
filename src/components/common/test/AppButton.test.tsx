@@ -8,7 +8,7 @@ describe('<AppButton />', () => {
     const title = 'this is a button';
     const handlePress = jest.fn();
     const { getByText } = render(
-      <AppButton title={title} onPress={handlePress} />,
+      <AppButton label={title} onPress={handlePress} />,
     );
     expect(getByText(title)).toBeDefined();
   });

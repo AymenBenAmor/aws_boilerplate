@@ -26,7 +26,8 @@ const InputBoxChat: React.FC<Props> = ({
   const { run: runGetUser } = useAsync<UserType>();
   const { run } = useAsync<GraphQLResult<CreateMessageInput>>();
   React.useEffect(() => {
-    runGetUser(Auth.currentAuthenticatedUser()).then(res => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    runGetUser(Auth.currentAuthenticatedUser()).then((res: any) => {
       setMyUserId(res.attributes.sub);
     });
   }, [setMyUserId, runGetUser]);
