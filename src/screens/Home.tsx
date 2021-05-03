@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import UikittenLayout from 'components/common/UikittenLayout';
 import AppButton from 'components/common/AppButton';
 import { updateAuth } from '../navigation/AppNavigator';
 import { ParamList } from '../navigation/ParamList';
@@ -25,7 +24,7 @@ const Home = ({ updateAuthState, navigation }: Props) => {
   }
 
   return (
-    <UikittenLayout style={styles.container}>
+    <View style={styles.container}>
       <Text>React Native + Amplify</Text>
       <AppButton
         onPress={() => navigation.navigate('Profile')}
@@ -33,7 +32,7 @@ const Home = ({ updateAuthState, navigation }: Props) => {
       />
       <AppButton onPress={() => navigation.navigate('Chat')} label="Chat" />
       <AppButton onPress={signOut} label="Logout" />
-    </UikittenLayout>
+    </View>
   );
 };
 
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 15,
   },
 });
 

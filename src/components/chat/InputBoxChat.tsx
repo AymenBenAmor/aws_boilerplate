@@ -1,9 +1,10 @@
 import React from 'react';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { Icon, Button, IconProps } from '@ui-kitten/components';
 import { View, TextInput, Platform } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import AppButton from 'components/common/AppButton';
 import { createMessage } from '../../graphql/mutations';
 import { useAsync } from '../../helpers/customHooks';
 import { CreateMessageInput } from '../../API';
@@ -54,8 +55,12 @@ const InputBoxChat: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomID]);
 
-  const SendIcon = (props: IconProps) => (
-    <Icon {...props} fill="black" name="paper-plane-outline" />
+  const SendIcon = () => (
+    <MaterialCommunityIcons
+      name="send-circle-outline"
+      size={24}
+      color="black"
+    />
   );
 
   return (
@@ -81,11 +86,14 @@ const InputBoxChat: React.FC<Props> = ({
         }}
         numberOfLines={Platform.OS === 'ios' ? undefined : 4}
       />
-      <Button
-        appearance="ghost"
-        status="danger"
+      <AppButton
         accessoryLeft={SendIcon}
-        style={{ width: '10%' }}
+        style={{
+          width: '10%',
+          paddingTop: 15,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
         onPress={chatRoomID ? onSendPress : () => createChatRoomUserFn(message)}
       />
     </View>

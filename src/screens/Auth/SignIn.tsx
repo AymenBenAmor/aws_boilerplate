@@ -7,7 +7,6 @@ import AppButton from 'components/common/AppButton';
 import AppContainer from 'components/common/AppContainer';
 import AppTextInput from 'components/common/AppTextInput';
 import useForm from 'components/common/custemHook/useForm';
-import UikittenLayout from 'components/common/UikittenLayout';
 
 import { useAsync, PossibleActionType } from '../../helpers/customHooks';
 import { updateAuth } from '../../navigation/AppNavigator';
@@ -65,13 +64,12 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
 
   return (
     <AppContainer>
-      <UikittenLayout style={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.title}>Sign in to your account</Text>
         <View>
           <AppTextInput
             value={values?.email || ''}
             onChangeText={value => handleChange({ name: 'email', value })}
-            leftIcon="person-outline"
             placeholder="Enter username"
             autoCapitalize="none"
             keyboardType="email-address"
@@ -82,7 +80,6 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           <AppTextInput
             value={values?.password || ''}
             onChangeText={value => handleChange({ name: 'password', value })}
-            leftIcon="lock-outline"
             placeholder="Enter password"
             autoCapitalize="none"
             autoCorrect={false}
@@ -93,7 +90,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           />
         </View>
 
-        <UikittenLayout style={styles.footerButtonContainer}>
+        <View style={styles.footerButtonContainer}>
           <AppButton
             loading={status === PossibleActionType.LOADING}
             label="Login"
@@ -105,13 +102,13 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
           >
             <Text style={styles.forgotPassword}>Forgot Password ?</Text>
           </TouchableWithoutFeedback>
-        </UikittenLayout>
+        </View>
 
         <AppButton
           onPress={() => navigation.navigate('SignUp')}
           label="Don't have an account? Sign Up"
         />
-      </UikittenLayout>
+      </View>
     </AppContainer>
   );
 };
@@ -120,15 +117,16 @@ export default SignIn;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
+    width: '100%',
   },
   title: {
     fontSize: 20,
     color: '#202020',
     fontWeight: '500',
     marginVertical: 15,
+    textAlign: 'center',
   },
   forgotPassword: {
     fontSize: 12,
