@@ -1,4 +1,3 @@
-import { ButtonProps } from '@ui-kitten/components';
 import React from 'react';
 import {
   StyleSheet,
@@ -7,17 +6,16 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
-  ViewProps,
 } from 'react-native';
 
 type Props = {
   label?: string;
   loading?: boolean;
   disabled?: boolean;
-  accessoryLeft?: ViewProps;
+  accessoryLeft?: () => void;
   onPress: (event: GestureResponderEvent) => void;
   style?: ViewStyle;
-} & ButtonProps;
+};
 
 const AppButton = ({
   label,
@@ -26,7 +24,6 @@ const AppButton = ({
   disabled = false,
   style,
   accessoryLeft,
-  ...buttonProps
 }: Props) => {
   const handleClick = (e: GestureResponderEvent) => {
     if (!loading) {
@@ -40,8 +37,6 @@ const AppButton = ({
       style={style || styles.button}
       onPress={handleClick}
       disabled={disabled}
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...buttonProps}
     >
       {accessoryLeft && accessoryLeft()}
 
