@@ -10,7 +10,7 @@
     "strict": true,
     "baseUrl": "src",
     "paths": {
-      "test-utils": ["./test-utils"],
+      "test-utils": ["./test-utils"]
     }
   }
 }

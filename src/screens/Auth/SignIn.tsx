@@ -18,7 +18,7 @@ type Props = {
   updateAuthState: updateAuth;
 };
 
-const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
+const SignIn = ({ updateAuthState, navigation }: Props) => {
   const {
     handleChange,
     checkErrors,
