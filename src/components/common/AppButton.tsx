@@ -34,7 +34,7 @@ const AppButton = ({
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={style || styles.button}
+      style={[style || styles.button, disabled && { backgroundColor: 'gray' }]}
       onPress={handleClick}
       disabled={disabled}
     >

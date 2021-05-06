@@ -34,7 +34,8 @@
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-svg": "^12.1.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "react-test-renderer": "^17.0.2"
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.12.35",
@@ -83,5 +84,5 @@
       "!**/babel.config.js",
       "!**/jest.setup.js"
     ]
-  }
+   }
 }
