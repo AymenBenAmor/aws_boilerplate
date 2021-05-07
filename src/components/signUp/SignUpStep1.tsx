@@ -116,6 +116,7 @@ const SignUpStep1: React.FC<Props> = ({
           textContentType="emailAddress"
           onBlur={() => checkErrors('email')}
           errorMessage={errorsMessages.email || ''}
+          testID="SignUp.email"
         />
         <AppTextInput
           value={values.family_name || ''}
@@ -125,6 +126,7 @@ const SignUpStep1: React.FC<Props> = ({
           autoCapitalize="none"
           onBlur={() => checkErrors('family_name')}
           errorMessage={errorsMessages.family_name || ''}
+          testID="SignUp.firstName"
         />
         <AppTextInput
           value={values.given_name || ''}

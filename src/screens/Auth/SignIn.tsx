@@ -97,11 +97,10 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
             onPress={signIn}
             disabled={status === PossibleActionType.LOADING || isSubmitting}
           />
-          <TouchableWithoutFeedback
+          <AppButton
             onPress={() => navigation.navigate('ForgotPassword')}
-          >
-            <Text style={styles.forgotPassword}>Forgot Password ?</Text>
-          </TouchableWithoutFeedback>
+            label="Forgot Password ?"
+          />
         </View>
 
         <AppButton
