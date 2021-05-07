@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { fireEvent } from '@testing-library/react-native';
+import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { render } from '../../../../utils/test-utils';
 import AuthenticationNavigator from '../../../navigation/AuthenticationNavigator';
@@ -24,13 +24,12 @@ describe('<SignUp />', () => {
   });
 
   it('shows invalid user name error message', async () => {
-    const { getByText, queryByTestId, debug } = render(
+    const { getByText, queryByTestId, getByTestId } = render(
       <SignUp navigation={navigation} />,
     );
 
     await fireEvent.changeText(queryByTestId('SignUp.email'), 'gmail');
-    await fireEvent.changeText(queryByTestId('SignUp.firstName'), 'sadik');
-    debug();
+    fireEvent(getByTestId('SignUp.email'), 'blur');
     expect(getByText('Invalid email')).toBeDefined();
   });
 });
