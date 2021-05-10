@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { fireEvent, waitFor } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { render } from '../../../../utils/test-utils';
-import AuthenticationNavigator from '../../../navigation/AuthenticationNavigator';
 import SignUp from '../SignUp';
 
+jest.mock('aws-amplify');
 jest.useFakeTimers();
 
 describe('<SignUp />', () => {
@@ -31,5 +30,10 @@ describe('<SignUp />', () => {
     await fireEvent.changeText(queryByTestId('SignUp.email'), 'gmail');
     fireEvent(getByTestId('SignUp.email'), 'blur');
     expect(getByText('Invalid email')).toBeDefined();
+  });
+  it('shows invalid user name error message', async () => {
+    const { getByText } = render(<SignUp navigation={navigation} />);
+
+    await fireEvent.press(getByText('confirmSignUp'));
   });
 });

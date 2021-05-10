@@ -179,6 +179,7 @@ const SignUpStep1: React.FC<Props> = ({
         label="confirmSignUp"
         onPress={signUpStep1}
         disabled={isSubmitting}
+        testID="submit.button"
       />
     </ScrollView>
   );
