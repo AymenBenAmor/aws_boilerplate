@@ -4,9 +4,6 @@ import { fireEvent } from '@testing-library/react-native';
 import { render } from '../../../../utils/test-utils';
 import SignUp from '../SignUp';
 
-jest.mock('aws-amplify');
-jest.useFakeTimers();
-
 describe('<SignUp />', () => {
   const navigation: any = jest.fn();
 
