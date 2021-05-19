@@ -10,6 +10,7 @@ import {
 
 type Props = {
   label?: string;
+  testID?: string;
   loading?: boolean;
   disabled?: boolean;
   accessoryLeft?: () => void;
@@ -24,6 +25,7 @@ const AppButton = ({
   disabled = false,
   style,
   accessoryLeft,
+  testID,
 }: Props) => {
   const handleClick = (e: GestureResponderEvent) => {
     if (!loading) {
@@ -37,6 +39,7 @@ const AppButton = ({
       style={[style || styles.button, disabled && { backgroundColor: 'gray' }]}
       onPress={handleClick}
       disabled={disabled}
+      testID={testID}
     >
       {accessoryLeft && accessoryLeft()}
 

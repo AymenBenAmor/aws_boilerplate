@@ -29,9 +29,14 @@ const Home = ({ updateAuthState, navigation }: Props) => {
       <AppButton
         onPress={() => navigation.navigate('Profile')}
         label="Profile"
+        testID="Profile"
       />
-      <AppButton onPress={() => navigation.navigate('Chat')} label="Chat" />
-      <AppButton onPress={signOut} label="Logout" />
+      <AppButton
+        onPress={() => navigation.navigate('Chat')}
+        label="Chat"
+        testID="Chat"
+      />
+      <AppButton onPress={signOut} label="Logout" testID="Logout" />
     </View>
   );
 };

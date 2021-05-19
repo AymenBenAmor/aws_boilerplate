@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import AppButton from 'components/common/AppButton';
 import AppContainer from 'components/common/AppContainer';
@@ -18,7 +18,7 @@ type Props = {
   updateAuthState: updateAuth;
 };
 
-const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
+const SignIn = ({ updateAuthState, navigation }: Props) => {
   const {
     handleChange,
     checkErrors,
@@ -76,6 +76,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
             textContentType="emailAddress"
             onBlur={() => checkErrors('email')}
             errorMessage={errorsMessages.email || ''}
+            testID="SignIn.email"
           />
           <AppTextInput
             value={values?.password || ''}
@@ -87,6 +88,7 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
             textContentType="password"
             onBlur={() => checkErrors('password')}
             errorMessage={errorsMessages.password || ''}
+            testID="SignIn.password"
           />
         </View>
 
@@ -97,11 +99,10 @@ const SignIn: React.FC<Props> = ({ updateAuthState, navigation }) => {
             onPress={signIn}
             disabled={status === PossibleActionType.LOADING || isSubmitting}
           />
-          <TouchableWithoutFeedback
+          <AppButton
             onPress={() => navigation.navigate('ForgotPassword')}
-          >
-            <Text style={styles.forgotPassword}>Forgot Password ?</Text>
-          </TouchableWithoutFeedback>
+            label="Forgot Password ?"
+          />
         </View>
 
         <AppButton

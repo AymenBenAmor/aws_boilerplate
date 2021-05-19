@@ -70,10 +70,14 @@ const Profile = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (res: any) => {
         updateAllValues(() => {
-          // eslint-disable-next-line camelcase
-          const { email, family_name, given_name, address } = res.attributes;
-          setUserDetails(res);
-          return { email, family_name, given_name, address };
+          if (res && res.attributes) {
+            // eslint-disable-next-line camelcase
+            const { email, family_name, given_name, address } = res.attributes;
+            setUserDetails(res);
+
+            return { email, family_name, given_name, address };
+          }
+          return { email: '', family_name: '', given_name: '', address: '' };
         });
       },
 
@@ -110,7 +114,7 @@ const Profile = () => {
   return (
     <AppContainer>
       <View style={styles.container}>
-        <Text style={styles.title}>Sign in to your account</Text>
+        <Text style={styles.title}>My profile</Text>
         {!isEditStep ? (
           <View>
             <Text style={styles.title}>
@@ -183,6 +187,7 @@ const Profile = () => {
           }}
           disabled={!isEditStep ? false : isSubmitting}
           label={!isEditStep ? 'updateUserDetails' : 'Update'}
+          testID="submit.button"
         />
       </View>
     </AppContainer>

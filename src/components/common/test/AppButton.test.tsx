@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { cleanup, fireEvent } from '@testing-library/react-native';
 
 import { render } from '../../../../utils/test-utils';

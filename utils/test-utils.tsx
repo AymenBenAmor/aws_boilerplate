@@ -4,6 +4,8 @@ import { render, RenderOptions } from '@testing-library/react-native';
 // eslint-disable-next-line import/extensions
 import { ThemeProvider } from 'components/ThemeContext';
 
+import '@testing-library/jest-native/extend-expect';
+
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return <ThemeProvider>{children}</ThemeProvider>;
 };

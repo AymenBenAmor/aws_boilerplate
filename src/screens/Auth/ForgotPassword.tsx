@@ -56,7 +56,7 @@ const ForgotPassword = ({ navigation }: Props) => {
   return (
     <AppContainer>
       <View style={[styles.subcontainer]}>
-        <Text style={styles.title}>Forgot Password </Text>
+        <Text style={styles.title}>Forgot Password</Text>
         {!isConfirmStep ? (
           <ForgotPasswordStep1
             setIsConfirmStep={setIsConfirmStep}
