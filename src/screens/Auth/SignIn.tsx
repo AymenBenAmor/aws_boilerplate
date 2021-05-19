@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Auth } from 'aws-amplify';
 import * as React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import AppButton from 'components/common/AppButton';
 import AppContainer from 'components/common/AppContainer';
@@ -76,6 +76,7 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
             textContentType="emailAddress"
             onBlur={() => checkErrors('email')}
             errorMessage={errorsMessages.email || ''}
+            testID="SignIn.email"
           />
           <AppTextInput
             value={values?.password || ''}
@@ -87,6 +88,7 @@ const SignIn = ({ updateAuthState, navigation }: Props) => {
             textContentType="password"
             onBlur={() => checkErrors('password')}
             errorMessage={errorsMessages.password || ''}
+            testID="SignIn.password"
           />
         </View>
 

@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { fireEvent } from '@testing-library/react-native';
+import {
+  fireEvent,
+  waitForElementToBeRemoved,
+} from '@testing-library/react-native';
 
 import { render } from '../../../../utils/test-utils';
 import SignUp from '../SignUp';
 
 describe('<SignUp />', () => {
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
   const navigation: any = jest.fn();
 
   it('page contains sign up text', async () => {
@@ -24,13 +28,39 @@ describe('<SignUp />', () => {
       <SignUp navigation={navigation} />,
     );
 
-    await fireEvent.changeText(queryByTestId('SignUp.email'), 'gmail');
+    fireEvent.changeText(queryByTestId('SignUp.email'), 'gmail');
     fireEvent(getByTestId('SignUp.email'), 'blur');
     expect(getByText('Invalid email')).toBeDefined();
   });
-  it('shows invalid user name error message', async () => {
-    const { getByText } = render(<SignUp navigation={navigation} />);
+  it('go to the next page sign Up', async () => {
+    const { getByText, getByTestId } = render(
+      <SignUp navigation={navigation} />,
+    );
 
-    await fireEvent.press(getByText('confirmSignUp'));
+    fireEvent.press(getByTestId('submit.button'));
+    await waitForElementToBeRemoved(() => getByTestId('submit.button'));
+    expect(getByText('confirmSignUp2')).toBeDefined();
+  });
+  it('test resend verification code', async () => {
+    const { getByText, getByTestId } = render(
+      <SignUp navigation={navigation} />,
+    );
+
+    fireEvent.press(getByTestId('submit.button'));
+    await waitForElementToBeRemoved(() => getByTestId('submit.button'));
+    expect(getByText('Resend Code')).toBeDefined();
+  });
+
+  it('shows invalid verification code error message', async () => {
+    const { getByText, getByTestId, queryByTestId } = render(
+      <SignUp navigation={navigation} />,
+    );
+
+    fireEvent.press(getByTestId('submit.button'));
+    await waitForElementToBeRemoved(() => getByTestId('submit.button'));
+    expect(getByText('Resend Code')).toBeDefined();
+    expect(queryByTestId('SignUp.verificationCode')).toBeDefined();
+    fireEvent(getByTestId('SignUp.verificationCode'), 'blur');
+    expect(getByText('Invalid code')).toBeDefined();
   });
 });

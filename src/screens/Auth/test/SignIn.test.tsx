@@ -1,38 +1,38 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent } from '@testing-library/react-native';
 
 import { render } from '../../../../utils/test-utils';
-import AuthenticationNavigator from '../../../navigation/AuthenticationNavigator';
 import SignIn from '../SignIn';
 
 jest.useFakeTimers();
 
 describe('<SignIn />', () => {
   const updateAuth = jest.fn();
+  /* eslint-disable @typescript-eslint/no-explicit-any  */
   const navigation: any = jest.fn();
 
   const component = (
-    <NavigationContainer>
-      <AuthenticationNavigator updateAuthState={updateAuth} />
-    </NavigationContainer>
+    <SignIn updateAuthState={updateAuth} navigation={navigation} />
   );
   it('page contains sign in text', async () => {
-    const { getByText } = render(
-      <SignIn updateAuthState={updateAuth} navigation={navigation} />,
-    );
+    const { getByText } = render(component);
     expect(getByText('Sign in to your account')).toBeDefined();
   });
 
-  it('should go To signup when clicking on signup button', async () => {
-    const { getByText } = render(component);
-    await fireEvent.press(getByText("Don't have an account? Sign Up"));
-    expect(getByText('Sign Up')).toBeDefined();
+  it('shows invalid email error message', async () => {
+    const { getByText, queryByTestId, getByTestId } = render(component);
+
+    fireEvent.changeText(queryByTestId('SignIn.email'), 'gmail');
+    fireEvent(getByTestId('SignIn.email'), 'blur');
+    expect(getByText('Invalid email')).toBeDefined();
   });
 
-  it('should go To ForgotPassword when clicking on forgot password button', async () => {
-    const { getByText } = render(component);
-    await fireEvent.press(getByText('Forgot Password ?'));
-    expect(getByText('Forgot Password')).toBeDefined();
+  it('shows invalid password error message', async () => {
+    const { getByText, queryByTestId, getByTestId } = render(component);
+
+    fireEvent.changeText(queryByTestId('SignIn.password'), '1');
+    fireEvent(getByTestId('SignIn.password'), 'blur');
+
+    expect(getByText('Invalid password')).toBeDefined();
   });
 });

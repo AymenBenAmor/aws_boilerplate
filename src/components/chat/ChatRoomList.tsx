@@ -39,19 +39,21 @@ const ChatRoomList = () => {
     const fetchData = async () => {
       try {
         const myInfo = await Auth.currentAuthenticatedUser();
-        /* eslint-disable @typescript-eslint/no-explicit-any  */
-        const userData: any = await run(
-          API.graphql(
-            graphqlOperation(getUser, { id: myInfo.attributes.sub }),
-          ) as Promise<GraphQLResult<GetUserQuery>>,
-        );
-        const chatRoomID = getContactList({
-          userData,
-          userID: myInfo.attributes.sub,
-        });
+        if (API) {
+          /* eslint-disable @typescript-eslint/no-explicit-any  */
+          const userData: any = await run(
+            API.graphql(
+              graphqlOperation(getUser, { id: myInfo.attributes.sub }),
+            ) as Promise<GraphQLResult<GetUserQuery>>,
+          );
+          const chatRoomID = getContactList({
+            userData,
+            userID: myInfo.attributes.sub,
+          });
 
-        setChatRoomList(chatRoomID);
-        setMyUserId(myInfo.attributes.sub);
+          setChatRoomList(chatRoomID);
+          setMyUserId(myInfo.attributes.sub);
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log('error', error);
@@ -113,6 +115,7 @@ const ChatRoomList = () => {
         onPress={() => {
           navigation.navigate('ContactsList');
         }}
+        testID="chat.button"
       />
     </View>
   );

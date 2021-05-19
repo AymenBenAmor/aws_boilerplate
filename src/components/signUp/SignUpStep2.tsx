@@ -28,7 +28,7 @@ const SignUpStep = ({ navigation, email }: Props) => {
       errorsCondition: {
         required: true,
       },
-      errorMessage: 'Invalid address',
+      errorMessage: 'Invalid code',
     },
   });
   const { show } = React.useContext(ToastContext);
@@ -70,11 +70,12 @@ const SignUpStep = ({ navigation, email }: Props) => {
         secureTextEntry
         onBlur={() => checkErrors('verificationCode')}
         errorMessage={errorsMessages.verificationCode || ''}
+        testID="SignUp.verificationCode"
       />
 
       <View style={styles.footerButtonContainer}>
         <AppButton
-          label="confirmSignUp"
+          label="confirmSignUp2"
           onPress={() => signUpStep2()}
           disabled={isSubmitting}
         />
